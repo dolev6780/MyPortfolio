@@ -23,6 +23,7 @@ export default function NavBar() {
 
   return (
     <nav>
+        <span className='logo'>LOGO</span>
     {(toggleMenu || screenWidth > 500) && (
       <ul>
         {navLinks.map((link,i)=>{
