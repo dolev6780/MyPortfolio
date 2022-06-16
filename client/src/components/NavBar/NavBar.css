@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Gentium+Plus:ital,wght@1,700&display=swap');
+
 nav{
   background-color: inherit;
   overflow: hidden;
@@ -6,11 +7,10 @@ nav{
 
 nav > ul{
   float: right;
-  
 }
 
 nav > ul > button{
-  color: white;
+  color: var(--deafaultColor);
   text-decoration: none;
   margin-right: 20px;
   border: none;
@@ -21,7 +21,7 @@ nav > ul > button{
   padding: 4px 10px;
 }
 nav > ul > button:hover{
-  color: rgb(0, 38, 255);
+  color: var(--hoverColor);
   transform: rotateX(360deg);
   transition: 1000ms;
 }
@@ -29,7 +29,7 @@ nav > ul > button:hover{
   display: none;
 }
 .logo{
-  color: white;
+  color: var(--deafaultColor);
   float: left; 
   margin: 25px;
 }
@@ -54,7 +54,7 @@ nav > ul > button:hover{
   }
  
   .menu {
-    color: white;
+    color: var(--deafaultColor);
     padding: 12px;
     float: right;
     display: block;

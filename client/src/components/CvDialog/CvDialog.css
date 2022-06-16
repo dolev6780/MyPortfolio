@@ -19,7 +19,7 @@
   }
  
   .popup-header{
-    background-color: white;
+    background-color: var(--deafaultColor);
     width: 100%;
     height: 4vh;
   }

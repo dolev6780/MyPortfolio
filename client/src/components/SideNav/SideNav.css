@@ -11,12 +11,12 @@
   .sidenav a {
     padding: 10px;
     margin-top: 05px;   
-    color: #dfdfdf;
+    color: var(--deafaultColor);
     display: block;
   }
   
   .sidenav a:hover {
     transform: scale(1.3);
     transition: 600ms;
-    color: #c6e3fd;
+    color: var(--hoverColor);
   }

@@ -1,3 +1,8 @@
+:root {
+  --hoverColor: #c6e3fd;
+  --deafaultColor: #ffffff;
+}
+
 .App {
   text-align: center;
 }
