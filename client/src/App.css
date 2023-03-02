@@ -1,7 +1,7 @@
-:root {
-  --hoverColor: #c6e3fd;
-  --deafaultColor: #ffffff;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 
 .App {
   text-align: center;
@@ -9,5 +9,6 @@
 body{
   margin: 0;
   padding: 0;
-  background-color: rgb(33, 33, 33);
+  background-color: rgb(42, 42, 42);
+  color: white;
 }
