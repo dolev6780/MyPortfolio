@@ -23,7 +23,7 @@ const pathVariant = {
   },
 };
 
-export default function CodeWindow({width}) {
+export default function CodeWindow() {
   const [color, setColor] = useState("white");
   const controls = useAnimation();
   const ref = useRef(null);
@@ -49,7 +49,7 @@ export default function CodeWindow({width}) {
         variants={svgVariant}
         initial="initial"
         animate={controls}
-        width={width}
+        width="335"
         height="335"
         viewBox="0 0 566 335"
         fill="none"

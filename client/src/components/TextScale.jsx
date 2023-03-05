@@ -3,7 +3,13 @@ import {motion} from 'framer-motion';
 export default function TextSpan({text}) {
   return (
     <motion.span whileHover={{scale:1.1}}
-     className='text-9xl text-blue-500 font-bold inline-block cursor-none'>
+     className='font-bold inline-block cursor-none
+     text-3xl
+     md:text-6xl
+     xl:text-7xl
+      
+      
+       '>
         {text}
     </motion.span>
   )

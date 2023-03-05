@@ -1,4 +1,4 @@
-import React, {useEffect, useRef } from 'react';
+import React, {useEffect, useRef, useState } from 'react';
 import { motion, useAnimation, useInView } from 'framer-motion';
 
 const svgVariant = {
@@ -25,8 +25,8 @@ const svgVariant = {
   };
 
 
-export default function DBSkills() {
-
+export default function DBSkillsWindow({width}) {
+  const [color, setColor] = useState("white");
     const controls = useAnimation();
     const ref = useRef(null);
     const inView = useInView(ref);
@@ -38,13 +38,22 @@ export default function DBSkills() {
   
     }, [controls, inView]);
   return (
-    <div>
+    <motion.div
+    whileHover={{scale:1.1}}
+    onHoverStart={() => {
+      
+      setColor("#3d7ceb");
+    }}
+    onHoverEnd={() => {
+      setColor("white");
+    }}
+    >
       <motion.svg
       ref={ref}
       variants={svgVariant}
       initial="initial"
       animate={controls}
-        width="255"
+        width={width}
         height="333"
         viewBox="0 0 255 333"
         fill="none"
@@ -57,8 +66,8 @@ export default function DBSkills() {
           y1="55"
           x2="1.1"
           y2="207.017"
-          stroke="white"
-          stroke-width="2"
+          stroke={color}
+          strokeWidth="3"
         />
         <motion.line
         variants={pathVariant}
@@ -67,34 +76,34 @@ export default function DBSkills() {
           y1="53.0178"
           x2="249.850"
           y2="210.017"
-          stroke="white"
-          stroke-width="2"
+          stroke={color}
+          strokeWidth="3"
         />
         <motion.path
         variants={pathVariant}
           d="M1.00019 53.9915C1.00798 120.991 253.139 127.022 253.13 52.9988"
-          stroke="#CECECE"
-          stroke-width="2"
+          stroke={color}
+          strokeWidth="3"
         />
         <motion.path
         variants={pathVariant}
           d="M253.1 54.6586C253.487 -12.3402 1.43032 -19.8568 1.00296 54.1655"
-          stroke="#CECECE"
-          stroke-width="2"
+          stroke={color}
+          strokeWidth="3"
         />
         <motion.path
         variants={pathVariant}
           d="M1.00679 125.992C1.01599 192.992 251.757 199.029 251.747 125.005"
-          stroke="#CECECE"
-          stroke-width="2"
+          stroke={color}
+          strokeWidth="3"
         />
         <motion.path
         variants={pathVariant}
           d="M1.00019 204.983C1.0108 271.983 250.37 278.025 250.358 204.001"
-          stroke="#CECECE"
-          stroke-width="2"
+          stroke={color}
+          strokeWidth="3"
         />
       </motion.svg>
-    </div>
+    </motion.div>
   );
 }

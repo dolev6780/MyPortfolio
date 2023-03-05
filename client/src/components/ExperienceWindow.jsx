@@ -1,9 +1,6 @@
-import React, {useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { motion, useAnimation, useInView } from "framer-motion";
-import js from "../assets/logos/js.png";
-import java from "../assets/logos/java.png";
-import dart from "../assets/logos/dart.png";
-import python from "../assets/logos/python.png";
+
 
 const iconVariants = {
   initial: {
@@ -15,44 +12,50 @@ const iconVariants = {
   },
 };
 
-export default function ExperienceWindow() {
+export default function ExperienceWindow({ title, list}) {
   const controls = useAnimation();
   const ref = useRef(null);
   const inView = useInView(ref);
   useEffect(() => {
-   
     if (inView) {
       controls.start("animate");
     }
-
   }, [controls, inView]);
-
   return (
     <div className="font-bold overflow-hidden">
-      <motion.div ref={ref} className="mt-10 m-auto">
-        <h1 className="text-xl text-left">
-          Experienced in both functional and OOP with:
+      <motion.div ref={ref} className="mt-20 md:mt-10 m-auto">
+        <h1
+          className="text-sm text-left
+        md:text-xl
+         "
+        >
+          {title}
         </h1>
-        
-        <div className="grid justify-center text-lg">
-          <div className="flex mt-4">
-            <p>JavaScript</p>
-            <motion.img
-              variants={iconVariants}
-              initial="initial"
-              animate={controls}
-              transition={{
-                delay: 1,
-                duration: 1.6,
-                type: "spring",
-                stiffness: 120,
-              }}
-              src={js}
-              width={50}
-              alt=""
-            />
-          </div>
-          <div className="flex mt-4">
+        <div className="grid justify-center text-sm md:text-lg">
+          {list.map((li, i) => {
+            return (
+              <div key={i} className="flex mt-1 md:mt-4 text-blue-500">
+                <p>{li.li}</p>
+                <motion.img
+                className="ml-2"
+                  variants={iconVariants}
+                  initial="initial"
+                  animate={controls}
+                  transition={{
+                    delay: li.delay,
+                    duration: 1.6,
+                    type: "spring",
+                    stiffness: 120,
+                  }}
+                  src={li.logo}
+                  width={25}
+                  alt=""
+                />
+              </div>
+            );
+          })}
+
+          {/* <div className="flex md:mt-4">
             <p>Java</p>
             <motion.img
               className="ml-1 mb-2"
@@ -70,7 +73,7 @@ export default function ExperienceWindow() {
               alt=""
             />
           </div>
-          <div className="flex mt-4">
+          <div className="flex md:mt-4 text-blue-500">
             <p>Dart</p>
             <motion.img
               className="ml-2 mb-2"
@@ -88,7 +91,7 @@ export default function ExperienceWindow() {
               alt=""
             />
           </div>
-          <div className="flex mt-4">
+          <div className="flex md:mt-4">
             <p>Python</p>
             <motion.img
               className="ml-1"
@@ -105,7 +108,7 @@ export default function ExperienceWindow() {
               width={25}
               alt=""
             />
-          </div>
+          </div> */}
         </div>
       </motion.div>
     </div>

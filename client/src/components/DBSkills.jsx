@@ -34,9 +34,9 @@ export default function DBSkills() {
       animate={controls}
       className="font-bold"
     >
-      <h1 className=" text-lg mt-4">DataBase Skills</h1>
-      <div className="flex mt-14 justify-center items-center">
-        <p className="">Firebase</p>
+      <h1 className="text-lg mt-10 md:mt-4">DataBase Skills</h1>
+      <div className="flex mt-10 md:mt-14 justify-center items-center text-blue-500">
+        <p>Firebase</p>
         <motion.img
          initial={{scale:1}}
           animate={{ scale: [1, 1.2, 1, 1.2, 1] }}
@@ -52,7 +52,7 @@ export default function DBSkills() {
           alt=""
         />
       </div>
-      <div className="flex mt-12 justify-center items-center">
+      <div className="flex mt-8 md:mt-12 justify-center items-center text-blue-500">
         <p className="">MongoDB</p>
         <motion.img
         initial={{scale:1}}
