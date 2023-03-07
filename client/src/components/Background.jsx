@@ -18,6 +18,10 @@ const logos = [
   js,
   mongodb,
   nodejs,
+  firebase,
+  css,
+  flutter,
+  html,
   react,
   tailwind,
 ];
@@ -61,7 +65,7 @@ export default function Background() {
                 marginTop: Math.floor(Math.random() * screenSize.dynamicHeight),
               }}
               className="mt-5 fixed"
-              width={50}
+              width={75}
               src={logo}
               alt=""
             />

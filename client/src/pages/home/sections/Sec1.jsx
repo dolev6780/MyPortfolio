@@ -34,7 +34,7 @@ export default function sec1() {
     <div
       className="h-screen w-full justify-center flex items-center"
     >
-      <div>
+      <div className="sticky">
         <div className="inline-flex">
         {title.map((char, i) => {
           return <TextScale text={char} key={i} />;
@@ -43,7 +43,7 @@ export default function sec1() {
             variants={paraVariants}
             initial="initial"
             animate="animate"
-            className="font-bold ml-2
+            className="font-bold ml-4
             text-3xl
             md:text-6xl
             xl:text-7xl
@@ -53,7 +53,7 @@ export default function sec1() {
           </motion.p>
           </div>
         <motion.p
-          className="
+          className=" font-medium
           text-2xl
           md:text-6xl
           xl:text-7xl
@@ -64,10 +64,10 @@ export default function sec1() {
         >
           Mobile & Web Developer.
         </motion.p>
-      <button className="mt-5 p-2 pl-4 pr-4 bg-gradient-to-r from-blue-500 to-blue-400 font-bold rounded-md
+      <motion.button whileHover={{scaleX:[1,1.2,0.8,1.2,1],scaleY:[1,0.8,1.2,0.8,1],opacity:0.8}} className="mt-5 p-2 pl-4 pr-4 bg-gradient-to-r from-blue-500 to-blue-400 font-bold rounded-md
         md:p-4 md:pl-6 md:pr-6 md:mt-10
       ">Contact me
-      </button>
+      </motion.button>
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ function App() {
     <div className="App">
       <Router>
       <Background/>
-      {/* <Sidebar/> */}
+      <Sidebar/>
       <Routes>
         <Route path='/' element={<Home/>} />
       </Routes>
