@@ -30,13 +30,13 @@ const imgVariants = {
   initial: {
     x: 0,
     y: 0,
+    rotate: 0,
   },
 };
 export default function Background() {
   const { screenSize } = useScreensize();
   return (
     <div className="absolute -z-10">
-     
       {logos.map((logo, i) => {
         return (
           <div key={i}>
@@ -46,20 +46,27 @@ export default function Background() {
               animate={{
                 x: [
                   0,
-                  Math.floor(Math.random() * 50),
-                  Math.floor(Math.random() * 50),
-                  Math.floor(Math.random() * 50),
+                  Math.floor(Math.random() * 100),
+                  Math.floor(Math.random() * -100),
+                  Math.floor(Math.random() * 100),
+                  Math.floor(Math.random() * 100),
+                  Math.floor(Math.random() * -100),
+                  Math.floor(Math.random() * 100),
                   0,
                 ],
                 y: [
                   0,
-                  Math.floor(Math.random() * 50),
-                  Math.floor(Math.random() * 50),
-                  Math.floor(Math.random() * 50),
+                  Math.floor(Math.random() * 100),
+                  Math.floor(Math.random() * -100),
+                  Math.floor(Math.random() * 100),
+                  Math.floor(Math.random() * 100),
+                  Math.floor(Math.random() * -100),
+                  Math.floor(Math.random() * 100),
                   0,
                 ],
+                
               }}
-              transition={{ duration: 20, repeat: Infinity }}
+              transition={{ duration: 60, repeat: Infinity }}
               style={{
                 marginLeft: Math.floor(Math.random() * screenSize.dynamicWidth),
                 marginTop: Math.floor(Math.random() * screenSize.dynamicHeight),

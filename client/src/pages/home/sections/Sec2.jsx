@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useScreensize } from "../../../hooks/useScreenSize";
+import { motion, useAnimation, useInView } from "framer-motion";
 import js from "../../../assets/logos/js.png";
 import java from "../../../assets/logos/java.png";
 import dart from "../../../assets/logos/dart.png";
@@ -18,6 +19,8 @@ import MobileSkillsWindow from "../../../components/MobileSkillsWindow";
 import WindowsContent from "../../../components/WindowsContent";
 export default function Sec2() {
   const { screenSize } = useScreensize();
+  const [emojiTime, setEmojiTime] = useState(true)
+  const [emojiTime2, setEmojiTime2] = useState(true)
   const objListExp = [
     {
       li: "JavaScript",
@@ -89,36 +92,63 @@ export default function Sec2() {
       delay: 7.5,
     },
   ];
+  const controls = useAnimation();
+  const ref = useRef(null);
+  const inView = useInView(ref);
+  useEffect(() => {
+    if (inView) {
+      setTimeout(() => {
+        setEmojiTime(false)
+      }, 8000);
+      setTimeout(() => {
+        setEmojiTime2(false)
+        
+      }, 11000);
+      setTimeout(() => {
+        setEmojiTime(true)
+        
+      }, 14000);
+    }
+  }, [controls, inView]);
 
   return (
-    <div className="h-[160vh] xl:h-screen bg-white">
+    <div className="h-screen">
         <h1
           className="text-4xl text-blue-500 font-bold relative top-40
-        sm:text-8xl
+        md:text-6xl
+          lg:text-8xl
         "
         >
           My Expertise
         </h1>
-      <div className="flex justify-center mt-96">
-        <div className="flex mr-20">
-          <ExpWindow />
-          <div className="absolute ml-52 mt-28">
-            <WindowsContent objList={objListExp} />
+      <div className="xl:flex justify-center mt-48 xl:mt-96 grid">
+        <motion.div whileHover={{scaleX:[1,1.2,0.8,1.2,1],scaleY:[1,0.8,1.2,0.8,1]}} className="flex justify-center items-center mt-10 xl:mr-20 cursor-none">
+        <div style={{backgroundColor:"rgb(42, 42, 42)"}}>
+          <ExpWindow width={screenSize.dynamicWidth > 2150 ? 638 : screenSize.dynamicWidth > 1600 ? 450 : 350} height={screenSize.dynamicWidth > 2150 ? 381 : screenSize.dynamicWidth > 1600 ? 270 : 210} />
           </div>
-        </div>
-        <div className="flex">
-          <WebSkillsWindow />
-          <div className="absolute ml-52 mt-28">
-            <WindowsContent objList={objListWebSkills} />
+          <div className="absolute w-[300px] ">
+            <WindowsContent objList={objListExp} iconSize={screenSize.dynamicWidth > 2150 ? 35 : 20}/>
           </div>
-        </div>
-        <div className="flex ml-20">
-          <MobileSkillsWindow />
-          <div className="absolute ml-52 mt-28">
-            <WindowsContent objList={objListMobilekills} />
+        </motion.div>
+        <motion.div whileHover={{scaleX:[1,1.2,0.8,1.2,1],scaleY:[1,0.8,1.2,0.8,1]}} className="flex justify-center items-center mt-10 cursor-none">
+        <div style={{backgroundColor:"rgb(42, 42, 42)"}}>
+          <WebSkillsWindow width={screenSize.dynamicWidth > 2150 ? 638 : screenSize.dynamicWidth > 1600 ? 450 : 350} height={screenSize.dynamicWidth > 2150 ? 381 : screenSize.dynamicWidth > 1600 ? 270 : 210}/>
           </div>
-        </div>
+          <div className="absolute w-[300px] 3xl:mt-10">
+            <WindowsContent objList={objListWebSkills} iconSize={screenSize.dynamicWidth > 2150 ? 35 : 20}/>
+          </div>
+        </motion.div>
+        <motion.div whileHover={{scaleX:[1,1.2,0.8,1.2,1],scaleY:[1,0.8,1.2,0.8,1]}} className="flex justify-center items-center mt-10 xl:ml-20 cursor-none">
+        <div style={{backgroundColor:"rgb(42, 42, 42)"}}>
+          <MobileSkillsWindow width={screenSize.dynamicWidth > 2150 ? 638 : screenSize.dynamicWidth > 1600 ? 450 : 350} height={screenSize.dynamicWidth > 2150 ? 381 : screenSize.dynamicWidth > 1600 ? 270 : 210} />
+          </div>
+          <div className="absolute w-[300px]">
+            <WindowsContent objList={objListMobilekills} iconSize={screenSize.dynamicWidth > 2150 ? 35 : 20}/>
+          </div>
+        </motion.div>
       </div>
+      <p ref={ref} className="mt-40 text-9xl">{emojiTime ? "" : !emojiTime2 ? "👌" :  "🤔"}</p>
+     
     </div>
   );
 }

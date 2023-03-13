@@ -25,8 +25,8 @@ export default function Sec4() {
   };
 
   return (
-   <div>
-    
+   <div className="">
+    <h1 className="3xl:text-3xl">sec4</h1>
    </div>
   );
 }

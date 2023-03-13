@@ -1,9 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import { motion, useAnimation, useInView } from "framer-motion";
-import js from "../assets/logos/js.png";
-import java from "../assets/logos/java.png";
-import dart from "../assets/logos/dart.png";
-import python from "../assets/logos/python.png";
 
 const iconVariants = {
   initial: {
@@ -12,10 +8,11 @@ const iconVariants = {
   animate: {
     x: 0,
     scale: [1, 1.2, 1, 1.2, 1],
+   
   },
 };
 
-export default function ExperienceContent({objList}) {
+export default function ExperienceContent({objList, iconSize}) {
   const controls = useAnimation();
   const ref = useRef(null);
   const inView = useInView(ref);
@@ -27,10 +24,14 @@ export default function ExperienceContent({objList}) {
   
 
   return (
-    <motion.div ref={ref} className="overflow-hidden">
+    <motion.div ref={ref} className="overflow-hidden mt-8">
       {objList.map((li, i) => {
         return (
-          <div key={i} className="flex mt-1 md:mt-3 text-blue-500 font-medium text-3xl">
+          <div key={i} className="flex items-center  mt-1 text-blue-500 font-medium
+          text-sm
+          3xl:text-3xl 3xl:mt-2
+          
+          ">
             <motion.p
             variants={iconVariants}
             initial={{opacity:0}}
@@ -52,7 +53,7 @@ export default function ExperienceContent({objList}) {
                 stiffness: 120,
               }}
               src={li.logo}
-              width={35}
+              width={iconSize}
               alt=""
             />
           </div>
