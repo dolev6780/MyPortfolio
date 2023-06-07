@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { useScreensize } from "../../../hooks/useScreenSize";
-import { motion, useAnimation, useInView } from "framer-motion";
+import { motion} from "framer-motion";
 import js from "../../../assets/logos/js.png";
 import java from "../../../assets/logos/java.png";
 import dart from "../../../assets/logos/dart.png";
