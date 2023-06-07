@@ -19,8 +19,6 @@ import MobileSkillsWindow from "../../../components/MobileSkillsWindow";
 import WindowsContent from "../../../components/WindowsContent";
 export default function Sec2() {
   const { screenSize } = useScreensize();
-  const [emojiTime, setEmojiTime] = useState(true)
-  const [emojiTime2, setEmojiTime2] = useState(true)
   const objListExp = [
     {
       li: "JavaScript",
@@ -92,27 +90,13 @@ export default function Sec2() {
       delay: 7.5,
     },
   ];
-  const controls = useAnimation();
-  const ref = useRef(null);
-  const inView = useInView(ref);
-  useEffect(() => {
-    if (inView) {
-      setTimeout(() => {
-        setEmojiTime(false)
-      }, 8000);
-      setTimeout(() => {
-        setEmojiTime2(false)
-        
-      }, 11000);
-      setTimeout(() => {
-        setEmojiTime(true)
-        
-      }, 14000);
-    }
-  }, [controls, inView]);
+ // const controls = useAnimation();
+ // const ref = useRef(null);
+ // const inView = useInView(ref);
+
 
   return (
-    <div className="h-screen">
+    <div className="h-[140vh] xl:h-[110vh] w-full">
         <h1
           className="text-4xl text-blue-500 font-bold relative top-40
         md:text-6xl
@@ -121,7 +105,7 @@ export default function Sec2() {
         >
           My Expertise
         </h1>
-      <div className="xl:flex justify-center mt-48 xl:mt-96 grid">
+      <div className="xl:flex justify-center mt-48 xl:mt-80 grid">
         <motion.div whileHover={{scaleX:[1,1.2,0.8,1.2,1],scaleY:[1,0.8,1.2,0.8,1]}} className="flex justify-center items-center mt-10 xl:mr-20 cursor-none">
         <div style={{backgroundColor:"rgb(42, 42, 42)"}}>
           <ExpWindow width={screenSize.dynamicWidth > 2150 ? 638 : screenSize.dynamicWidth > 1600 ? 450 : 350} height={screenSize.dynamicWidth > 2150 ? 381 : screenSize.dynamicWidth > 1600 ? 270 : 210} />
@@ -147,7 +131,6 @@ export default function Sec2() {
           </div>
         </motion.div>
       </div>
-      <p ref={ref} className="mt-40 text-9xl">{emojiTime ? "" : !emojiTime2 ? "👌" :  "🤔"}</p>
      
     </div>
   );

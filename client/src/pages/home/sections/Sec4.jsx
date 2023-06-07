@@ -26,7 +26,7 @@ export default function Sec4() {
 
   return (
     <div className="">
-      <div className="h-full bottom-40 relative grid grid-flow-col grid-cols-2 gap-3">
+      <div className="relative grid grid-flow-col grid-cols-2 gap-3">
         <div className="col-span-1 order-last">
           <motion.div
             variants={ContactMeVariants}

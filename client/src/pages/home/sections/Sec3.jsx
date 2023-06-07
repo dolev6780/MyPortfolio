@@ -85,7 +85,7 @@ export default function Sec3() {
     <div className="xl:h-[120vh] h-screen w-full">
       <h1
         className="text-4xl text-blue-500 font-bold mt-32
-      sm:text-7xl
+      md:text-6xl
       lg:text-8xl
       "
       >
@@ -110,7 +110,7 @@ export default function Sec3() {
         >
            <div
             hidden={hoverShadow}
-            className="w-[60%] h-[68%] bg-black absolute opacity-50"
+            className="w-[60%] h-[50%] bg-black absolute opacity-50"
           />
           <motion.div
           variants={hoverVariant}
