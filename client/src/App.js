@@ -4,6 +4,7 @@ import Sidebar from './components/Sidebar';
 import Home from './pages/home/Home';
 import Background from './components/Background';
 import BackToTopButton from './components/BackToTopButton';
+import Footer from './components/Footer';
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Home/>} />
       </Routes>
+      <Footer/>
       <BackToTopButton/>
       </Router>
     </div>

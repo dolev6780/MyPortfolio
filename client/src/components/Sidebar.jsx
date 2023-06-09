@@ -6,6 +6,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import MailIcon from "@mui/icons-material/Mail";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 const menuVariant = {
@@ -54,14 +55,14 @@ export default function Sidebar() {
                 <HomeIcon fontSize="large" />
               </motion.li>
             </Link>
-            <Link to={"/contact"}>
+            <a href="#contactme">
               <motion.li
                 whileHover={{ scale: 1.2 }}
                 className="mt-10 hover:text-blue-500 hover:bg-opacity-5 hover:bg-blue-300 rounded-full p-2"
               >
                 <MailIcon fontSize="large" />
               </motion.li>
-            </Link>
+            </a>
             <Link
               to={"https://www.linkedin.com/in/dolev-cohen-736763190/"}
               target="_blank"
@@ -82,6 +83,17 @@ export default function Sidebar() {
                 className="mt-10 hover:text-blue-500 hover:bg-opacity-5 hover:bg-blue-300 rounded-full p-2"
               >
                 <GitHubIcon fontSize="large" />
+              </motion.li>
+            </Link>
+            <Link
+              to={"https://github.com/dolev6780?tab=repositories"}
+              target="_blank"
+            >
+              <motion.li
+                whileHover={{ scale: 1.2 }}
+                className="mt-10 hover:text-blue-500 hover:bg-opacity-5 hover:bg-blue-300 rounded-full p-2"
+              >
+                <WhatsAppIcon fontSize="large" />
               </motion.li>
             </Link>
           </ul>
@@ -145,6 +157,16 @@ export default function Sidebar() {
                     className="mt-8 font-bold text-blue-500 text-4xl"
                   >
                     Github
+                  </motion.li>
+                </Link>
+                <div className="w-16 h-0.5 rounded-lg bg-neutral-300 m-auto relative top-5 "/>
+                <Link>
+                  <motion.li
+                    whileHover={{ rotate: [0, 10, 0, -10, 0, 10, 0, -10, 0] }}
+                    transition={{ duration: 0.4 }}
+                    className="mt-8 font-bold text-blue-500 text-4xl"
+                  >
+                    Whatsapp
                   </motion.li>
                 </Link>
               </div>

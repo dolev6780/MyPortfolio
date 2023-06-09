@@ -64,10 +64,11 @@ export default function sec1() {
         >
           Mobile & Web Developer.
         </motion.p>
-      <motion.button whileHover={{scaleX:[1,1.2,0.8,1.2,1],scaleY:[1,0.8,1.2,0.8,1],opacity:0.8}} className="mt-5 p-2 pl-4 pr-4 bg-gradient-to-r from-blue-500 to-blue-400 font-bold rounded-md
+      <a href="#contactme"><motion.button whileHover={{scaleX:[1,1.2,0.8,1.2,1],scaleY:[1,0.8,1.2,0.8,1],opacity:0.8}} className="mt-5 p-2 pl-4 pr-4 bg-gradient-to-r from-blue-500 to-blue-400 font-bold rounded-md
         md:p-4 md:pl-6 md:pr-6 md:mt-10
       ">Contact me
       </motion.button>
+      </a>
       </div>
     </div>
   );

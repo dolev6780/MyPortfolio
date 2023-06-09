@@ -14,65 +14,42 @@ const ContactMeVariants = {
 };
 
 export default function Sec4() {
-  const [signal, setSignal] = useState(false);
-  const controls = useAnimation();
-  const showContactMe = () => {
-    controls.start("animate");
-    setSignal(true);
-  };
-  const submit = () => {
-    console.log("submit");
-  };
-
   return (
-    <div className="">
-      <div className="relative grid grid-flow-col grid-cols-2 gap-3">
-        <div className="col-span-1 order-last">
-          <motion.div
-            variants={ContactMeVariants}
-            initial="initial"
-            animate={controls}
-            className="mt-[300px] p-10 pl-96 text-left"
-          >
-            <h1 className="text-7xl text-blue-500 font-bold">Let's talk</h1>
-            <p className="text-xl mt-2">
-              Share with me your idea for a mobile or web application and let's
-              make it happned.
-            </p>
-            <form className="grid w-[500px] mt-10">
-              <input
-                className="bg-inherit border-2 mt-4 p-4"
-                type="text"
-                placeholder="Name"
-              />
-              <input
-                className="bg-inherit border-2 mt-4 p-4"
-                type="text"
-                placeholder="Email"
-              />
-              <textarea
-                className="bg-inherit border-2 mt-4 p-4"
-                name=""
-                id=""
-                cols="30"
-                rows="10"
-                placeholder="Put your message here!"
-              ></textarea>
-            </form>
-          </motion.div>
-        </div>
-
-        <div className="col-span-1">
-          <AboutMe />
-          <div className="pl-20">
+    <div id="contactme" className="h-[90vh] flex justify-center items-center">
+      <div className="bg-neutral-800 p-10 rounded-md bg-opacity-80 border">
+        <h1
+          className="text-4xl text-blue-500 font-bold
+      md:text-6xl">
+          Contact Me
+        </h1>
+        <div className="mt-10 xl:mt-14">
+          <div>
+            <input
+              className="p-2 w-[300px] xl:w-[400px] xl:p-3 xl:text-lg pr-6 pl-6 m-4 bg-white border-2 border-blue-500 text-blue-500 placeholder:text-blue-500 rounded font-medium"
+              type="text"
+              placeholder="Full Name"
+            />
+          </div>
+          <div>
+            <input
+              className="p-2 w-[300px] xl:w-[400px] xl:p-3 xl:text-lg pr-6 pl-6 m-4 bg-white border-2 border-blue-500 text-blue-500 placeholder:text-blue-500 rounded font-medium"
+              type="text"
+              placeholder="Email Address"
+            />
+          </div>
+          <div>
+            <textarea
+              className="p-2 w-[300px] xl:w-[400px] xl:p-3 xl:text-lg pr-6 pl-6 m-4 bg-white border-2 border-blue-500 text-blue-500 placeholder:text-blue-500 rounded font-medium"
+              cols="22"
+              rows="5"
+              placeholder="Tell me what we can create together."
+            />
+          </div>
+          <div>
             <motion.button
-              initial={{ y: 0 }}
-              animate={signal ? { x: 1925, y: 200 } : { x: 0, y: 0 }}
-              transition={{ duration: 1 }}
-              className="flex p-4 border-2 rounded-xl pr-6 pl-6 font-bold hover:text-blue-500"
-              onClick={signal ? submit : showContactMe}
-            >
-              {signal ? "Send message" : "Contact me"}
+              whileHover={{ scale: 1.2 }}
+            className="p-2 xl:w-[150px] xl:p-3 xl:text-lg pr-8 pl-8 m-4 bg-blue-500 border-2 border-white text-white rounded-lg font-bold">
+              Send
             </motion.button>
           </div>
         </div>

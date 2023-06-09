@@ -45,11 +45,11 @@ export default function BackToTopButton() {
     onHoverEnd={() => {
       setColor("white");
     }}
-    className=""
+  
     >
       <motion.svg
       whileHover={{rotate: [0,180,-360],scale:[1,1.3,1]}}
-      className="fixed bottom-5 left-5"
+      className="fixed bottom-[4.5rem] left-5"
       ref={ref}
       variants={svgVariant}
       initial="initial"

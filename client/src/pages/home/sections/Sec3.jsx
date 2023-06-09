@@ -47,7 +47,7 @@ const hoverVariant = {
     },
   },
 };
-const delay = 5000;
+var delay = 5000;
 export default function Sec3() {
   const [index, setIndex] = useState(0);
   const [hoverShadow, setHoverShadow] = useState(true);
@@ -81,7 +81,7 @@ export default function Sec3() {
 
   return (
     <AnimatePresence>
-      <div className="xl:h-[120vh] h-screen w-full">
+      <div className="h-full w-full">
         <h1
           className="text-4xl text-blue-500 font-bold
       md:text-6xl
@@ -90,10 +90,10 @@ export default function Sec3() {
         >
           Latest Works
         </h1>
-        {screenSize.dynamicWidth > 700 ? (
+        {screenSize.dynamicWidth > 1536 ? (
           <div
-            className="w-full p-10 overflow-hidden m-auto
-      xl:w-[60%]
+            className="w-full p-10 overflow-hidden m-auto mt-20
+      lg:w-[80%] 2xl:w-[60%]
       "
           >
             <motion.div
@@ -110,21 +110,18 @@ export default function Sec3() {
               className="flex items-center justify-center cursor-pointer
           "
             >
-              <div
-                hidden={hoverShadow}
-                className="w-[60%] h-[50%] bg-black absolute opacity-50"
-              />
               <motion.div
                 variants={hoverVariant}
                 initial="initial"
                 animate={controls}
                 className="absolute z-10"
               >
-                <h1 className="font-bold text-2xl text-blue-500">
-                  {projects[index].Pname}
-                </h1>
-                <p className="font-medium">{projects[index].Pdetails}</p>
-
+                <div className="bg-black p-4 bg-opacity-50 rounded-2xl">
+                  <h1 className="font-bold text-2xl text-blue-500">
+                    {projects[index].Pname}
+                  </h1>
+                  <p className="font-medium">{projects[index].Pdetails}</p>
+                </div>
                 <motion.button
                   whileHover={{ scale: 1.2 }}
                   className="bg-gradient-to-r from-blue-500 to-blue-400 font-medium text-white p-4 w-[90px] h-[90px] rounded-full relative top-5"
@@ -154,14 +151,15 @@ export default function Sec3() {
           <div>
             {projects.map((project, idx) => {
               return (
-                <div key={idx} className="p-4 flex justify-center items-center">
+                <div
+                  key={idx}
+                  className="p-4 pr-8 pl-8 flex justify-center items-center sm:w-[80%] m-auto"
+                >
                   <div className="bg-black bg-opacity-50 p-2 absolute rounded">
-                      <h1 className="font-bold text-md text-blue-500">
-                        {project.Pname}
-                      </h1>
-                      <p className="font-medium text-sm">
-                        {project.Pdetails}
-                      </p>
+                    <h1 className="font-bold text-md text-blue-500">
+                      {project.Pname}
+                    </h1>
+                    <p className="font-medium text-sm">{project.Pdetails}</p>
                   </div>
                   <img className="" src={project.Pimg1} alt="" />
                 </div>
