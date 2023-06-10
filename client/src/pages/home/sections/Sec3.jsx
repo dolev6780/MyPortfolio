@@ -93,7 +93,7 @@ export default function Sec3() {
         {screenSize.dynamicWidth > 1280 ? (
           <div
             className="w-full p-10 overflow-hidden m-auto mt-20
-      lg:w-[80%] 2xl:w-[60%]
+      lg:w-[80%] 2xl:w-[55%]
       "
           >
             <motion.div

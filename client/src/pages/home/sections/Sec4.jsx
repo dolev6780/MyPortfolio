@@ -25,21 +25,21 @@ export default function Sec4() {
         <div className="mt-10 xl:mt-14">
           <div>
             <input
-              className="p-2 w-[300px] xl:w-[400px] xl:p-3 xl:text-lg pr-6 pl-6 m-4 bg-white border-2 border-blue-500 text-blue-500 placeholder:text-blue-500 rounded font-medium"
+              className="p-2 w-[300px] xl:w-[400px] xl:p-3 xl:text-lg pr-6 pl-6 m-4 bg-white border-2 border-blue-500 text-blue-500 placeholder:text-blue-500 rounded-md font-medium"
               type="text"
               placeholder="Full Name"
             />
           </div>
           <div>
             <input
-              className="p-2 w-[300px] xl:w-[400px] xl:p-3 xl:text-lg pr-6 pl-6 m-4 bg-white border-2 border-blue-500 text-blue-500 placeholder:text-blue-500 rounded font-medium"
+              className="p-2 w-[300px] xl:w-[400px] xl:p-3 xl:text-lg pr-6 pl-6 m-4 bg-white border-2 border-blue-500 text-blue-500 placeholder:text-blue-500 rounded-md font-medium"
               type="text"
               placeholder="Email Address"
             />
           </div>
           <div>
             <textarea
-              className="p-2 w-[300px] xl:w-[400px] xl:p-3 xl:text-lg pr-6 pl-6 m-4 bg-white border-2 border-blue-500 text-blue-500 placeholder:text-blue-500 rounded font-medium"
+              className="p-2 w-[300px] xl:w-[400px] xl:p-3 xl:text-lg pr-6 pl-6 m-4 bg-white border-2 border-blue-500 text-blue-500 placeholder:text-blue-500 rounded-md font-medium"
               cols="22"
               rows="5"
               placeholder="Tell me what we can create together."
