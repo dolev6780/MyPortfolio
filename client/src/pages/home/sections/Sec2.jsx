@@ -93,7 +93,7 @@ export default function Sec2() {
 
 
   return (
-    <div className="h-[120vh] lg:h-screen w-full">
+    <div className="h-full w-full">
       <h1
         className="text-4xl text-blue-500 font-bold relative top-40
         md:text-6xl

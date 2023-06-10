@@ -15,10 +15,10 @@ const ContactMeVariants = {
 
 export default function Sec4() {
   return (
-    <div id="contactme" className="h-[90vh] flex justify-center items-center">
-      <div className="bg-neutral-800 p-10 rounded-md bg-opacity-80 border">
+    <div id="contactme" className="h-full w-full mt-10 flex justify-center items-center">
+      <div className="bg-neutral-800 lg:p-10 rounded-md bg-opacity-80 border">
         <h1
-          className="text-4xl text-blue-500 font-bold
+          className="text-4xl text-blue-500 font-bold mt-10
       md:text-6xl">
           Contact Me
         </h1>
