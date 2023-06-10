@@ -81,7 +81,7 @@ export default function Sec3() {
 
   return (
     <AnimatePresence>
-      <div className="h-full w-full mt-10">
+      <div className="h-full w-full mt-10 2xl:h-[120vh]">
         <h1
           className="text-4xl text-blue-500 font-bold
       md:text-6xl
