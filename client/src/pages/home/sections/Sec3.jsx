@@ -81,7 +81,7 @@ export default function Sec3() {
 
   return (
     <AnimatePresence>
-      <div className="h-full w-full mt-10 2xl:h-[120vh]">
+      <div className="h-full w-full mt-32">
         <h1
           className="text-4xl text-blue-500 font-bold
       md:text-6xl
@@ -90,7 +90,7 @@ export default function Sec3() {
         >
           Latest Works
         </h1>
-        {screenSize.dynamicWidth > 1536 ? (
+        {screenSize.dynamicWidth > 1280 ? (
           <div
             className="w-full p-10 overflow-hidden m-auto mt-20
       lg:w-[80%] 2xl:w-[60%]
