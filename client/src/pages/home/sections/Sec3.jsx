@@ -1,173 +1,75 @@
-import React, { useState, useRef, useEffect } from "react";
-import bijumpacademy from "../../../assets/bijumpacademy.jpg";
-import { motion, AnimatePresence, useAnimation } from "framer-motion";
-import { useScreensize } from "../../../hooks/useScreenSize";
-const projects = [
-  {
-    Pname: "BI JUMP ACADEMY",
-    Pdetails: "Online course for jump rope.",
-    Pimg1: bijumpacademy,
-  },
-  {
-    Pname: "BI JUMP ACADEMY 2",
-    Pdetails: "Online course for jump rope.",
-    Pimg1: bijumpacademy,
-  },
-  {
-    Pname: "BI JUMP ACADEMY 3",
-    Pdetails: "Online course for jump rope.",
-    Pimg1: bijumpacademy,
-  },
-  {
-    Pname: "BI JUMP ACADEMY 4",
-    Pdetails: "Online course for jump rope.",
-    Pimg1: bijumpacademy,
-  },
-];
+import React, {useState} from 'react'
+import img from '../../../assets/bijumpacademy.jpg';
+import img1 from '../../../assets/img1.jpg';
+import '../../../App.css'
+const cards = [
+    {
+        header: "Bijump1",
+        image: img,
+        text:"Bijump description"
+    },
+    {
+        header: "Bijump2",
+        image: img1,
+        text:"Bijump description"
+    },
+    {
+        header: "Bijump3",
+        image: img,
+        text:"Bijump description"
+    },
+    {
+        header: "Bijump4",
+        image: img,
+        text:"Bijump description"
+    },
+]
 
-const slideVariant = {
-  initial: {
-    opacity: 0,
-  },
-  animate: {
-    opacity: 1,
-    transition: {
-      duration: 0.5,
-    },
-  },
-};
-const hoverVariant = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { duration: 0.6 } },
-  exit: {
-    opacity: 0,
-    transition: {
-      duration: 0.6,
-      delay: 0.6,
-    },
-  },
-};
-var delay = 5000;
 export default function Sec3() {
-  const [index, setIndex] = useState(0);
-  const [hoverShadow, setHoverShadow] = useState(true);
-  const timeoutRef = useRef(null);
-  const controls = useAnimation();
-  const { screenSize } = useScreensize();
-  function resetTimeout() {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-  }
-
-  useEffect(() => {
-    if (!hoverShadow) controls.start("animate");
-    else {
-      controls.start("initial");
-    }
-    resetTimeout();
-    timeoutRef.current = setTimeout(
-      () =>
-        setIndex((prevIndex) =>
-          prevIndex === projects.length - 1 ? 0 : prevIndex + 1
-        ),
-      delay
-    );
-
-    return () => {
-      resetTimeout();
-    };
-  }, [index, hoverShadow, controls]);
-
+    const [active, setActive] = useState(0);
   return (
-    <AnimatePresence>
-      <div className="h-full w-full mt-32">
-        <h1
-          className="text-4xl text-blue-500 font-bold
+    <div className='"h-full w-full mt-20 p-10'>
+      <h1
+        className="text-4xl text-blue-500 font-bold
       md:text-6xl
       lg:text-8xl
       "
-        >
-          Latest Works
-        </h1>
-        {screenSize.dynamicWidth > 1280 ? (
-          <div
-            className="w-full p-10 overflow-hidden m-auto mt-20
-      lg:w-[80%] 2xl:w-[55%]
-      "
-          >
-            <motion.div
+      >
+        Latest Works
+      </h1>
+      <section className="flex gap-[10px] justify-center mt-20">
+        {cards.map((card, index) => {
+          return (
+            <article
               key={index}
-              variants={slideVariant}
-              initial="initial"
-              animate="animate"
-              onHoverStart={() => {
-                setHoverShadow(false);
+              className={`relative overflow-hidden cursor-pointer w-10 md:w-20 h-[400px] sm:h-[600px] xl:h-[800px] rounded-3xl md:rounded-[36px] flex items-center opacity-90 transition-all duration-500 ${
+                active === index ? "w-[300%] md:w-[800px] opacity-100" : ""
+              }`}
+              onClick={() => {
+                setActive(index);
               }}
-              onHoverEnd={() => {
-                setHoverShadow(true);
-              }}
-              className="flex items-center justify-center cursor-pointer
-          "
             >
-              <motion.div
-                variants={hoverVariant}
-                initial="initial"
-                animate={controls}
-                className="absolute z-10"
+              <img
+                className="absolute z-0 top-1/2 left-1/2 h-full"
+                src={card.image}
+                alt={card.header}
+              />
+              <div
+                className={`z-[1] opacity-0 flex items-center m-auto transition-all duration-500 ${
+                  active === index ? "opacity-100" : ""
+                }`}
               >
-                <div className="bg-black p-4 bg-opacity-50 rounded-2xl">
-                  <h1 className="font-bold text-2xl text-blue-500">
-                    {projects[index].Pname}
-                  </h1>
-                  <p className="font-medium">{projects[index].Pdetails}</p>
+                <div className="bg-black px-4 py-2 rounded-lg bg-opacity-50">
+                  <h2 className="text-xl md:text-2xl font-bold text-blue-500">
+                    {card.header}
+                  </h2>
+                  <p className="text-sm md:text-lg font-semibold mt-2">{card.text}</p>
                 </div>
-                <motion.button
-                  whileHover={{ scale: 1.2 }}
-                  className="bg-gradient-to-r from-blue-500 to-blue-400 font-medium text-white p-4 w-[90px] h-[90px] rounded-full relative top-5"
-                >
-                  See Project
-                </motion.button>
-              </motion.div>
-
-              <img className="" src={projects[index].Pimg1} alt="" />
-            </motion.div>
-
-            <div className="mt-20 flex rounded-full cursor-pointer">
-              {projects.map((project, idx) => (
-                <div
-                  key={idx}
-                  onClick={() => {
-                    setIndex(idx);
-                  }}
-                  style={index === idx ? { opacity: 1 } : { opacity: 0.6 }}
-                >
-                  <img src={project.Pimg1} alt="" />
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div>
-            {projects.map((project, idx) => {
-              return (
-                <div
-                  key={idx}
-                  className="p-4 pr-8 pl-8 flex justify-center items-center sm:w-[80%] m-auto"
-                >
-                  <div className="bg-black bg-opacity-50 p-2 absolute rounded">
-                    <h1 className="font-bold text-md text-blue-500">
-                      {project.Pname}
-                    </h1>
-                    <p className="font-medium text-sm">{project.Pdetails}</p>
-                  </div>
-                  <img className="" src={project.Pimg1} alt="" />
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
-    </AnimatePresence>
+              </div>
+            </article>
+          );
+        })}
+      </section>
+    </div>
   );
 }
