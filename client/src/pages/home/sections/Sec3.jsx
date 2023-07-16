@@ -1,34 +1,28 @@
-import React, {useState} from 'react'
-import img from '../../../assets/bijumpacademy.jpg';
-import img1 from '../../../assets/img1.jpg';
-import '../../../App.css'
+import React, { useState } from "react";
+import bijumpacademymg from "../../../assets/bijumpacademy.jpg";
+import ourleaguehome from "../../../assets/ourleaguehome.jpg";
+import "../../../App.css";
+import { Link } from 'react-router-dom'
 const cards = [
-    {
-        header: "Bijump1",
-        image: img,
-        text:"Bijump description"
-    },
-    {
-        header: "Bijump2",
-        image: img1,
-        text:"Bijump description"
-    },
-    {
-        header: "Bijump3",
-        image: img,
-        text:"Bijump description"
-    },
-    {
-        header: "Bijump4",
-        image: img,
-        text:"Bijump description"
-    },
-]
+  {
+    header: "B.I JUMP ACADEMY",
+    image: bijumpacademymg,
+    text: "Professional jump rope course with over 13 hours of viewing.",
+    githubcode: "https://github.com/dolev6780/Bijumpacademy"
+  },
+  {
+    header: "OUR LEAGUE",
+    image: ourleaguehome,
+    text: "Creating tournaments, leagues and competitions of any sport like soccer and tennis and even the most loved games like FIFA and Mario Kart.",
+    githubcode: "https://github.com/dolev6780/ourLeague"
+
+  },
+];
 
 export default function Sec3() {
-    const [active, setActive] = useState(0);
+  const [active, setActive] = useState(0);
   return (
-    <div className='"h-full w-full mt-20 p-10'>
+    <div className='"h-full w-full mt-20 p-4 md:p-20'>
       <h1
         className="text-4xl text-blue-500 font-bold
       md:text-6xl
@@ -42,7 +36,7 @@ export default function Sec3() {
           return (
             <article
               key={index}
-              className={`relative overflow-hidden cursor-pointer w-10 md:w-20 h-[400px] sm:h-[600px] xl:h-[800px] rounded-3xl md:rounded-[36px] flex items-center opacity-90 transition-all duration-500 ${
+              className={`relative overflow-hidden cursor-pointer w-16 h-[400px] sm:h-[600px] xl:h-[700px] rounded-3xl md:rounded-[36px] flex items-center opacity-90 transition-all duration-500 ${
                 active === index ? "w-[300%] md:w-[800px] opacity-100" : ""
               }`}
               onClick={() => {
@@ -50,20 +44,23 @@ export default function Sec3() {
               }}
             >
               <img
-                className="absolute z-0 top-1/2 left-1/2 h-full"
+                className="absolute z-0 top-1/2 left-1/2 h-full object-cover"
                 src={card.image}
                 alt={card.header}
               />
               <div
-                className={`z-[1] opacity-0 flex items-center m-auto transition-all duration-500 ${
+                className={`p-20 z-[1] opacity-0 flex items-center justify-center m-auto transition-all duration-500 ${
                   active === index ? "opacity-100" : ""
                 }`}
               >
-                <div className="bg-black px-4 py-2 rounded-lg bg-opacity-50">
-                  <h2 className="text-xl md:text-2xl font-bold text-blue-500">
+                <div className="bg-black px-4 py-2 rounded-lg bg-opacity-50 font-serif">
+                  <h2 className="text-lg md:text-2xl font-bold text-blue-500">
                     {card.header}
                   </h2>
-                  <p className="text-sm md:text-lg font-semibold mt-2">{card.text}</p>
+                  <p className="text-sm md:text-lg font-semibold mt-2">
+                    {card.text}
+                  </p>
+                  <Link to={card.githubcode}><button className="text-sm p-2 mt-2 rounded-full bg-gradient-to-r from-blue-500 to-blue-400">Github code</button></Link>
                 </div>
               </div>
             </article>

@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Caprasimo&display=swap');
 
 html {
   scroll-behavior: smooth;
@@ -9,6 +10,7 @@ html {
   text-align: center;
 }
 body{
+  font-family: 'Caprasimo', cursive;
   margin: 0;
   padding: 0;
   background-color: rgb(42, 42, 42);

@@ -32,7 +32,7 @@ export default function sec1() {
 
   return (
     <div
-      className="h-screen w-full justify-center flex items-center"
+      className="h-screen w-full justify-center flex items-center font-mono"
     >
       <div className="sticky">
         <div className="inline-flex">

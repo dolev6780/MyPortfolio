@@ -47,14 +47,14 @@ export default function Sidebar() {
       {screenSize.dynamicWidth > 700 ? (
         <div className="flex ml-3 mt-10 fixed">
           <ul>
-            <Link to={"/"}>
+          <a href="#sec1">
               <motion.li
                 whileHover={{ scale: 1.2 }}
                 className="mt-10 hover:text-blue-500 hover:bg-opacity-5 hover:bg-blue-300 rounded-full p-2"
               >
                 <HomeIcon fontSize="large" />
               </motion.li>
-            </Link>
+              </a>
             <a href="#contactme">
               <motion.li
                 whileHover={{ scale: 1.2 }}
@@ -86,7 +86,7 @@ export default function Sidebar() {
               </motion.li>
             </Link>
             <Link
-              to={"https://github.com/dolev6780?tab=repositories"}
+              to={"https://wa.me/+972506378511"}
               target="_blank"
             >
               <motion.li
@@ -119,7 +119,7 @@ export default function Sidebar() {
                 </motion.button>
               </div>
               <div className="mt-[50%] ">
-                <Link>
+               <a href="#sec1">
                   <motion.li
                     whileHover={{ rotate: [0, 10, 0, -10, 0, 10, 0, -10, 0] }}
                     transition={{ duration: 0.4 }}
@@ -128,19 +128,23 @@ export default function Sidebar() {
                     Home
                   </motion.li>
                 <div className="w-16 h-0.5 rounded-lg bg-neutral-300 m-auto relative top-5"/>
-                </Link>
+                </a>
               
-                <Link>
+                <a href="#contactme">
                   <motion.li
+                  onClick={()=>setOpen(false)}
                     whileHover={{ rotate: [0, 10, 0, -10, 0, 10, 0, -10, 0] }}
                     transition={{ duration: 0.4 }}
                     className="mt-8 font-bold text-blue-500 text-4xl"
                   >
                     Contact Me
                   </motion.li>
-                </Link>
+                  </a>
                 <div className="w-16 h-0.5 rounded-lg bg-neutral-300 m-auto relative top-5 "/>
-                <Link>
+                <Link
+                 to={"https://www.linkedin.com/in/dolev-cohen-736763190/"}
+                 target="_blank"
+                 >
                   <motion.li
                     whileHover={{ rotate: [0, 10, 0, -10, 0, 10, 0, -10, 0] }}
                     transition={{ duration: 0.4 }}
@@ -150,7 +154,10 @@ export default function Sidebar() {
                   </motion.li>
                 </Link>
                 <div className="w-16 h-0.5 rounded-lg bg-neutral-300 m-auto relative top-5 "/>
-                <Link>
+                <Link
+                 to={"https://github.com/dolev6780?tab=repositories"}
+                 target="_blank"
+                 >
                   <motion.li
                     whileHover={{ rotate: [0, 10, 0, -10, 0, 10, 0, -10, 0] }}
                     transition={{ duration: 0.4 }}
@@ -160,7 +167,10 @@ export default function Sidebar() {
                   </motion.li>
                 </Link>
                 <div className="w-16 h-0.5 rounded-lg bg-neutral-300 m-auto relative top-5 "/>
-                <Link>
+                <Link
+                 to={"https://wa.me/+972506378511"}
+                 target="_blank"
+                >
                   <motion.li
                     whileHover={{ rotate: [0, 10, 0, -10, 0, 10, 0, -10, 0] }}
                     transition={{ duration: 0.4 }}
