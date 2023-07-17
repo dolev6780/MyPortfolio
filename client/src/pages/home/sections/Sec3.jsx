@@ -67,6 +67,17 @@ export default function Sec3() {
           );
         })}
       </section>
+      <div className="flex justify-center mt-5">
+      {cards.map((dot,i)=>{
+          return <div key={i} className={`mr-2 w-4 h-4 md:w-5 md:h-5 border-[3px] rounded-full cursor-pointer
+          ${active === i ? "bg-gradient-to-tr from-blue-600 to-white" : ""}
+          `}
+            onClick={()=>{
+              setActive(i)
+            }}
+          />
+      })}
+      </div>
     </div>
   );
 }

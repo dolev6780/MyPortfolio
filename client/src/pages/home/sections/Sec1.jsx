@@ -6,7 +6,7 @@ const spanVariants = {
     scale: 1,
   },
   animate: {
-    scale: [1, 1.1, 1, 1.1],
+    scale: [1, 1.1, 1, 1.1,1],
     color: "#3d7ceb",
     originX: 0,
     transition: {
@@ -32,9 +32,9 @@ export default function sec1() {
 
   return (
     <div
-      className="h-screen w-full justify-center flex items-center font-mono"
+      className="h-screen w-full justify-center flex flex-col items-center font-mono"
     >
-      <div className="sticky">
+      <motion.div className="sticky bg-black bg-opacity-20 rounded-lg p-4">
         <div className="inline-flex">
         {title.map((char, i) => {
           return <TextScale text={char} key={i} />;
@@ -64,12 +64,24 @@ export default function sec1() {
         >
           Mobile & Web Developer.
         </motion.p>
+      </motion.div>
+   
+      <div>
       <a href="#contactme"><motion.button whileHover={{scaleX:[1,1.2,0.8,1.2,1],scaleY:[1,0.8,1.2,0.8,1],opacity:0.8}} className="mt-5 p-2 pl-4 pr-4 bg-gradient-to-r from-blue-500 to-blue-400 font-bold rounded-md
         md:p-4 md:pl-6 md:pr-6 md:mt-10
       ">Contact me
       </motion.button>
       </a>
+      <motion.button whileHover={{scaleX:[1,1.2,0.8,1.2,1],scaleY:[1,0.8,1.2,0.8,1],opacity:0.8}} className="mt-5 p-2 pl-4 pr-4 bg-gradient-to-r from-blue-500 to-blue-400 font-bold rounded-md
+        md:p-4 md:pl-6 md:pr-6 md:mt-10 ml-5
+      ">About me
+      </motion.button>
       </div>
+      <motion.div 
+      hidden
+      >
+        <p>hey, I'm Dolev</p>
+        </motion.div>
     </div>
   );
 }

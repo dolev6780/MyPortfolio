@@ -44,9 +44,9 @@ export default function Sec4() {
       id="contactme"
       className="h-full w-full mt-32 flex justify-center items-center"
     >
-      <div className="bg-neutral-800 lg:p-10 rounded-2xl bg-opacity-80 shadow-2xl hover:shadow-inner hover:shadow-slate-200">
+      <div className="bg-gradient-to-tr from-white to-blue-500 lg:p-10 rounded-2xl shadow-3xl hover:shadow-inner hover:shadow-slate-200">
         <h1
-          className="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-300 to-blue-500 font-bold mt-10 cursor-pointer
+          className="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-blue-500 to-blue-900 font-bold mt-10 cursor-pointer
       md:text-4xl lg:text-5xl xl:text-6xl"
         >
           Contact Me
@@ -54,7 +54,7 @@ export default function Sec4() {
         <div className="mt-10 xl:mt-14">
           <div>
             <input
-              className="p-2 w-[300px] xl:w-[400px] xl:p-3 xl:text-lg pr-6 pl-6 m-4 bg-gradient-to-r from-white via-white to-blue-300 border-2 border-blue-500 text-blue-500 placeholder:text-blue-500 rounded-md font-medium "
+              className="p-2 w-[300px] xl:w-[400px] xl:p-3 xl:text-lg pr-6 pl-6 m-4  border-2 border-blue-500 text-blue-500 placeholder:text-blue-500 rounded-md font-medium "
               type="text"
               placeholder="Full Name"
               onChange={(e) => {
@@ -64,7 +64,7 @@ export default function Sec4() {
           </div>
           <div>
             <input
-              className="p-2 w-[300px] xl:w-[400px] xl:p-3 xl:text-lg pr-6 pl-6 m-4 bg-gradient-to-r from-white via-white to-blue-300  border-2 border-blue-500 text-blue-500 placeholder:text-blue-500 rounded-md font-medium"
+              className="p-2 w-[300px] xl:w-[400px] xl:p-3 xl:text-lg pr-6 pl-6 m-4 border-2 border-blue-500 text-blue-500 placeholder:text-blue-500 rounded-md font-medium"
               type="text"
               placeholder="Email Address"
               onChange={(e) => {
@@ -74,7 +74,7 @@ export default function Sec4() {
           </div>
           <div>
             <textarea
-              className="p-2 w-[300px] xl:w-[400px] xl:p-3 xl:text-lg pr-6 pl-6 m-4 bg-gradient-to-br from-white via-white to-blue-100  border-2 border-blue-500 text-blue-500 placeholder:text-blue-500 rounded-md font-medium"
+              className="p-2 w-[300px] xl:w-[400px] xl:p-3 xl:text-lg pr-6 pl-6 m-4 border-2 border-blue-500 text-blue-500 placeholder:text-blue-500 rounded-md font-medium"
               cols="22"
               rows="5"
               placeholder="Tell me what we can create together."
@@ -95,7 +95,8 @@ export default function Sec4() {
               Send
             </motion.button>
           </div>
-          <label className="text-xl text-blue-500"></label>
+          <label className="text-sm md:text-xl text-blue-500 relative bottom-2">{successMessage}</label>
+       
         </div>
       </div>
     </div>
