@@ -43,7 +43,7 @@ export default function Sidebar() {
   // };
 
   return (
-    <div>
+    <div className="font-mono">
       {screenSize.dynamicWidth > 700 ? (
         <div className="flex ml-3 mt-10 fixed">
           <ul>

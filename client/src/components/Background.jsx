@@ -18,12 +18,6 @@ const logos = [
   js,
   mongodb,
   nodejs,
-  firebase,
-  css,
-  flutter,
-  html,
-  react,
-  tailwind,
 ];
 
 const imgVariants = {
@@ -46,22 +40,17 @@ export default function Background() {
               animate={{
                 x: [
                   0,
-                  Math.floor(Math.random() * 100),
-                  Math.floor(Math.random() * -100),
-                  Math.floor(Math.random() * 100),
-                  Math.floor(Math.random() * 100),
-                  Math.floor(Math.random() * -100),
-                  Math.floor(Math.random() * 100),
+                  Math.floor(Math.random() * (-250 - -250) + -250),
+                  Math.floor(Math.random() * (250 - 250) + 250),
+                 
                   0,
                 ],
                 y: [
                   0,
-                  Math.floor(Math.random() * 100),
-                  Math.floor(Math.random() * -100),
-                  Math.floor(Math.random() * 100),
-                  Math.floor(Math.random() * 100),
-                  Math.floor(Math.random() * -100),
-                  Math.floor(Math.random() * 100),
+                  Math.floor(Math.random() * (250 - -250) + -250),
+                  Math.floor(Math.random() * (250 - -250) + -250),
+                 
+                   
                   0,
                 ],
                 
@@ -72,7 +61,7 @@ export default function Background() {
                 marginTop: Math.floor(Math.random() * screenSize.dynamicHeight),
               }}
               className="mt-5 fixed"
-              width={75}
+              width={50}
               src={logo}
               alt=""
             />

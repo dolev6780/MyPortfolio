@@ -1,6 +1,6 @@
 import React from 'react'
 import {motion} from 'framer-motion';
-export default function TextSpan({char, x,y,rotate}) {
+export default function TextGrow({char, x,y,rotate}) {
   return (
     <motion.span
    
@@ -8,14 +8,11 @@ export default function TextSpan({char, x,y,rotate}) {
       x:x,
       y:y,
       rotate:rotate,
-      
+      scale: [1, 1.1, 1, 1.1, 1],
+      color: "#3d7ceb",
+      originX: 0,
+        
     }}
-    whileHover={
-      {
-        scaleX:[1,1.2,0.8,1.2,1],scaleY:[1,0.8,1.2,0.8,1],color:"#3d7ceb"}}
-        transition={{
-          duration:0.5
-        }}
      className='font-bold inline-block cursor-none
      text-3xl
      md:text-6xl

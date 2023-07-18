@@ -33,3 +33,12 @@ article img {
   translate: -50% -50%;
 }
 
+.stickyPos {
+  position: absolute;
+  top: 50%; /* Adjust this value to control the vertical position of the half circle */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  height: 200px; /* Adjust this value to control the height of the half circle */
+  width: 100%; /* Adjust this value if needed based on your layout */
+}
