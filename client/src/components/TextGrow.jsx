@@ -11,7 +11,9 @@ export default function TextGrow({char, x,y,rotate}) {
       scale: [1, 1.1, 1, 1.1, 1],
       color: "#3d7ceb",
       originX: 0,
-        
+    }}
+    transition={{
+      duration:0.5
     }}
      className='font-bold inline-block cursor-none
      text-3xl

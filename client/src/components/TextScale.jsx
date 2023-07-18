@@ -8,7 +8,6 @@ export default function TextSpan({char, x,y,rotate}) {
       x:x,
       y:y,
       rotate:rotate,
-      
     }}
     whileHover={
       {
