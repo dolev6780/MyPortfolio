@@ -44,10 +44,10 @@ export default function Sec4() {
       id="contactme"
       className="h-full w-full mt-32 flex justify-center items-center"
     >
-      <div className="border-2 lg:p-10 rounded-2xl shadow-3xl hover:shadow-inner hover:shadow-slate-200">
+      <div className="border-2 border-blue-500 lg:p-10 rounded-2xl shadow-xl hover:shadow-inner hover:shadow-slate-200">
         <h1
-          className="text-3xl text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-blue-400 font-bold mt-10 cursor-pointer
-      md:text-4xl lg:text-5xl xl:text-6xl"
+          className="text-4xl text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-blue-400 font-bold mt-10
+      lg:text-5xl xl:text-6xl"
         >
           Contact Me
         </h1>

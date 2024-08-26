@@ -95,11 +95,11 @@ export default function Sec1() {
      "
       >
         <p>
-          hey, I'm Dolev Recent computer science student at the Open University,
-          after graduate software engineer with a passion for developing
+         Hey, I'm Dolev. Recent computer science student at the Open University,
+          after graduate a software engineer with a passion for developing
           scalable web applications and working across the full stack. I am
-          looking for a job where I can continue to grow my skill set while I
-          provide a service to the company and the people receiving service.
+          looking for a full-time position where I can continue to grow my skill set while I
+          provide service to the company and its clients.
         </p>
       </motion.div>
       <motion.div className={`${hideAboutMe ? "bg-black bg-opacity-40 p-4 rounded-lg" : ""}`}>

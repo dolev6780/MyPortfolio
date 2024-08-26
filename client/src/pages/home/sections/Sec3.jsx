@@ -1,20 +1,27 @@
 import React, { useState } from "react";
 import bijumpacademymg from "../../../assets/bijumpacademy.jpg";
-import ourleaguehome from "../../../assets/ourleaguehome.jpg";
+import ShoppingListApp from "../../../assets/ShoppingListApp.png";
 import "../../../App.css";
 import { Link } from 'react-router-dom'
 const cards = [
   {
     header: "B.I JUMP ACADEMY",
     image: bijumpacademymg,
-    text: "Professional jump rope course with over 13 hours of viewing.",
+    text: "Professional jump rope course with over 13 hours of viewing. developed with react-js and node-js",
     githubcode: "https://github.com/dolev6780/Bijumpacademy"
   },
+  // {
+  //   header: "OUR LEAGUE",
+  //   image: ourleaguehome,
+  //   text: "Creating tournaments, leagues and competitions of any sport like soccer and tennis and even the most loved games like FIFA and Mario Kart. developed with react-js and node-js",
+  //   githubcode: "https://github.com/dolev6780/ourLeague"
+
+  // },
   {
-    header: "OUR LEAGUE",
-    image: ourleaguehome,
-    text: "Creating tournaments, leagues and competitions of any sport like soccer and tennis and even the most loved games like FIFA and Mario Kart.",
-    githubcode: "https://github.com/dolev6780/ourLeague"
+    header: "ShoppingList",
+    image: ShoppingListApp,
+    text: "Create lists for shopping and share it with others. developed with flutter",
+    githubcode: "https://github.com/dolev6780/shoppingListFlutter"
 
   },
 ];
@@ -70,7 +77,7 @@ export default function Sec3() {
       <div className="flex justify-center mt-5">
       {cards.map((dot,i)=>{
           return <div key={i} className={`mr-2 w-4 h-4 md:w-5 md:h-5 border-[3px] rounded-full cursor-pointer
-          ${active === i ? "bg-gradient-to-tr from-blue-600 to-white" : ""}
+          ${active === i ? "bg-neutral-800" : ""}
           `}
             onClick={()=>{
               setActive(i)
