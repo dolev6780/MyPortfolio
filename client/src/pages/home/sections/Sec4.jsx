@@ -8,6 +8,7 @@ export default function Sec4() {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const sendEmail = () => {
+    console.log("asdas");
     if (name === "" || email === "" || message === "") {
       setErrorMessage("Enter details");
       setTimeout(() => {
@@ -44,9 +45,9 @@ export default function Sec4() {
       id="contactme"
       className="h-full w-full mt-32 flex justify-center items-center"
     >
-      <div className="border-2 border-blue-500 lg:p-10 rounded-2xl shadow-xl hover:shadow-inner hover:shadow-slate-200">
+      <div className="bg-black bg-opacity-50 lg:p-10 rounded-2xl shadow-xl hover:shadow-inner hover:shadow-slate-200">
         <h1
-          className="text-4xl text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-blue-400 font-bold mt-10
+          className="text-4xl  font-bold mt-10
       lg:text-5xl xl:text-6xl"
         >
           Contact Me
@@ -54,7 +55,7 @@ export default function Sec4() {
         <div className="mt-10 xl:mt-14">
           <div>
             <input
-              className="p-2 w-[300px] xl:w-[400px] xl:p-3 xl:text-lg pr-6 pl-6 m-4  border-2 border-blue-500 text-blue-500 placeholder:text-blue-500 rounded-md font-medium "
+              className="p-2 w-[300px] xl:w-[400px] xl:p-3 xl:text-lg pr-6 pl-6 m-4 border-2 border-blue-500 text-blue-500 placeholder:text-blue-500 rounded-md font-medium "
               type="text"
               placeholder="Full Name"
               onChange={(e) => {
@@ -87,18 +88,20 @@ export default function Sec4() {
           <div>
             <motion.button
               whileHover={{ scale: 1.2 }}
-              className="p-2 xl:w-[150px] xl:p-3 xl:text-lg pr-8 pl-8 m-4 bg-gradient-to-r from-blue-500 to-blue-400 text-white rounded-lg "
-              onClick={() => {
-                sendEmail();
-              }}
+              className="p-2 xl:w-[150px] xl:p-3 xl:text-lg pr-8 pl-8 m-4 bg-gradient-to-r from-blue-500 to-blue-400 text-white rounded-lg z-10"
+              onClick={sendEmail}
             >
               Send
             </motion.button>
           </div>
-          <label className="text-sm md:text-xl text-blue-500 relative bottom-2">{successMessage}</label>
-       
+          <label className="text-sm md:text-xl text-blue-500 relative bottom-2">
+            {successMessage}
+          </label>
         </div>
       </div>
     </div>
   );
 }
+
+
+// I collaborate closely with clients to understand their vision and deliver custom solutions tailored to their specific needs. Whether it's building a new product from scratch or enhancing an existing platform, I ensure that every project is delivered with high quality, on time, and within budget.

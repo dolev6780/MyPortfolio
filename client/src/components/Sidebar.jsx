@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import { motion, useAnimation, useInView } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import { motion, useAnimation } from "framer-motion";
 import { useScreensize } from "../hooks/useScreenSize";
 import { Link } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
@@ -9,6 +9,9 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import ShowCv from "./ShowCv";
+
+
 const menuVariant = {
   initial: {
     display: "none",
@@ -18,15 +21,18 @@ const menuVariant = {
     display: "grid",
     opacity: 1,
     transition: {
-      duration: 0.8,
+      duration: 0.2,
     },
   },
 };
 
+
+
 export default function Sidebar() {
   const { screenSize } = useScreensize();
   const controls = useAnimation();
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
+
   useEffect(() => {
     if (open) {
       controls.start("animate");
@@ -35,32 +41,70 @@ export default function Sidebar() {
       controls.start("initial");
     }
   }, [controls, open]);
-  // const openMunu = () => {
-  //   controls.start("animate");
-  // };
-  // const closeMunu = () => {
-  //   controls.start("initial");
-  // };
-
+  
   return (
     <div className="font-mono">
       {screenSize.dynamicWidth > 700 ? (
-        <div className="flex ml-3 mt-10 fixed">
+        <div className="flex ml-3 mt-10 fixed z-[100]">
           <ul>
-          <a href="#sec1">
+            <a href="#sec1">
               <motion.li
-                whileHover={{ scale: 1.2 }}
-                className="mt-10 hover:text-blue-500 hover:bg-opacity-5 hover:bg-blue-300 rounded-full p-2"
+                whileHover={["hover", {scale:1.2}]}
+                className="mt-10 hover:text-blue-500 hover:bg-opacity-5 hover:bg-blue-300 rounded-full p-2 flex items-center"
               >
                 <HomeIcon fontSize="large" />
+                <motion.p
+                  className="ml-2 flex"
+                  variants={{
+                    hover: {
+                      opacity: 1,
+                      transition: {
+                        duration: 0.5,
+                        staggerChildren: 0.05,
+                      },
+                    },
+                  }}
+                >
+                  {"Home".split("").map((char, index) => (
+                    <motion.span
+                      key={index}
+                      initial={{ opacity: 0 }}
+                      variants={{ hover: { opacity: 1 } }}
+                    >
+                      {char}
+                    </motion.span>
+                  ))}
+                </motion.p>
               </motion.li>
-              </a>
+            </a>
             <a href="#contactme">
               <motion.li
-                whileHover={{ scale: 1.2 }}
-                className="mt-10 hover:text-blue-500 hover:bg-opacity-5 hover:bg-blue-300 rounded-full p-2"
+                whileHover={["hover", {scale:1.2}]}
+                className="mt-10 hover:text-blue-500 hover:bg-opacity-5 hover:bg-blue-300 rounded-full p-2 flex items-center"
               >
                 <MailIcon fontSize="large" />
+                <motion.p
+                  className="ml-2 flex"
+                  variants={{
+                    hover: {
+                      opacity: 1,
+                      transition: {
+                        duration: 0.5,
+                        staggerChildren: 0.05,
+                      },
+                    },
+                  }}
+                >
+                  {"Contact Me".split("").map((char, index) => (
+                    <motion.span
+                      key={index}
+                      initial={{ opacity: 0 }}
+                      variants={{ hover: { opacity: 1 } }}
+                    >
+                      {char}
+                    </motion.span>
+                  ))}
+                </motion.p>
               </motion.li>
             </a>
             <Link
@@ -68,10 +112,32 @@ export default function Sidebar() {
               target="_blank"
             >
               <motion.li
-                whileHover={{ scale: 1.2 }}
-                className="mt-10 hover:text-blue-500 hover:bg-opacity-5 hover:bg-blue-300 rounded-full p-2"
+               whileHover={["hover", {scale:1.2}]}
+                className="mt-10 hover:text-blue-500 hover:bg-opacity-5 hover:bg-blue-300 rounded-full p-2 flex items-center"
               >
                 <LinkedInIcon fontSize="large" />
+                <motion.p
+                  className="ml-2 flex"
+                  variants={{
+                    hover: {
+                      opacity: 1,
+                      transition: {
+                        duration: 0.5,
+                        staggerChildren: 0.05,
+                      },
+                    },
+                  }}
+                >
+                  {"LinkedIn".split("").map((char, index) => (
+                    <motion.span
+                      key={index}
+                      initial={{ opacity: 0 }}
+                      variants={{ hover: { opacity: 1 } }}
+                    >
+                      {char}
+                    </motion.span>
+                  ))}
+                </motion.p>
               </motion.li>
             </Link>
             <Link
@@ -79,32 +145,78 @@ export default function Sidebar() {
               target="_blank"
             >
               <motion.li
-                whileHover={{ scale: 1.2 }}
-                className="mt-10 hover:text-blue-500 hover:bg-opacity-5 hover:bg-blue-300 rounded-full p-2"
+                  whileHover={["hover", {scale:1.2}]}
+                className="mt-10 hover:text-blue-500 hover:bg-opacity-5 hover:bg-blue-300 rounded-full p-2 flex items-center"
               >
                 <GitHubIcon fontSize="large" />
+                <motion.p
+                  className="ml-2 flex"
+                  variants={{
+                    hover: {
+                      opacity: 1,
+                      transition: {
+                        duration: 0.5,
+                        staggerChildren: 0.05,
+                      },
+                    },
+                  }}
+                >
+                  {"GitHub".split("").map((char, index) => (
+                    <motion.span
+                      key={index}
+                      initial={{ opacity: 0 }}
+                      variants={{ hover: { opacity: 1 } }}
+                    >
+                      {char}
+                    </motion.span>
+                  ))}
+                </motion.p>
               </motion.li>
             </Link>
-            <Link
-              to={"https://wa.me/+972506378511"}
-              target="_blank"
-            >
+            <Link to={"https://wa.me/+972506378511"} target="_blank">
               <motion.li
-                whileHover={{ scale: 1.2 }}
-                className="mt-10 hover:text-blue-500 hover:bg-opacity-5 hover:bg-blue-300 rounded-full p-2"
+                  whileHover={["hover", {scale:1.2}]}
+                className="mt-10 hover:text-blue-500 hover:bg-opacity-5 hover:bg-blue-300 rounded-full p-2 mb-10 flex items-center"
               >
                 <WhatsAppIcon fontSize="large" />
+                <motion.p
+                  className="ml-2 flex"
+                  variants={{
+                    hover: {
+                      opacity: 1,
+                      transition: {
+                        duration: 0.5,
+                        staggerChildren: 0.05,
+                      },
+                    },
+                  }}
+                >
+                  {"WhatsApp".split("").map((char, index) => (
+                    <motion.span
+                      key={index}
+                      initial={{ opacity: 0 }}
+                      variants={{ hover: { opacity: 1 } }}
+                    >
+                      {char}
+                    </motion.span>
+                  ))}
+                </motion.p>
               </motion.li>
             </Link>
+              <ShowCv/>
           </ul>
         </div>
       ) : (
         <div>
           <div
-            onClick={()=>setOpen(true)}
-            className="fixed p-4 hover:text-blue-500 hover:bg-opacity-5 hover:bg-blue-300 cursor-pointer"
+            onClick={() => setOpen(!open)}
+            className={`fixed p-4 cursor-pointer ${open ? "z-[100]" : ""}`}
           >
-            <MenuIcon fontSize="large" />
+            {open ? (
+              <CloseIcon fontSize="large" />
+            ) : (
+              <MenuIcon fontSize="large" />
+            )}
           </div>
           <motion.div
             variants={menuVariant}
@@ -113,13 +225,8 @@ export default function Sidebar() {
             className="fixed bg-neutral-800 h-screen w-full z-50"
           >
             <ul>
-              <div className="flex justify-end ">
-                <motion.button whileHover={{scale:1.2}} onClick={()=>setOpen(false)} className="w-10 h-10 pr-12 pt-4 hover:text-blue-500">
-                  <CloseIcon fontSize="large" />
-                </motion.button>
-              </div>
               <div className="mt-[50%] ">
-               <a href="#sec1">
+                <a href="#sec1">
                   <motion.li
                     whileHover={{ rotate: [0, 10, 0, -10, 0, 10, 0, -10, 0] }}
                     transition={{ duration: 0.4 }}
@@ -127,24 +234,24 @@ export default function Sidebar() {
                   >
                     Home
                   </motion.li>
-                <div className="w-16 h-0.5 rounded-lg bg-neutral-300 m-auto relative top-5"/>
+                  <div className="w-16 h-0.5 rounded-lg bg-neutral-300 m-auto relative top-5" />
                 </a>
-              
+
                 <a href="#contactme">
                   <motion.li
-                  onClick={()=>setOpen(false)}
+                    onClick={() => setOpen(false)}
                     whileHover={{ rotate: [0, 10, 0, -10, 0, 10, 0, -10, 0] }}
                     transition={{ duration: 0.4 }}
                     className="mt-8 font-bold text-blue-500 text-4xl"
                   >
                     Contact Me
                   </motion.li>
-                  </a>
-                <div className="w-16 h-0.5 rounded-lg bg-neutral-300 m-auto relative top-5 "/>
+                </a>
+                <div className="w-16 h-0.5 rounded-lg bg-neutral-300 m-auto relative top-5 " />
                 <Link
-                 to={"https://www.linkedin.com/in/dolev-cohen-736763190/"}
-                 target="_blank"
-                 >
+                  to={"https://www.linkedin.com/in/dolev-cohen-736763190/"}
+                  target="_blank"
+                >
                   <motion.li
                     whileHover={{ rotate: [0, 10, 0, -10, 0, 10, 0, -10, 0] }}
                     transition={{ duration: 0.4 }}
@@ -153,11 +260,11 @@ export default function Sidebar() {
                     LinkedIn
                   </motion.li>
                 </Link>
-                <div className="w-16 h-0.5 rounded-lg bg-neutral-300 m-auto relative top-5 "/>
+                <div className="w-16 h-0.5 rounded-lg bg-neutral-300 m-auto relative top-5 " />
                 <Link
-                 to={"https://github.com/dolev6780?tab=repositories"}
-                 target="_blank"
-                 >
+                  to={"https://github.com/dolev6780?tab=repositories"}
+                  target="_blank"
+                >
                   <motion.li
                     whileHover={{ rotate: [0, 10, 0, -10, 0, 10, 0, -10, 0] }}
                     transition={{ duration: 0.4 }}
@@ -166,11 +273,8 @@ export default function Sidebar() {
                     Github
                   </motion.li>
                 </Link>
-                <div className="w-16 h-0.5 rounded-lg bg-neutral-300 m-auto relative top-5 "/>
-                <Link
-                 to={"https://wa.me/+972506378511"}
-                 target="_blank"
-                >
+                <div className="w-16 h-0.5 rounded-lg bg-neutral-300 m-auto relative top-5 " />
+                <Link to={"https://wa.me/+972506378511"} target="_blank">
                   <motion.li
                     whileHover={{ rotate: [0, 10, 0, -10, 0, 10, 0, -10, 0] }}
                     transition={{ duration: 0.4 }}
@@ -180,6 +284,7 @@ export default function Sidebar() {
                   </motion.li>
                 </Link>
               </div>
+              <ShowCv/>
             </ul>
           </motion.div>
         </div>

@@ -13,10 +13,11 @@ export default function TextSpan({char, x,y,rotate}) {
       {
         scaleX:[1,1.2,0.8,1.2,1],scaleY:[1,0.8,1.2,0.8,1],color:"#3d7ceb"}}
         transition={{
-          duration:0.5
+          duration:0.4
         }}
-     className='font-bold inline-block cursor-none
-     text-3xl
+     className='font-bold inline-block cursor-pointer
+     text-2xl
+     sm:text-4xl
      md:text-6xl
      xl:text-7xl
       

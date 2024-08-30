@@ -26,7 +26,8 @@ const cards = [
   },
 ];
 
-export default function Sec3() {
+export default function 
+Sec3() {
   const [active, setActive] = useState(0);
   return (
     <div className='"h-full w-full mt-20 p-4 md:p-20'>

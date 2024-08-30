@@ -1,8 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=Caprasimo&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap');
 html {
   scroll-behavior: smooth;
 }
@@ -10,7 +9,7 @@ html {
   text-align: center;
 }
 body{
-  font-family: 'Caprasimo', cursive;
+  font-family: 'Figtree', cursive;
   margin: 0;
   padding: 0;
   background: linear-gradient(#1a1c1d,#4d4d4d);
@@ -41,4 +40,49 @@ article img {
   overflow: hidden;
   height: 200px; /* Adjust this value to control the height of the half circle */
   width: 100%; /* Adjust this value if needed based on your layout */
+}
+
+.text1 {
+  text-shadow: 0px 4px 3px rgba(0,0,0,0.4),
+             0px 8px 13px rgba(0,0,0,0.1),
+             0px 18px 23px rgba(0,0,0,0.1);
+}
+
+
+/* Define keyframes for walking animations */
+@keyframes walk-right {
+  0% { background-position: 0px; }
+  100% { background-position: -100px; } /* Adjust as needed */
+}
+
+@keyframes walk-left {
+  0% { background-position: 0px; }
+  100% { background-position: 100px; } /* Adjust as needed */
+}
+
+@keyframes walk-up {
+  0% { background-position: 0px; }
+  100% { background-position: 0px; } /* Adjust as needed */
+}
+
+@keyframes walk-down {
+  0% { background-position: 0px; }
+  100% { background-position: 0px; } /* Adjust as needed */
+}
+
+/* Apply animations based on direction */
+.walk-right {
+  animation: walk-right 1s infinite;
+}
+
+.walk-left {
+  animation: walk-left 1s infinite;
+}
+
+.walk-up {
+  animation: walk-up 1s infinite;
+}
+
+.walk-down {
+  animation: walk-down 1s infinite;
 }

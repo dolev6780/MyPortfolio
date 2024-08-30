@@ -15,12 +15,11 @@ export default function TextGrow({char, x,y,rotate}) {
     transition={{
       duration:0.5
     }}
-     className='font-bold inline-block cursor-none
-     text-3xl
+     className='font-bold inline-block 
+     text-2xl
+     sm:text-4xl
      md:text-6xl
      xl:text-7xl
-      
-      
        '>
        {char}
     </motion.span>

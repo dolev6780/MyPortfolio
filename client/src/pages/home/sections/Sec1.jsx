@@ -23,6 +23,8 @@ export default function Sec1() {
     }))
   );
   const [hideAboutMe, setHideAboutMe] = useState(true);
+  const AboutMe =
+    "Hey, I'm Dolev. As a Freelance Mobile and Web Developer, I am passionate about turning ideas into functional, scalable, and user-friendly applications. With expertise in full-stack development, I specialize in creating responsive websites and mobile apps that provide seamless experiences across devices.";
   const handleClick = () => {
     setHideAboutMe(false);
     ///Mobile************
@@ -33,7 +35,7 @@ export default function Sec1() {
         rotate: Math.floor(Math.random() * 720) - 360,
       }));
       setAnimation(newAnimation);
-      console.log(animation);
+
       const newAnimation2 = animation2.map(() => ({
         x: Math.floor(Math.random() * (300 - -500) + -500),
         y: Math.floor(Math.random() * (350 - 200) + 100),
@@ -90,25 +92,34 @@ export default function Sec1() {
         transition={{
           duration: hideAboutMe ? 0 : 0.5,
         }}
-        className="-z-10 bg-black bg-opacity-40 rounded-lg font-extrabold absolute lg:w-[1000px] md:w-[700px] sm:w-[600px] md:mb-32 mb-52 p-4
+        className=" bg-black bg-opacity-50 md:rounded-lg font-extrabold absolute lg:w-[1000px] md:w-[700px] sm:w-[600px] md:mb-32 mb-42 p-4
      md:text-lg lg:text-xl xl:text-2xl
      "
       >
-        <p>
-         Hey, I'm Dolev. Recent computer science student at the Open University,
-          after graduate a software engineer with a passion for developing
-          scalable web applications and working across the full stack. I am
-          looking for a full-time position where I can continue to grow my skill set while I
-          provide service to the company and its clients.
-        </p>
+        <p>{AboutMe}</p>
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          className={`mt-5 p-2 px-4 bg-gradient-to-r from-blue-500 to-blue-400 font-bold rounded-md absolute flex right-0
+        ${hideAboutMe ? "hidden" : ""}
+      `}
+          onClick={() => {
+            stopClick();
+          }}
+        >
+          Close
+        </motion.button>
       </motion.div>
-      <motion.div className={`${hideAboutMe ? "bg-black bg-opacity-40 p-4 rounded-lg" : ""}`}>
+      <motion.div
+        className={`${
+          hideAboutMe ? "bg-black bg-opacity-50 p-4 md:rounded-lg w-full md:w-auto" : ""
+        }`}
+      >
         <div className="flex justify-center">
           {title.map((char, i) => {
             return (
               <div key={i}>
                 {char === " " ? (
-                  <p className="ml-6" />
+                  <p className="ml-2" />
                 ) : (
                   <TextScale
                     char={char}
@@ -127,7 +138,7 @@ export default function Sec1() {
             return (
               <div key={i}>
                 {char === " " ? (
-                  <p className="ml-6" />
+                  <p className="ml-2 " />
                 ) : (
                   <TextGrow
                     char={char}
@@ -142,14 +153,10 @@ export default function Sec1() {
         </div>
       </motion.div>
 
-      <div className="mt-10">
+      <div className="mt-10 z-10" hidden={!hideAboutMe}>
         <a href="#contactme">
           <motion.button
-            whileHover={{
-              scaleX: [1, 1.2, 0.8, 1.2, 1],
-              scaleY: [1, 0.8, 1.2, 0.8, 1],
-              opacity: 0.8,
-            }}
+            whileHover={{ scale: 1.1 }}
             className="mt-5 p-2 pl-4 pr-4 bg-gradient-to-r from-blue-500 to-blue-400 font-bold rounded-md
         md:p-4 md:pl-6 md:pr-6 md:mt-10
       "
@@ -157,39 +164,17 @@ export default function Sec1() {
             Contact me
           </motion.button>
         </a>
-        {hideAboutMe ? (
-          <motion.button
-            whileHover={{
-              scaleX: [1, 1.2, 0.8, 1.2, 1],
-              scaleY: [1, 0.8, 1.2, 0.8, 1],
-              opacity: 0.8,
-            }}
-            className="mt-5 p-2 pl-4 pr-4 bg-gradient-to-r from-blue-500 to-blue-400 font-bold rounded-md
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          className="mt-5 p-2 pl-4 pr-4 bg-gradient-to-r from-blue-500 to-blue-400 font-bold rounded-md
         md:p-4 md:pl-6 md:pr-6 md:mt-10 ml-5
       "
-            onClick={() => {
-              handleClick();
-            }}
-          >
-            About me
-          </motion.button>
-        ) : (
-          <motion.button
-            whileHover={{
-              scaleX: [1, 1.2, 0.8, 1.2, 1],
-              scaleY: [1, 0.8, 1.2, 0.8, 1],
-              opacity: 0.8,
-            }}
-            className="mt-5 p-2 pl-4 pr-4 bg-gradient-to-r from-blue-500 to-blue-400 font-bold rounded-md
-        md:p-4 md:pl-6 md:pr-6 md:mt-10 ml-5
-      "
-            onClick={() => {
-              stopClick();
-            }}
-          >
-            X
-          </motion.button>
-        )}
+          onClick={() => {
+            handleClick();
+          }}
+        >
+          About me
+        </motion.button>
       </div>
     </div>
   );
