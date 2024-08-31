@@ -98,8 +98,8 @@ export default function Sec1() {
       >
         <p>{AboutMe}</p>
         <motion.button
-          whileHover={{ scale: 1.1 }}
-          className={`mt-5 p-2 px-4 bg-gradient-to-r from-blue-500 to-blue-400 rounded-md absolute flex right-0
+          whileHover={{ scale: 1.2 }}
+          className={`mt-5 py-3 px-6 bg-gradient-to-r from-blue-500 to-blue-400 rounded-md absolute flex right-0
         ${hideAboutMe ? "hidden" : ""}
       `}
           onClick={() => {
@@ -111,7 +111,9 @@ export default function Sec1() {
       </motion.div>
       <motion.div
         className={`${
-          hideAboutMe ? "bg-black bg-opacity-50 p-4 md:rounded-lg w-full md:w-auto" : ""
+          hideAboutMe
+            ? "bg-black bg-opacity-50 p-4 md:rounded-lg w-full md:w-auto"
+            : ""
         }`}
       >
         <div className="flex justify-center">
@@ -157,8 +159,8 @@ export default function Sec1() {
         <a href="#contactme">
           <motion.button
             whileHover={{ scale: 1.1 }}
-            className="mt-5 p-2 pl-4 pr-4 bg-gradient-to-r from-blue-500 to-blue-400 font-bold rounded-md
-        md:p-4 md:pl-6 md:pr-6 md:mt-10
+            className="mt-5 py-3 px-6 bg-gradient-to-r from-blue-500 to-blue-400 font-bold rounded-md
+       md:mt-10
       "
           >
             Contact me
@@ -166,8 +168,8 @@ export default function Sec1() {
         </a>
         <motion.button
           whileHover={{ scale: 1.1 }}
-          className="mt-5 p-2 pl-4 pr-4 bg-gradient-to-r from-blue-500 to-blue-400 font-bold rounded-md
-        md:p-4 md:pl-6 md:pr-6 md:mt-10 ml-5
+          className="mt-5 py-3 px-6 bg-gradient-to-r from-blue-500 to-blue-400 font-bold rounded-md
+        md:mt-10 ml-5
       "
           onClick={() => {
             handleClick();
