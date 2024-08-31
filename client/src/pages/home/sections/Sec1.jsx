@@ -98,7 +98,7 @@ export default function Sec1() {
       >
         <p>{AboutMe}</p>
         <motion.button
-          whileHover={{ scale: 1.2 }}
+          whileHover={{ scale: 1.1 }}
           className={`mt-5 py-3 px-6 bg-gradient-to-r from-blue-500 to-blue-400 rounded-md absolute flex right-0
         ${hideAboutMe ? "hidden" : ""}
       `}
