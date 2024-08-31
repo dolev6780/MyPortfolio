@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.df4f5ac1.css",
-    "main.js": "/static/js/main.a37a0922.js",
+    "main.js": "/static/js/main.2c9b66bd.js",
     "static/media/liatGallery.png": "/static/media/liatGallery.e3c0537e7d28e8e907f1.png",
     "static/media/bijumpacademy.jpg": "/static/media/bijumpacademy.2d42ea6318b467c5be7d.jpg",
     "static/media/ShoppingListApp.png": "/static/media/ShoppingListApp.a528868070aa23045d76.png",
@@ -13,10 +13,10 @@
     "static/media/nodejs.jpeg": "/static/media/nodejs.c52357c303ec3b476aa5.jpeg",
     "index.html": "/index.html",
     "main.df4f5ac1.css.map": "/static/css/main.df4f5ac1.css.map",
-    "main.a37a0922.js.map": "/static/js/main.a37a0922.js.map"
+    "main.2c9b66bd.js.map": "/static/js/main.2c9b66bd.js.map"
   },
   "entrypoints": [
     "static/css/main.df4f5ac1.css",
-    "static/js/main.a37a0922.js"
+    "static/js/main.2c9b66bd.js"
   ]
 }
