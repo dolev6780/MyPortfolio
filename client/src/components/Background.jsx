@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import css from "../assets/logos/css.jpeg";
 import firebase from "../assets/logos/firebase.jpeg";
@@ -7,8 +7,6 @@ import html from "../assets/logos/html.png";
 import js from "../assets/logos/js.png";
 import mongodb from "../assets/logos/mongodb.jpeg";
 import nodejs from "../assets/logos/nodejs.jpeg";
-import react from "../assets/logos/react.png";
-import tailwind from "../assets/logos/tailwind.jpeg";
 import { useScreensize } from "../hooks/useScreenSize";
 const logos = [
   firebase,
