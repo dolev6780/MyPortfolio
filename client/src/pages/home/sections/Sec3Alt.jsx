@@ -75,12 +75,21 @@ export default function Sec3Alt({ projects }) {
                         onClick={() => goToSlide(index)}
                       />
                       <motion.div
-                        className={`absolute top-0 left-0 w-full h-full bg-black bg-opacity-80 text-white flex items-center justify-center transition-opacity duration-400 ${
-                          hoverIndex === index ? 'opacity-100' : 'opacity-0'
+                        className={`absolute top-0 left-0 w-full h-full bg-black bg-opacity-80 text-white flex flex-col items-center justify-center transition-opacity duration-400 ${
+                          hoverIndex === index ? "opacity-100" : "opacity-0"
                         } p-4`}
                       >
-                        <p className="text-center text-lg">{image.details}</p>
-                        <a className="absolute bottom-2 right-2 w-14 h-14 flex justify-center items-center bg-gradient-to-r from-blue-500 to-blue-400 rounded-full" href={image.link} target="_blank" rel="noreferrer">Visit</a>
+                        <p className="text-center text-xs -mt-10 lg:mt-0 lg:text-lg">
+                          {image.details}
+                        </p>
+                        <a
+                          href={image.link}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md text-sm lg:text-base absolute bottom-2 right-2"
+                        >
+                          Visit
+                        </a>
                       </motion.div>
                     </motion.div>
                   </motion.div>

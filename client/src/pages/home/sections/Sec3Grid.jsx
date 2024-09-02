@@ -19,6 +19,7 @@ export default function Sec3Grid({ projects }) {
           <p className={`flex text-3xl absolute -mt-7 -z-10 text1 ${hoverIndex === index ? 'opacity-0' : 'opacity-100'}`}>
             {index + 1}
           </p>
+
           <motion.img
             src={project.img}
             alt={project.title}
@@ -26,23 +27,24 @@ export default function Sec3Grid({ projects }) {
             whileHover={{ scale: 1.2 }}
             transition={{ duration: 0.6 }}
           />
+           <p className={`flex text-xl absolute text1 ${hoverIndex === index ? 'opacity-0' : 'opacity-100'}`}>{project.title}</p>
           <motion.div
             className={`absolute inset-0 flex flex-col items-center justify-center text-center p-4 bg-black bg-opacity-70 rounded-lg transition-opacity duration-300 ${
               hoverIndex === index ? 'opacity-100' : 'opacity-0'
             } ${hoverIndex === index ? 'md:p-6 lg:p-8' : 'p-2'}`}
             style={{ bottom: '0', left: '0', right: '0', top: '0' }}
           >
-            <p className="text-xl text-white mb-4 lg:text-2xl">{project.title}</p>
-            <p className="text-white mb-4 text-sm lg:text-base">{project.details}</p>
+            <p className="text-white mb-10 text-xs 2xl:text-base">{project.details}</p>
             <a
               href={project.link}
               target="_blank"
               rel="noreferrer"
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md text-sm lg:text-base"
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md text-xs 2xl:text-base absolute bottom-2 right-2"
             >
               Visit
             </a>
           </motion.div>
+          
         </motion.div>
       ))}
     </div>
