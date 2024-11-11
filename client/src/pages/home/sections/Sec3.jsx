@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import bijumpacademymg from "../../../assets/bijumpacademy.jpg";
 import ShoppingListApp from "../../../assets/ShoppingListApp.png";
+import careerinfocus from "../../../assets/careerinfocus.png";
 import "../../../App.css";
 import { Link } from 'react-router-dom'
 const cards = [
@@ -10,13 +11,13 @@ const cards = [
     text: "Professional jump rope course with over 13 hours of viewing. developed with react-js and node-js",
     githubcode: "https://github.com/dolev6780/Bijumpacademy"
   },
-  // {
-  //   header: "OUR LEAGUE",
-  //   image: ourleaguehome,
-  //   text: "Creating tournaments, leagues and competitions of any sport like soccer and tennis and even the most loved games like FIFA and Mario Kart. developed with react-js and node-js",
-  //   githubcode: "https://github.com/dolev6780/ourLeague"
+  {
+    header: "Career in focus",
+    image: careerinfocus,
+    text: "promoting business in career ",
+    githubcode: "https://github.com/dolev6780/careerinfocus"
 
-  // },
+  },
   {
     header: "ShoppingList",
     image: ShoppingListApp,

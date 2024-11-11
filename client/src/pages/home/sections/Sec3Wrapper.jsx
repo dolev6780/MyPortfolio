@@ -7,6 +7,7 @@ import Sec3Alt from "./Sec3Alt";
 import bijumpacademymg from "../../../assets/bijumpacademy.jpg";
 import ShoppingListApp from "../../../assets/ShoppingListApp.png";
 import LiatGallery from "../../../assets/liatGallery.png";
+import careerinfocus from "../../../assets/careerinfocus.png";
 export default function Sec3Wrapper() {
   const [sec3View, setSec3View] = useState("carousel");
   const projects = [
@@ -30,6 +31,13 @@ export default function Sec3Wrapper() {
       details:
         "Liat Photography captures moments with a creative and artistic touch. From portraits to events, Liat offers high-quality images that tell your unique story. Explore the gallery to see a curated selection of stunning photographs.",
       link: "https://liatphotography.netlify.app/",
+    },
+    {
+      title: "Career in focus",
+      img: careerinfocus,
+      details:
+        "promoting career ",
+      link: "https://careerinfocusdemo.netlify.app/",
     },
   ];
 
