@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Gamepad2, Star, Code, Maximize2, Monitor, X } from 'lucide-react';
+import { Gamepad2, Star, Monitor, X } from 'lucide-react';
 import memoryGameIcon from '../assets/memorygame.jpg';
 
 export default function Games({ windowSize, onOpenUrl }) {
@@ -297,7 +297,7 @@ export default function Games({ windowSize, onOpenUrl }) {
         animate="visible"
       >
         {filteredGames.map(game => {
-          const gameUrl = getGameUrl(game);
+          // const gameUrl = getGameUrl(game);
           
           return (
             <motion.div 
