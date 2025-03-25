@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 export default function Calculator() {
   const [display, setDisplay] = useState('0');
@@ -9,6 +9,207 @@ export default function Calculator() {
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
   const [theme, setTheme] = useState('light');
+
+  const addToHistory = useCallback((calculation, result) => {
+    setHistory(prev => [...prev, { calculation, result }]);
+  }, []);
+
+  const formatResult = useCallback((value) => {
+    if (typeof value === 'string') return value;
+    
+    // Format the number to avoid excessive decimals but preserve precision
+    if (Number.isInteger(value)) {
+      return String(value);
+    }
+    
+    const stringValue = value.toString();
+    if (stringValue.length > 12) {
+      return value.toExponential(8);
+    }
+    
+    return stringValue;
+  }, []);
+
+  const performCalculation = useCallback(() => {
+    const inputValue = parseFloat(display);
+
+    if (operator === '+') {
+      return firstOperand + inputValue;
+    } else if (operator === '-') {
+      return firstOperand - inputValue;
+    } else if (operator === '×') {
+      return firstOperand * inputValue;
+    } else if (operator === '÷') {
+      if (inputValue === 0) {
+        return 'Error';
+      }
+      return firstOperand / inputValue;
+    } else if (operator === '%') {
+      return firstOperand % inputValue;
+    }
+
+    return inputValue;
+  }, [display, firstOperand, operator]);
+
+  const inputDigit = useCallback((digit) => {
+    if (waitingForSecondOperand) {
+      setDisplay(digit);
+      setWaitingForSecondOperand(false);
+    } else {
+      // Prevent excessive digits
+      if (display.replace(/[-.]/g, '').length < 12) {
+        setDisplay(display === '0' ? digit : display + digit);
+      }
+    }
+  }, [display, waitingForSecondOperand]);
+
+  const inputDecimal = useCallback(() => {
+    if (waitingForSecondOperand) {
+      setDisplay('0.');
+      setWaitingForSecondOperand(false);
+      return;
+    }
+
+    if (!display.includes('.')) {
+      setDisplay(display + '.');
+    }
+  }, [display, waitingForSecondOperand]);
+
+  const clearDisplay = useCallback(() => {
+    setDisplay('0');
+    setFirstOperand(null);
+    setOperator(null);
+    setWaitingForSecondOperand(false);
+  }, []);
+
+  const toggleSign = useCallback(() => {
+    setDisplay(parseFloat(display) * -1 + '');
+  }, [display]);
+
+  const handleOperator = useCallback((nextOperator) => {
+    const inputValue = parseFloat(display);
+
+    if (firstOperand === null) {
+      setFirstOperand(inputValue);
+    } else if (operator) {
+      const result = performCalculation();
+      if (result === 'Error') {
+        setDisplay('Error');
+        setFirstOperand(null);
+        setWaitingForSecondOperand(true);
+        return;
+      }
+      
+      const formattedResult = formatResult(result);
+      addToHistory(`${firstOperand} ${operator} ${inputValue}`, formattedResult);
+      setDisplay(formattedResult);
+      setFirstOperand(result);
+    }
+
+    setWaitingForSecondOperand(true);
+    setOperator(nextOperator);
+  }, [display, firstOperand, operator, performCalculation, formatResult, addToHistory]);
+
+  const handleEquals = useCallback(() => {
+    if (!operator) return;
+
+    const inputValue = parseFloat(display);
+    const result = performCalculation();
+    
+    if (result === 'Error') {
+      setDisplay('Error');
+      setFirstOperand(null);
+      setOperator(null);
+      addToHistory(`${firstOperand} ${operator} ${inputValue}`, 'Error');
+    } else {
+      const formattedResult = formatResult(result);
+      addToHistory(`${firstOperand} ${operator} ${inputValue}`, formattedResult);
+      setDisplay(formattedResult);
+      setFirstOperand(result);
+    }
+    
+    setOperator(null);
+    setWaitingForSecondOperand(false);
+  }, [display, firstOperand, operator, performCalculation, formatResult, addToHistory]);
+
+  const backspace = useCallback(() => {
+    if (display === 'Error') {
+      setDisplay('0');
+      return;
+    }
+    
+    if (display.length === 1 || (display.length === 2 && display.startsWith('-'))) {
+      setDisplay('0');
+    } else {
+      setDisplay(display.slice(0, -1));
+    }
+  }, [display]);
+
+  const percentage = useCallback(() => {
+    const value = parseFloat(display);
+    setDisplay(String(value / 100));
+  }, [display]);
+
+  // Scientific functions
+  const square = useCallback(() => {
+    const value = parseFloat(display);
+    const result = value * value;
+    const formattedResult = formatResult(result);
+    setDisplay(formattedResult);
+    addToHistory(`sqr(${value})`, formattedResult);
+  }, [display, formatResult, addToHistory]);
+
+  const squareRoot = useCallback(() => {
+    const value = parseFloat(display);
+    if (value < 0) {
+      setDisplay('Error');
+      addToHistory(`√(${value})`, 'Error');
+      return;
+    }
+    const result = Math.sqrt(value);
+    const formattedResult = formatResult(result);
+    setDisplay(formattedResult);
+    addToHistory(`√(${value})`, formattedResult);
+  }, [display, formatResult, addToHistory]);
+
+  const reciprocal = useCallback(() => {
+    const value = parseFloat(display);
+    if (value === 0) {
+      setDisplay('Error');
+      addToHistory(`1/(${value})`, 'Error');
+      return;
+    }
+    const result = 1 / value;
+    const formattedResult = formatResult(result);
+    setDisplay(formattedResult);
+    addToHistory(`1/(${value})`, formattedResult);
+  }, [display, formatResult, addToHistory]);
+
+  // Memory functions
+  const memoryClear = useCallback(() => {
+    setMemory(0);
+  }, []);
+
+  const memoryRecall = useCallback(() => {
+    setDisplay(String(memory));
+    setWaitingForSecondOperand(false);
+  }, [memory]);
+
+  const memoryAdd = useCallback(() => {
+    if (display !== 'Error') {
+      setMemory(memory + parseFloat(display));
+    }
+  }, [display, memory]);
+
+  const memorySubtract = useCallback(() => {
+    if (display !== 'Error') {
+      setMemory(memory - parseFloat(display));
+    }
+  }, [display, memory]);
+
+  const toggleTheme = useCallback(() => {
+    setTheme(theme === 'light' ? 'dark' : 'light');
+  }, [theme]);
 
   // Add keyboard support
   useEffect(() => {
@@ -40,208 +241,15 @@ export default function Calculator() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [display, firstOperand, operator, waitingForSecondOperand]);
-
-  const addToHistory = (calculation, result) => {
-    setHistory(prev => [...prev, { calculation, result }]);
-  };
-
-  const inputDigit = (digit) => {
-    if (waitingForSecondOperand) {
-      setDisplay(digit);
-      setWaitingForSecondOperand(false);
-    } else {
-      // Prevent excessive digits
-      if (display.replace(/[-.]/g, '').length < 12) {
-        setDisplay(display === '0' ? digit : display + digit);
-      }
-    }
-  };
-
-  const inputDecimal = () => {
-    if (waitingForSecondOperand) {
-      setDisplay('0.');
-      setWaitingForSecondOperand(false);
-      return;
-    }
-
-    if (!display.includes('.')) {
-      setDisplay(display + '.');
-    }
-  };
-
-  const clearDisplay = () => {
-    setDisplay('0');
-    setFirstOperand(null);
-    setOperator(null);
-    setWaitingForSecondOperand(false);
-  };
-
-  const toggleSign = () => {
-    setDisplay(parseFloat(display) * -1 + '');
-  };
-
-  const handleOperator = (nextOperator) => {
-    const inputValue = parseFloat(display);
-
-    if (firstOperand === null) {
-      setFirstOperand(inputValue);
-    } else if (operator) {
-      const result = performCalculation();
-      if (result === 'Error') {
-        setDisplay('Error');
-        setFirstOperand(null);
-        setWaitingForSecondOperand(true);
-        return;
-      }
-      
-      const formattedResult = formatResult(result);
-      addToHistory(`${firstOperand} ${operator} ${inputValue}`, formattedResult);
-      setDisplay(formattedResult);
-      setFirstOperand(result);
-    }
-
-    setWaitingForSecondOperand(true);
-    setOperator(nextOperator);
-  };
-
-  const formatResult = (value) => {
-    if (typeof value === 'string') return value;
-    
-    // Format the number to avoid excessive decimals but preserve precision
-    if (Number.isInteger(value)) {
-      return String(value);
-    }
-    
-    const stringValue = value.toString();
-    if (stringValue.length > 12) {
-      return value.toExponential(8);
-    }
-    
-    return stringValue;
-  };
-
-  const performCalculation = () => {
-    const inputValue = parseFloat(display);
-
-    if (operator === '+') {
-      return firstOperand + inputValue;
-    } else if (operator === '-') {
-      return firstOperand - inputValue;
-    } else if (operator === '×') {
-      return firstOperand * inputValue;
-    } else if (operator === '÷') {
-      if (inputValue === 0) {
-        return 'Error';
-      }
-      return firstOperand / inputValue;
-    } else if (operator === '%') {
-      return firstOperand % inputValue;
-    }
-
-    return inputValue;
-  };
-
-  const handleEquals = () => {
-    if (!operator) return;
-
-    const inputValue = parseFloat(display);
-    const result = performCalculation();
-    
-    if (result === 'Error') {
-      setDisplay('Error');
-      setFirstOperand(null);
-      setOperator(null);
-      addToHistory(`${firstOperand} ${operator} ${inputValue}`, 'Error');
-    } else {
-      const formattedResult = formatResult(result);
-      addToHistory(`${firstOperand} ${operator} ${inputValue}`, formattedResult);
-      setDisplay(formattedResult);
-      setFirstOperand(result);
-    }
-    
-    setOperator(null);
-    setWaitingForSecondOperand(false);
-  };
-
-  const backspace = () => {
-    if (display === 'Error') {
-      setDisplay('0');
-      return;
-    }
-    
-    if (display.length === 1 || (display.length === 2 && display.startsWith('-'))) {
-      setDisplay('0');
-    } else {
-      setDisplay(display.slice(0, -1));
-    }
-  };
-
-  const percentage = () => {
-    const value = parseFloat(display);
-    setDisplay(String(value / 100));
-  };
-
-  // Scientific functions
-  const square = () => {
-    const value = parseFloat(display);
-    const result = value * value;
-    const formattedResult = formatResult(result);
-    setDisplay(formattedResult);
-    addToHistory(`sqr(${value})`, formattedResult);
-  };
-
-  const squareRoot = () => {
-    const value = parseFloat(display);
-    if (value < 0) {
-      setDisplay('Error');
-      addToHistory(`√(${value})`, 'Error');
-      return;
-    }
-    const result = Math.sqrt(value);
-    const formattedResult = formatResult(result);
-    setDisplay(formattedResult);
-    addToHistory(`√(${value})`, formattedResult);
-  };
-
-  const reciprocal = () => {
-    const value = parseFloat(display);
-    if (value === 0) {
-      setDisplay('Error');
-      addToHistory(`1/(${value})`, 'Error');
-      return;
-    }
-    const result = 1 / value;
-    const formattedResult = formatResult(result);
-    setDisplay(formattedResult);
-    addToHistory(`1/(${value})`, formattedResult);
-  };
-
-  // Memory functions
-  const memoryClear = () => {
-    setMemory(0);
-  };
-
-  const memoryRecall = () => {
-    setDisplay(String(memory));
-    setWaitingForSecondOperand(false);
-  };
-
-  const memoryAdd = () => {
-    if (display !== 'Error') {
-      setMemory(memory + parseFloat(display));
-    }
-  };
-
-  const memorySubtract = () => {
-    if (display !== 'Error') {
-      setMemory(memory - parseFloat(display));
-    }
-  };
-
-  const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
-  };
+  }, [
+    inputDigit,
+    inputDecimal,
+    clearDisplay,
+    backspace,
+    handleEquals,
+    handleOperator,
+    percentage
+  ]);
 
   // Button component for consistency
   const Button = ({ onClick, className, children }) => {

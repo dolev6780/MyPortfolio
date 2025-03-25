@@ -1,34 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
-import { useScreensize } from "../hooks/useScreenSize";
 import { Link } from "react-router-dom";
-import HomeIcon from "@mui/icons-material/Home";
 import MailIcon from "@mui/icons-material/Mail";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import MenuIcon from "@mui/icons-material/Menu";
-import CloseIcon from "@mui/icons-material/Close";
 import ShowCv from "./ShowCv";
 
-const menuVariant = {
-  initial: {
-    display: "none",
-    opacity: 0,
-  },
-  animate: {
-    display: "grid",
-    opacity: 1,
-    transition: {
-      duration: 0.2,
-    },
-  },
-};
 
 export default function Sidebar() {
-  const { screenSize } = useScreensize();
+
   const controls = useAnimation();
-  const [open, setOpen] = useState(false);
+  const [open, ] = useState(false);
 
   useEffect(() => {
     if (open) {

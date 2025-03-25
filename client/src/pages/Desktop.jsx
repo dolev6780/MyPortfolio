@@ -1,6 +1,6 @@
 // This is a modified version of your Desktop.js file
 import React, { useState, useEffect } from 'react';
-import { Folder, FileText, Monitor, Settings, Mail, Globe, Database, Gamepad2, Calculator, Contact } from 'lucide-react';
+import { Folder, FileText, Mail, Globe, Gamepad2, Calculator, Contact } from 'lucide-react';
 import WindowsModal from '../components/WindowsModal';
 
 /**
@@ -37,12 +37,6 @@ export default function Desktop() {
   
   // Counter for generating unique IDs for dynamically opened windows
   const [nextDynamicId, setNextDynamicId] = useState(100);
-
-  // Window z-index management - higher z-index appears on top
-  const getWindowZIndex = (windowId) => {
-    const window = openWindows.find(w => w.id === windowId);
-    return window ? window.zIndex : 100;
-  };
 
   // Clear selection when clicking on desktop background
   const handleDesktopClick = (e) => {

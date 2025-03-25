@@ -1,5 +1,5 @@
 import React from 'react';
-import { FileText, Download, ExternalLink } from 'lucide-react';
+import { FileText, ExternalLink } from 'lucide-react';
 import Dolevcv from '../assets/Dolev cv.pdf'
 const Resume = ({ windowSize }) => {
   // Fixed PDF URL - replace with your actual resume PDF
@@ -8,11 +8,6 @@ const Resume = ({ windowSize }) => {
   // Open PDF in new browser tab
   const handleOpenExternal = () => {
     window.open(pdfUrl, '_blank');
-  };
-  
-  // Download the PDF
-  const handleDownload = () => {
-    window.location.href = pdfUrl;
   };
   
   return (

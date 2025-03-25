@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
-import { Globe, Folder, X, Minimize, Maximize, Square, ExternalLink, FileText, Contact, Mail, Gamepad2, CalculatorIcon } from 'lucide-react';
+import React, { useState, useEffect, useRef, Suspense, useCallback } from 'react';
+import { Globe, Folder, X, Minimize, Maximize, Square, ExternalLink, FileText, Contact, Mail, CalculatorIcon } from 'lucide-react';
 import Calculator from '../components/Calculator';
 import AboutMe from './AboutMe';
 import Projects from './Projects';
@@ -71,7 +71,7 @@ const WindowsModal = ({
   const contentRef = useRef(null);
 
   // Determine if a site is likely to block embedding
-  const isLikelyToBlockEmbedding = (urlString) => {
+  const isLikelyToBlockEmbedding = useCallback((urlString) => {
     if (!urlString) return false;
     
     try {
@@ -91,7 +91,7 @@ const WindowsModal = ({
     } catch (e) {
       return false;
     }
-  };
+  }, []);
   
   // Pre-emptively mark known blocked sites
   useEffect(() => {
@@ -100,36 +100,37 @@ const WindowsModal = ({
     } else {
       setIframeError(false);
     }
-  }, [url]);
+  }, [url, isLikelyToBlockEmbedding]);
+  
+  // Function to update window dimensions in pixels
+  const updateSizeInPixels = useCallback(() => {
+    if (!modalRef.current) return;
+    
+    const width = modalRef.current.offsetWidth;
+    const height = modalRef.current.offsetHeight;
+    
+    // Content area size (minus title bar and any other UI elements)
+    let contentHeight = height;
+    if (contentRef.current) {
+      contentHeight = contentRef.current.offsetHeight;
+    }
+    
+    setWindowSizePixels({
+      width,
+      height,
+      contentWidth: width,
+      contentHeight: contentHeight
+    });
+  }, []);
   
   // Update pixel size when modal is rendered
   useEffect(() => {
     if (modalRef.current) {
-      const updateSizeInPixels = () => {
-        const width = modalRef.current.offsetWidth;
-        const height = modalRef.current.offsetHeight;
-        
-        // Content area size (minus title bar and any other UI elements)
-        let contentHeight = height;
-        if (contentRef.current) {
-          contentHeight = contentRef.current.offsetHeight;
-        }
-        
-        setWindowSizePixels({
-          width,
-          height,
-          contentWidth: width,
-          contentHeight: contentHeight
-        });
-      };
-      
       updateSizeInPixels();
       
       // Set up a resize observer to track size changes
-      const resizeObserver = new ResizeObserver(entries => {
-        for (const entry of entries) {
-          updateSizeInPixels();
-        }
+      const resizeObserver = new ResizeObserver(() => {
+        updateSizeInPixels();
       });
       
       resizeObserver.observe(modalRef.current);
@@ -138,23 +139,23 @@ const WindowsModal = ({
         resizeObserver.disconnect();
       };
     }
-  }, [modalRef, contentRef, isOpen]);
+  }, [isOpen, updateSizeInPixels]);
   
   // Function to handle iframe load errors
-  const handleIframeError = () => {
+  const handleIframeError = useCallback(() => {
     setIframeError(true);
-  };
+  }, []);
 
   // Store previous state before maximizing
-  const saveCurrentState = () => {
+  const saveCurrentState = useCallback(() => {
     return {
       position: { ...windowPosition },
       size: { ...windowSize }
     };
-  };
+  }, [windowPosition, windowSize]);
 
   // Maximize window
-  const handleMaximize = () => {
+  const handleMaximize = useCallback(() => {
     if (!isMaximized) {
       const state = saveCurrentState();
       setPreviousState(state);
@@ -169,15 +170,15 @@ const WindowsModal = ({
       }
       setIsMaximized(false);
     }
-  };
+  }, [isMaximized, previousState, saveCurrentState]);
 
   // Handle opening a URL in a new tab
-  const handleOpenInNewTab = (url) => {
+  const handleOpenInNewTab = useCallback((url) => {
     window.open(url, '_blank');
-  };
+  }, []);
 
   // Start window drag
-  const handleMouseDown = (e) => {
+  const handleMouseDown = useCallback((e) => {
     if (isMaximized) return;
     
     // Only allow dragging from the title bar
@@ -194,11 +195,11 @@ const WindowsModal = ({
       // Prevent text selection during drag
       e.preventDefault();
     }
-  };
+  }, [isMaximized]);
 
   // Handle window movement
-  const handleMouseMove = (e) => {
-    if (isDragging) {
+  const handleMouseMove = useCallback((e) => {
+    if (isDragging && modalRef.current) {
       // Calculate new position
       const newX = e.clientX - dragOffset.x;
       const newY = e.clientY - dragOffset.y;
@@ -223,12 +224,12 @@ const WindowsModal = ({
         y: `${percentY}%`
       });
     }
-  };
+  }, [isDragging, dragOffset]);
 
   // End window drag
-  const handleMouseUp = () => {
+  const handleMouseUp = useCallback(() => {
     setIsDragging(false);
-  };
+  }, []);
 
   // Add and remove event listeners for dragging
   useEffect(() => {
@@ -244,7 +245,7 @@ const WindowsModal = ({
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isDragging]);
+  }, [isDragging, handleMouseMove, handleMouseUp]);
   
   // Reset iframe error when URL changes
   useEffect(() => {
