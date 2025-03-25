@@ -10,13 +10,13 @@ function App() {
   return (
     <div className="App">
       <Router>
-      <Background/>
-      <Sidebar/>
+      {/* <Background/> */}
+      {/* <Sidebar/> */}
       <Routes>
         <Route path='/' element={<Home/>} />
       </Routes>
-      <Footer/>
-      <BackToTopButton/>
+      {/* <Footer/> */}
+      {/* <BackToTopButton/> */}
       </Router>
     </div>
   );
