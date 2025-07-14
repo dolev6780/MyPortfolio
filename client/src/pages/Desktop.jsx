@@ -1,6 +1,5 @@
-// This is a modified version of your Desktop.js file
 import React, { useState, useEffect } from 'react';
-import { Folder, FileText, Mail, Globe, Gamepad2, Calculator, Contact } from 'lucide-react';
+import { Folder, FileText, Mail, Gamepad2, Calculator, Contact } from 'lucide-react';
 import WindowsModal from '../components/WindowsModal';
 
 /**
@@ -8,7 +7,7 @@ import WindowsModal from '../components/WindowsModal';
  * Main component that renders a desktop-like environment with icons and windows
  */
 export default function Desktop() {
-  // Icons data with position information and paths
+  // --- STATE MANAGEMENT ---
   const [icons, setIcons] = useState([
     { id: 1, name: 'About Me', icon: Contact, gridX: 0, gridY: 0, path: "aboutme" },
     { id: 2, name: 'Projects', icon: Folder, gridX: 0, gridY: 1, path: "projects" },
@@ -18,246 +17,164 @@ export default function Desktop() {
     { id: 6, name: 'Contact Me', icon: Mail, gridX: 0, gridY: 5, path: "contactme" },
   ]);
 
-  // Track the icon being dragged
   const [draggedIcon, setDraggedIcon] = useState(null);
-  
-  // Track the currently selected icon
   const [selectedIconId, setSelectedIconId] = useState(null);
-  
-  // Responsive grid configuration
   const [gridSize, setGridSize] = useState(80);
   const [gridColumns, setGridColumns] = useState(10);
   const [gridRows, setGridRows] = useState(6);
-  
-  // Window management
   const [openWindows, setOpenWindows] = useState([]);
   const [minimizedWindows, setMinimizedWindows] = useState([]);
   const [activeWindowId, setActiveWindowId] = useState(null);
   const [zIndexCounter, setZIndexCounter] = useState(100);
-  
-  // Counter for generating unique IDs for dynamically opened windows
   const [nextDynamicId, setNextDynamicId] = useState(100);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
-  // Clear selection when clicking on desktop background
-  const handleDesktopClick = (e) => {
-    // Only clear if clicking directly on the desktop, not on an icon or window
-    if (e.target === e.currentTarget || e.target.classList.contains('grid')) {
-      setSelectedIconId(null);
-    }
-  };
+  // --- EFFECTS ---
 
-  // Update grid configuration based on screen size
+  // Effect for updating the clock every second
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    // Cleanup the interval on component unmount
+    return () => clearInterval(timer);
+  }, []);
+
+  // Effect for responsive grid calculation
   useEffect(() => {
     const updateGridDimensions = () => {
       const width = window.innerWidth;
       const height = window.innerHeight;
-      
-      // Calculate optimal grid cell size and number of columns/rows
-      let newGridSize;
-      
-      if (width < 640) { // Small screens
-        newGridSize = 60;
-      } else if (width < 1024) { // Medium screens
-        newGridSize = 70;
-      } else { // Large screens
-        newGridSize = 80;
-      }
-      
-      const newGridColumns = Math.floor(width / newGridSize);
-      const newGridRows = Math.floor((height - 48) / newGridSize); // Subtract taskbar height
+      let newGridSize = width < 640 ? 60 : (width < 1024 ? 70 : 80);
       
       setGridSize(newGridSize);
-      setGridColumns(newGridColumns);
-      setGridRows(newGridRows);
+      setGridColumns(Math.floor(width / newGridSize));
+      setGridRows(Math.floor((height - 48) / newGridSize)); // 48px for taskbar
     };
-    
-    // Set initial dimensions
+
     updateGridDimensions();
-    
-    // Update dimensions when window is resized
     window.addEventListener('resize', updateGridDimensions);
-    
-    // Clean up
     return () => window.removeEventListener('resize', updateGridDimensions);
   }, []);
 
-  // Handle drag start
+  // --- EVENT HANDLERS ---
+
+  const handleDesktopClick = (e) => {
+    // Deselect icon if clicking on the desktop, grid, or video background
+    if (e.target === e.currentTarget || e.target.classList.contains('grid-container') || e.target.tagName === 'VIDEO') {
+      setSelectedIconId(null);
+    }
+  };
+
   const handleDragStart = (e, icon) => {
     setDraggedIcon(icon);
-    // Create a ghost image for dragging
-    const ghost = document.createElement('div');
-    ghost.style.opacity = '0';
-    document.body.appendChild(ghost);
+    // Use a transparent ghost image for a cleaner drag effect
+    const ghost = new Image();
+    ghost.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
     e.dataTransfer.setDragImage(ghost, 0, 0);
   };
 
-  // Handle drag over a grid cell
-  const handleDragOver = (e) => {
-    e.preventDefault(); // Necessary to allow dropping
-  };
+  const handleDragOver = (e) => e.preventDefault();
 
-  // Handle dropping an icon
   const handleDrop = (e, targetX, targetY) => {
     e.preventDefault();
-    
-    if (draggedIcon) {
-      // Update the position of the dragged icon
-      const updatedIcons = icons.map(icon => {
-        if (icon.id === draggedIcon.id) {
-          return { ...icon, gridX: targetX, gridY: targetY };
-        }
-        // Check if there's already an icon at the target position
-        // If so, swap their positions
-        if (icon.gridX === targetX && icon.gridY === targetY) {
-          return { ...icon, gridX: draggedIcon.gridX, gridY: draggedIcon.gridY };
-        }
-        return icon;
-      });
-      
-      setIcons(updatedIcons);
-      setDraggedIcon(null);
-    }
+    if (!draggedIcon) return;
+
+    const updatedIcons = icons.map(icon => {
+      if (icon.id === draggedIcon.id) {
+        return { ...icon, gridX: targetX, gridY: targetY };
+      }
+      // If another icon is at the drop target, swap positions
+      if (icon.gridX === targetX && icon.gridY === targetY) {
+        return { ...icon, gridX: draggedIcon.gridX, gridY: draggedIcon.gridY };
+      }
+      return icon;
+    });
+
+    setIcons(updatedIcons);
+    setDraggedIcon(null);
   };
-  
-  // Handle icon selection (single click)
+
   const handleIconSelect = (e, icon) => {
-    e.stopPropagation(); // Prevent event from bubbling to desktop
+    e.stopPropagation();
     setSelectedIconId(icon.id);
   };
-  
-  // Handle opening a URL in a new window from within another component
-  const handleOpenUrlInNewWindow = (url, title) => {
-    // Generate a unique ID for this new window
-    const newId = nextDynamicId;
-    setNextDynamicId(prev => prev + 1);
-    
-    // Create a window object
-    const windowObj = {
-      id: newId,
-      name: title || url,
-      icon: Globe,
-      url: url,
-      zIndex: zIndexCounter + 1
-    };
-    
-    // Increment z-index counter
-    setZIndexCounter(prev => prev + 1);
-    
-    // Add window to open windows
+
+  const openWindow = (icon) => {
+    const newZIndex = zIndexCounter + 1;
+    setZIndexCounter(newZIndex);
+    const windowObj = { ...icon, zIndex: newZIndex };
     setOpenWindows(prev => [...prev, windowObj]);
-    
-    // Set as active window
-    setActiveWindowId(newId);
-    
-    // Make sure it's not minimized
-    setMinimizedWindows(prev => prev.filter(id => id !== newId));
-    
-    // Return the window ID in case it's needed
-    return newId;
+    setActiveWindowId(icon.id);
   };
-  
-  // Handle icon click to open window (double click)
-  const handleIconClick = (icon) => {
-    const existingWindowIndex = openWindows.findIndex(w => w.id === icon.id);
-    
-    if (existingWindowIndex !== -1) {
-      // Window already open
-      
-      // If minimized, restore it
-      if (minimizedWindows.includes(icon.id)) {
-        setMinimizedWindows(prev => prev.filter(id => id !== icon.id));
-      }
-      
-      // Make this window active and bring to front
-      setActiveWindowId(icon.id);
-      const newZIndex = zIndexCounter + 1;
-      setZIndexCounter(newZIndex);
-      
-      // Update z-index
-      setOpenWindows(prev => prev.map(w => 
-        w.id === icon.id ? { ...w, zIndex: newZIndex } : w
-      ));
-    } else {
-      // Create new window with next available z-index
-      const newZIndex = zIndexCounter + 1;
-      setZIndexCounter(newZIndex);
-      
-      const windowObj = {
-        ...icon,
-        zIndex: newZIndex
-      };
-      
-      setOpenWindows(prev => [...prev, windowObj]);
-      setActiveWindowId(icon.id);
+
+  const focusWindow = (iconId) => {
+    const newZIndex = zIndexCounter + 1;
+    setZIndexCounter(newZIndex);
+    setOpenWindows(prev => prev.map(w => w.id === iconId ? { ...w, zIndex: newZIndex } : w));
+    setActiveWindowId(iconId);
+    if (minimizedWindows.includes(iconId)) {
+      setMinimizedWindows(prev => prev.filter(id => id !== iconId));
     }
   };
-  
-  // Handle window minimize
-  const handleMinimizeWindow = (windowId) => {
-    setMinimizedWindows(prev => [...prev, windowId]);
+
+  const handleIconDoubleClick = (icon) => {
+    const existingWindow = openWindows.find(w => w.id === icon.id);
+    if (existingWindow) {
+      focusWindow(icon.id);
+    } else {
+      openWindow(icon);
+    }
   };
-  
-  // Handle window close
+
   const handleCloseWindow = (windowId) => {
     setOpenWindows(prev => prev.filter(w => w.id !== windowId));
     setMinimizedWindows(prev => prev.filter(id => id !== windowId));
-    
-    // If closing the active window, set a new active window
+
     if (activeWindowId === windowId) {
-      const remainingWindows = openWindows.filter(w => w.id !== windowId);
-      
+      const remainingWindows = openWindows.filter(w => w.id !== windowId && !minimizedWindows.includes(w.id));
       if (remainingWindows.length > 0) {
-        // Find the window with highest z-index (most recently active)
-        const topWindow = remainingWindows.reduce((prev, curr) => 
-          (curr.zIndex > prev.zIndex && !minimizedWindows.includes(curr.id)) ? curr : prev, 
-          remainingWindows[0]
-        );
-        
-        setActiveWindowId(topWindow ? topWindow.id : null);
+        const topWindow = remainingWindows.reduce((a, b) => a.zIndex > b.zIndex ? a : b);
+        setActiveWindowId(topWindow.id);
       } else {
         setActiveWindowId(null);
       }
     }
   };
 
-  // Generate the grid cells for desktop icons
+  // --- RENDER LOGIC ---
+
   const renderGrid = () => {
     const grid = [];
     for (let y = 0; y < gridRows; y++) {
       for (let x = 0; x < gridColumns; x++) {
-        // Find icon at this position
         const iconAtPosition = icons.find(icon => icon.gridX === x && icon.gridY === y);
-        
         grid.push(
           <div
             key={`${x}-${y}`}
-            className="relative border border-dashed border-transparent hover:border-blue-200"
-            style={{
-              width: `${gridSize}px`,
-              height: `${gridSize}px`,
-            }}
+            className="relative"
+            style={{ width: `${gridSize}px`, height: `${gridSize}px` }}
             onDragOver={handleDragOver}
             onDrop={(e) => handleDrop(e, x, y)}
           >
             {iconAtPosition && (
               <div
-                className={`absolute inset-0 flex flex-col items-center justify-center cursor-pointer p-1 
-                  ${selectedIconId === iconAtPosition.id ? 'bg-blue-500 bg-opacity-30 rounded' : ''}`}
+                className={`flex flex-col items-center justify-center h-full w-full cursor-pointer rounded-md transition-colors duration-150
+                  ${selectedIconId === iconAtPosition.id ? 'bg-blue-500 bg-opacity-40' : 'hover:bg-white/10'}
+                  ${draggedIcon?.id === iconAtPosition.id ? 'opacity-40' : ''}
+                `}
                 draggable
                 onDragStart={(e) => handleDragStart(e, iconAtPosition)}
                 onClick={(e) => handleIconSelect(e, iconAtPosition)}
-                onDoubleClick={() => handleIconClick(iconAtPosition)}
+                onDoubleClick={() => handleIconDoubleClick(iconAtPosition)}
               >
                 <div className="flex items-center justify-center mb-1">
-                  {React.createElement(iconAtPosition.icon, { 
-                    size: gridSize < 70 ? 20 : 24,
-                    color: selectedIconId === iconAtPosition.id ? "white" : "#ffffffcc"
+                  {React.createElement(iconAtPosition.icon, {
+                    size: gridSize < 70 ? 24 : 32,
+                    color: "white"
                   })}
                 </div>
-                <div 
-                  className={`text-center text-xs w-full bg-black bg-opacity-40 text-white px-1 rounded
-                    ${selectedIconId === iconAtPosition.id ? 'overflow-visible whitespace-normal' : 'truncate'}`}
-                >
+                <div className="text-center text-xs w-full text-white px-1 truncate">
                   {iconAtPosition.name}
                 </div>
               </div>
@@ -270,87 +187,74 @@ export default function Desktop() {
   };
 
   return (
-    <div 
-      className="bg-neutral-800 w-full h-screen overflow-hidden p-0 m-0 relative"
-      style={{
-        backgroundImage: "url('/api/placeholder/1920/1080')",
-        backgroundSize: "cover",
-        backgroundPosition: "center"
-      }}
+    <div
+      className="w-full h-screen overflow-hidden p-0 m-0 relative select-none"
       onClick={handleDesktopClick}
     >
+      {/* Video Background */}
+      <video autoPlay loop muted playsInline className="absolute w-full h-full left-1/2 top-1/2 object-cover transform -translate-x-1/2 -translate-y-1/2 -z-10">
+        <source src="/backgroundVideo.mp4" type="video/mp4" />
+      </video>
+
       {/* Desktop Icon Grid */}
-      <div 
-        className="grid gap-0 p-2 pb-16"
+      <div
+        className="grid-container absolute top-0 left-0 p-2"
         style={{
+          display: 'grid',
           gridTemplateColumns: `repeat(${gridColumns}, ${gridSize}px)`,
           gridTemplateRows: `repeat(${gridRows}, ${gridSize}px)`,
-          width: `${gridColumns * gridSize}px`,
-          height: `${gridRows * gridSize}px`,
         }}
       >
         {renderGrid()}
       </div>
-      
-      {/* Windows Modal Windows */}
+
+      {/* Windows */}
       {openWindows.map((window) => (
         <WindowsModal
           key={window.id}
-          isOpen={true} // Always render the window in DOM
+          isOpen={true}
           onClose={() => handleCloseWindow(window.id)}
-          onMinimize={() => handleMinimizeWindow(window.id)}
+          onMinimize={() => setMinimizedWindows(prev => [...prev, window.id])}
+          onFocus={() => focusWindow(window.id)}
           title={window.name}
-          url={window.url}
           path={window.path}
-          onOpenUrl={handleOpenUrlInNewWindow} // Pass the function to open URLs
-          initialPosition={{ 
-            x: `${10 + (openWindows.indexOf(window) % 3 * 5)}%`, 
-            y: `${10 + (Math.floor(openWindows.indexOf(window) / 3) * 5)}%` 
+          initialPosition={{
+            x: `${10 + (openWindows.indexOf(window) % 5 * 3)}vw`,
+            y: `${10 + (Math.floor(openWindows.indexOf(window) / 5) * 5)}vh`
           }}
           isMinimized={minimizedWindows.includes(window.id)}
+          zIndex={window.zIndex}
+          isActive={activeWindowId === window.id}
         />
       ))}
-      
+
       {/* Taskbar */}
-      <div className="fixed bottom-0 left-0 right-0 h-12 bg-gray-900 bg-opacity-80 flex items-center px-2 border-t border-gray-700 backdrop-blur-sm">
-        <div className="w-10 h-10 bg-blue-600 rounded flex items-center justify-center text-white mr-2 hover:bg-blue-500 transition-colors duration-200 cursor-pointer">
+      <div className="fixed bottom-0 left-0 right-0 h-12 bg-gray-900/80 flex items-center px-2 border-t border-gray-700/50 backdrop-blur-md">
+        <div className="w-10 h-10 flex items-center justify-center text-white mr-2 hover:bg-blue-500 rounded transition-colors duration-200 cursor-pointer">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white">
-            <path d="M0 0h11.5v11.5H0V0zm12.5 0H24v11.5H12.5V0zM0 12.5h11.5V24H0V12.5zm12.5 0H24V24H12.5V12.5z"/>
+            <path d="M0 0h11.5v11.5H0V0zm12.5 0H24v11.5H12.5V0zM0 12.5h11.5V24H0V12.5zm12.5 0H24V24H12.5V12.5z" />
           </svg>
         </div>
-        
-        {/* Open windows in taskbar */}
         <div className="flex space-x-1 overflow-x-auto flex-grow">
           {openWindows.map(window => (
-            <div 
-              key={window.id} 
-              className={`h-10 px-3 flex items-center rounded 
-                ${activeWindowId === window.id && !minimizedWindows.includes(window.id) ? 'bg-gray-700' : 'bg-gray-800'} 
-                ${minimizedWindows.includes(window.id) ? 'opacity-70' : 'opacity-100'}
-                hover:bg-gray-700 transition-colors duration-200 cursor-pointer`}
-              onClick={() => {
-                // If window is minimized, restore it
-                if (minimizedWindows.includes(window.id)) {
-                  setMinimizedWindows(prev => prev.filter(id => id !== window.id));
-                }
-                
-                // Make active and bring to front
-                setActiveWindowId(window.id);
-                const newZIndex = zIndexCounter + 1;
-                setZIndexCounter(newZIndex);
-                setOpenWindows(prev => prev.map(w => 
-                  w.id === window.id ? { ...w, zIndex: newZIndex } : w
-                ));
-              }}
+            <div
+              key={window.id}
+              className={`h-9 px-3 flex items-center rounded-md transition-all duration-200 cursor-pointer border-b-2
+                ${activeWindowId === window.id && !minimizedWindows.includes(window.id) 
+                  ? 'bg-white/20 border-blue-400' 
+                  : 'bg-white/5 border-transparent hover:bg-white/10'}
+                ${minimizedWindows.includes(window.id) ? 'opacity-60' : ''}
+              `}
+              onClick={() => focusWindow(window.id)}
             >
-              {React.createElement(window.icon, { size: 16, color: 'white', className: 'mr-2' })}
+              {React.createElement(window.icon, { size: 16, color: 'white', className: 'mr-2 flex-shrink-0' })}
               <span className="text-white text-sm truncate max-w-xs">{window.name}</span>
             </div>
           ))}
         </div>
-        
-        <div className="text-white text-xs pr-2 pl-4">
-          {new Date().toLocaleTimeString()}
+        <div className="text-white text-xs text-center px-4">
+          <div>{currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+          <div>{currentTime.toLocaleDateString([], { month: '2-digit', day: '2-digit', year: 'numeric' })}</div>
         </div>
       </div>
     </div>

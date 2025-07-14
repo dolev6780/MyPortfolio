@@ -1,87 +1,161 @@
-import React, { useState } from 'react';
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
-import DescriptionIcon from '@mui/icons-material/Description';
-import { motion } from "framer-motion";
-import cv from '../assets/cv.png';
-import { useScreensize } from '../hooks/useScreenSize';
-import CloseIcon from "@mui/icons-material/Close";
+import React, { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FileText, Download, ExternalLink, X } from 'lucide-react';
 
-const style = {
-  position: 'relative', // Changed to relative
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: '80%', // Adjusted width for better responsiveness
-  maxWidth: 1000, // Max width for large screens
-  p: 4,
-};
+// --- Asset Import ---
+// In a real project, you would import your local PDF file like this.
+// To make this component self-contained for demonstration, we'll define it below.
+// import Dolevcv from '../assets/Dolev cv.pdf';
 
-export default function ShowCv() {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const { screenSize } = useScreensize();
-  
+// --- Main ResumeViewer Component ---
+// This component provides a trigger button that opens a fully functional PDF resume viewer in a modal.
+export default function ResumeViewer() {
+  // --- Configuration ---
+  // Use the imported PDF file. If you don't have a local PDF, you can use a URL.
+  const pdfUrl = '/assets/Dolev cv.pdf'; // Assuming Dolevcv is in the public/assets folder
+  // const pdfUrl = Dolevcv; // Use this line if you are importing the PDF directly
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // --- Handlers ---
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = useCallback(() => setIsModalOpen(false), []);
+
+  const handleOpenExternal = () => {
+    window.open(pdfUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  // Effect to handle closing the modal with the Escape key
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        closeModal();
+      }
+    };
+
+    if (isModalOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'auto'; // Restore scrolling
+    };
+  }, [isModalOpen, closeModal]);
+
+  // --- Animation Variants ---
+  const backdropVariants = {
+    visible: { opacity: 1 },
+    hidden: { opacity: 0 },
+  };
+
+  const modalVariants = {
+    hidden: { y: "100vh", opacity: 0, scale: 0.8 },
+    visible: { 
+      y: 0, 
+      opacity: 1, 
+      scale: 1,
+      transition: { type: "spring", stiffness: 100, damping: 20, duration: 0.5 }
+    },
+    exit: { 
+      y: "100vh", 
+      opacity: 0, 
+      scale: 0.8,
+      transition: { duration: 0.3 }
+    }
+  };
+
   return (
-    <div>
-      {screenSize.dynamicWidth > 700 ? (
-        <motion.li
-          whileHover={["hover", {scale:1.2}]}
-          className="mt-10 hover:text-blue-500 hover:bg-opacity-5 hover:bg-blue-300 rounded-full p-2 mb-10 flex items-center cursor-pointer"
-          onClick={handleOpen}
-        > 
-          <DescriptionIcon fontSize="large" />
-          <motion.p
-            className="ml-2 flex"
-            variants={{
-              hover: {
-                opacity: 1,
-                transition: {
-                  duration: 0.5,
-                  staggerChildren: 0.1,
-                },
-              },
-            }}
-          >
-            {"CV".split("").map((char, index) => (
-              <motion.span
-                key={index}
-                initial={{ opacity: 0 }}
-                variants={{ hover: { opacity: 1 } }}
-              >
-                {char}
-              </motion.span>
-            ))}
-          </motion.p>
-        </motion.li>
-      ) : (
-        <motion.li
-          whileHover={{ rotate: [0, 10, 0, -10, 0, 10, 0, -10, 0] }}
-          transition={{ duration: 0.4 }}
-          className="mt-8 font-bold text-blue-500 text-4xl cursor-pointer"
-          onClick={handleOpen}
-        >
-          CV
-        </motion.li>
-      )}
-     
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+    <>
+      {/* --- Trigger Button --- */}
+      <motion.button
+        onClick={openModal}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className="flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-lg hover:bg-indigo-700 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
       >
-        <Box sx={style}>
-          <button
-            className="absolute bottom-6 lg:bottom-20 left-1/2 transform -translate-x-1/2 lg:text-2xl"
-            onClick={handleClose}
+        <FileText size={20} />
+        <span>View My Resume</span>
+      </motion.button>
+
+      {/* --- Modal --- */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-60 backdrop-blur-sm"
+            variants={backdropVariants}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            onClick={closeModal} // Close modal on overlay click
           >
-            <CloseIcon color='inherit' fontSize='inherit' className='text-black '/>
-          </button>
-          <img src={cv} alt="CV" className="m-auto w-[400px] sm:w-[700px] md:w-[800px] lg:w-full h-auto lg:p-10"/>
-        </Box>
-      </Modal>
-    </div>
+            <motion.div
+              className="relative flex flex-col w-full max-w-4xl h-[90vh] bg-white dark:bg-slate-800 rounded-xl shadow-2xl overflow-hidden"
+              variants={modalVariants}
+              exit="exit"
+              onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
+            >
+              {/* Modal Header */}
+              <header className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-700 flex-shrink-0">
+                <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                  <FileText className="text-indigo-500" />
+                  My Resume
+                </h2>
+                <div className="flex items-center gap-2">
+                  <a 
+                    href={pdfUrl} 
+                    download="Dolev-Resume.pdf"
+                    className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-indigo-600 text-white text-xs font-semibold rounded-md hover:bg-indigo-700 transition-colors"
+                  >
+                    <Download size={14} /> Download
+                  </a>
+                  <button
+                    onClick={handleOpenExternal}
+                    className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-md hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors"
+                  >
+                    <ExternalLink size={14} /> New Tab
+                  </button>
+                  <button 
+                    onClick={closeModal}
+                    className="p-2 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                    aria-label="Close resume viewer"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+              </header>
+
+              {/* PDF Viewer */}
+              <div className="flex-grow bg-slate-100 dark:bg-slate-900">
+                <iframe
+                  src={`${pdfUrl}#view=fitH&zoom=100`}
+                  title="Resume PDF Viewer"
+                  className="w-full h-full border-0"
+                  aria-label="Embedded resume PDF"
+                />
+              </div>
+
+              {/* Mobile Footer Actions */}
+              <footer className="sm:hidden flex items-center justify-around p-2 border-t border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm">
+                 <a 
+                    href={pdfUrl} 
+                    download="Dolev-Resume.pdf"
+                    className="flex-1 flex justify-center items-center gap-2 px-3 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-md hover:bg-indigo-700 transition-colors"
+                  >
+                    <Download size={16} /> Download
+                  </a>
+                  <button
+                    onClick={handleOpenExternal}
+                    className="flex-1 flex justify-center items-center gap-2 px-3 py-2 text-slate-700 dark:text-slate-200 text-sm font-semibold rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                  >
+                    <ExternalLink size={16} /> New Tab
+                  </button>
+              </footer>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

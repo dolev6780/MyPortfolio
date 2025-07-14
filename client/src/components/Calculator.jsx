@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Sun, Moon, History, Trash2, X } from 'lucide-react';
 
+// Main Calculator Component
 export default function Calculator() {
+  // --- STATE MANAGEMENT ---
   const [display, setDisplay] = useState('0');
   const [firstOperand, setFirstOperand] = useState(null);
   const [operator, setOperator] = useState(null);
@@ -8,102 +12,73 @@ export default function Calculator() {
   const [memory, setMemory] = useState(0);
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState('dark'); // Defaulting to dark theme
 
-  const addToHistory = useCallback((calculation, result) => {
-    setHistory(prev => [...prev, { calculation, result }]);
-  }, []);
+  // --- CORE LOGIC (memoized with useCallback) ---
 
   const formatResult = useCallback((value) => {
-    if (typeof value === 'string') return value;
-    
-    // Format the number to avoid excessive decimals but preserve precision
-    if (Number.isInteger(value)) {
-      return String(value);
-    }
-    
-    const stringValue = value.toString();
+    if (typeof value !== 'number' || !isFinite(value)) return 'Error';
+    const stringValue = String(value);
+    // Use exponential notation for very long numbers to prevent overflow
     if (stringValue.length > 12) {
-      return value.toExponential(8);
+      return value.toExponential(6);
     }
-    
     return stringValue;
   }, []);
 
   const performCalculation = useCallback(() => {
     const inputValue = parseFloat(display);
+    if (isNaN(inputValue) || firstOperand === null) return inputValue;
 
-    if (operator === '+') {
-      return firstOperand + inputValue;
-    } else if (operator === '-') {
-      return firstOperand - inputValue;
-    } else if (operator === '×') {
-      return firstOperand * inputValue;
-    } else if (operator === '÷') {
-      if (inputValue === 0) {
-        return 'Error';
-      }
-      return firstOperand / inputValue;
-    } else if (operator === '%') {
-      return firstOperand % inputValue;
-    }
-
-    return inputValue;
+    const calculations = {
+      '+': (a, b) => a + b,
+      '-': (a, b) => a - b,
+      '×': (a, b) => a * b,
+      '÷': (a, b) => (b === 0 ? 'Error' : a / b),
+      '%': (a, b) => a % b,
+    };
+    return calculations[operator] ? calculations[operator](firstOperand, inputValue) : inputValue;
   }, [display, firstOperand, operator]);
+  
+  const addToHistory = useCallback((calculation, result) => {
+    setHistory(prev => [{ calculation, result, id: Date.now() }, ...prev].slice(0, 20));
+  }, []);
 
   const inputDigit = useCallback((digit) => {
+    if (display.length >= 16 && !waitingForSecondOperand) return;
     if (waitingForSecondOperand) {
-      setDisplay(digit);
+      setDisplay(String(digit));
       setWaitingForSecondOperand(false);
     } else {
-      // Prevent excessive digits
-      if (display.replace(/[-.]/g, '').length < 12) {
-        setDisplay(display === '0' ? digit : display + digit);
-      }
+      setDisplay(display === '0' ? String(digit) : display + digit);
     }
   }, [display, waitingForSecondOperand]);
 
   const inputDecimal = useCallback(() => {
-    if (waitingForSecondOperand) {
-      setDisplay('0.');
-      setWaitingForSecondOperand(false);
-      return;
-    }
-
     if (!display.includes('.')) {
       setDisplay(display + '.');
     }
-  }, [display, waitingForSecondOperand]);
+  }, [display]);
 
-  const clearDisplay = useCallback(() => {
+  const clearAll = useCallback(() => {
     setDisplay('0');
     setFirstOperand(null);
     setOperator(null);
     setWaitingForSecondOperand(false);
   }, []);
 
-  const toggleSign = useCallback(() => {
-    setDisplay(parseFloat(display) * -1 + '');
-  }, [display]);
-
   const handleOperator = useCallback((nextOperator) => {
     const inputValue = parseFloat(display);
+    if (isNaN(inputValue)) return;
 
-    if (firstOperand === null) {
-      setFirstOperand(inputValue);
-    } else if (operator) {
+    if (firstOperand !== null && operator) {
       const result = performCalculation();
-      if (result === 'Error') {
-        setDisplay('Error');
-        setFirstOperand(null);
-        setWaitingForSecondOperand(true);
-        return;
-      }
-      
       const formattedResult = formatResult(result);
-      addToHistory(`${firstOperand} ${operator} ${inputValue}`, formattedResult);
+      addToHistory(`${formatResult(firstOperand)} ${operator} ${formatResult(inputValue)}`, formattedResult);
       setDisplay(formattedResult);
-      setFirstOperand(result);
+      setFirstOperand(result === 'Error' ? null : result);
+    } else {
+      setFirstOperand(inputValue);
     }
 
     setWaitingForSecondOperand(true);
@@ -111,449 +86,146 @@ export default function Calculator() {
   }, [display, firstOperand, operator, performCalculation, formatResult, addToHistory]);
 
   const handleEquals = useCallback(() => {
-    if (!operator) return;
-
-    const inputValue = parseFloat(display);
+    if (!operator || firstOperand === null) return;
     const result = performCalculation();
+    const formattedResult = formatResult(result);
+    addToHistory(`${formatResult(firstOperand)} ${operator} ${formatResult(parseFloat(display))}`, formattedResult);
     
-    if (result === 'Error') {
-      setDisplay('Error');
-      setFirstOperand(null);
-      setOperator(null);
-      addToHistory(`${firstOperand} ${operator} ${inputValue}`, 'Error');
-    } else {
-      const formattedResult = formatResult(result);
-      addToHistory(`${firstOperand} ${operator} ${inputValue}`, formattedResult);
-      setDisplay(formattedResult);
-      setFirstOperand(result);
-    }
-    
+    setDisplay(formattedResult);
+    setFirstOperand(null);
     setOperator(null);
-    setWaitingForSecondOperand(false);
+    setWaitingForSecondOperand(true);
   }, [display, firstOperand, operator, performCalculation, formatResult, addToHistory]);
-
-  const backspace = useCallback(() => {
-    if (display === 'Error') {
-      setDisplay('0');
-      return;
-    }
-    
-    if (display.length === 1 || (display.length === 2 && display.startsWith('-'))) {
-      setDisplay('0');
-    } else {
-      setDisplay(display.slice(0, -1));
-    }
-  }, [display]);
-
-  const percentage = useCallback(() => {
-    const value = parseFloat(display);
-    setDisplay(String(value / 100));
-  }, [display]);
-
-  // Scientific functions
-  const square = useCallback(() => {
-    const value = parseFloat(display);
-    const result = value * value;
-    const formattedResult = formatResult(result);
-    setDisplay(formattedResult);
-    addToHistory(`sqr(${value})`, formattedResult);
-  }, [display, formatResult, addToHistory]);
-
-  const squareRoot = useCallback(() => {
-    const value = parseFloat(display);
-    if (value < 0) {
-      setDisplay('Error');
-      addToHistory(`√(${value})`, 'Error');
-      return;
-    }
-    const result = Math.sqrt(value);
-    const formattedResult = formatResult(result);
-    setDisplay(formattedResult);
-    addToHistory(`√(${value})`, formattedResult);
-  }, [display, formatResult, addToHistory]);
-
-  const reciprocal = useCallback(() => {
-    const value = parseFloat(display);
-    if (value === 0) {
-      setDisplay('Error');
-      addToHistory(`1/(${value})`, 'Error');
-      return;
-    }
-    const result = 1 / value;
-    const formattedResult = formatResult(result);
-    setDisplay(formattedResult);
-    addToHistory(`1/(${value})`, formattedResult);
-  }, [display, formatResult, addToHistory]);
-
-  // Memory functions
-  const memoryClear = useCallback(() => {
-    setMemory(0);
-  }, []);
-
-  const memoryRecall = useCallback(() => {
-    setDisplay(String(memory));
-    setWaitingForSecondOperand(false);
-  }, [memory]);
-
-  const memoryAdd = useCallback(() => {
-    if (display !== 'Error') {
-      setMemory(memory + parseFloat(display));
-    }
-  }, [display, memory]);
-
-  const memorySubtract = useCallback(() => {
-    if (display !== 'Error') {
-      setMemory(memory - parseFloat(display));
-    }
-  }, [display, memory]);
-
-  const toggleTheme = useCallback(() => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
-  }, [theme]);
-
-  // Add keyboard support
+  
+  // --- KEYBOARD SUPPORT ---
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (/\d/.test(e.key)) {
-        inputDigit(e.key);
-      } else if (e.key === '.') {
-        inputDecimal();
-      } else if (e.key === 'Escape') {
-        clearDisplay();
-      } else if (e.key === 'Backspace') {
-        backspace();
-      } else if (e.key === 'Enter' || e.key === '=') {
-        handleEquals();
-      } else if (e.key === '+') {
-        handleOperator('+');
-      } else if (e.key === '-') {
-        handleOperator('-');
-      } else if (e.key === '*') {
-        handleOperator('×');
-      } else if (e.key === '/') {
-        handleOperator('÷');
-      } else if (e.key === '%') {
-        percentage();
+      e.preventDefault();
+      if (/\d/.test(e.key)) inputDigit(e.key);
+      else if (e.key === '.') inputDecimal();
+      else if (e.key === 'Escape') clearAll();
+      else if (e.key === 'Backspace') setDisplay(d => d.length > 1 ? d.slice(0, -1) : '0');
+      else if (e.key === 'Enter' || e.key === '=') handleEquals();
+      else if (['+', '-', '%'].includes(e.key)) handleOperator(e.key);
+      else if (e.key === '*') handleOperator('×');
+      else if (e.key === '/') handleOperator('÷');
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [inputDigit, inputDecimal, clearAll, handleEquals, handleOperator]);
+
+  // --- THEME-AWARE BUTTON COMPONENT ---
+  const Button = ({ onClick, children, className = '' }) => {
+    const baseClasses = "rounded-lg text-xl sm:text-2xl focus:outline-none focus:ring-2 transition-all duration-150";
+    const themeClasses = {
+      light: {
+        default: 'bg-gray-200/80 hover:bg-gray-300/80 focus:ring-cyan-300 text-gray-800',
+        operator: 'bg-cyan-200/70 hover:bg-cyan-300/70 focus:ring-cyan-400 text-cyan-800',
+        equals: 'bg-blue-500 hover:bg-blue-600 focus:ring-blue-400 text-white',
+      },
+      dark: {
+        default: 'bg-gray-700/50 hover:bg-gray-600/50 focus:ring-cyan-500 text-gray-100',
+        operator: 'bg-cyan-500/80 hover:bg-cyan-400/80 focus:ring-cyan-300 text-white',
+        equals: 'bg-blue-600 hover:bg-blue-500 focus:ring-blue-400 text-white',
       }
     };
+    
+    let type = 'default';
+    if (['÷', '×', '-', '+'].includes(children)) type = 'operator';
+    if (children === '=') type = 'equals';
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [
-    inputDigit,
-    inputDecimal,
-    clearDisplay,
-    backspace,
-    handleEquals,
-    handleOperator,
-    percentage
-  ]);
-
-  // Button component for consistency
-  const Button = ({ onClick, className, children }) => {
     return (
-      <button 
+      <motion.button
         onClick={onClick}
-        className={`p-2 text-sm sm:text-base rounded-md hover:opacity-90
-                  focus:outline-none focus:ring-2 focus:ring-blue-300 
-                  active:scale-95 transition-all shadow-md
-                  ${className}
-                  ${theme === 'dark' ? 'shadow-slate-800' : ''}`}
+        className={`${baseClasses} ${themeClasses[theme][type]} ${className}`}
+        whileTap={{ scale: 0.95 }}
       >
         {children}
-      </button>
+      </motion.button>
     );
   };
 
   return (
-    <div className={`flex flex-col h-full p-3 ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100'}`}>
-      {/* Calculator header */}
-      <div className={`flex justify-between items-center mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
-        <div className="text-sm font-medium flex items-center">
-          <span className="mr-2">Standard</span>
-          {memory !== 0 && (
-            <span className="text-xs px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300">M</span>
-          )}
-        </div>
-        <div className="flex space-x-2">
-          <button 
-            className={`p-1 rounded ${theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-200'}`}
-            onClick={() => setShowHistory(!showHistory)}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </button>
-          <button 
-            className={`p-1 rounded ${theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-200'}`}
-            onClick={toggleTheme}
-          >
-            {theme === 'dark' ? (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-              </svg>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-              </svg>
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* History panel */}
-      {showHistory && (
-        <div className={`mb-3 border rounded-md p-2 ${theme === 'dark' ? 'bg-gray-900 border-gray-700 text-gray-200' : 'bg-white border-gray-300'}`}>
-          <div className="flex justify-between items-center mb-1">
-            <h3 className="text-sm font-medium">History</h3>
-            <button 
-              onClick={() => setHistory([])} 
-              className={`text-xs px-2 py-0.5 rounded ${theme === 'dark' ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}
-            >
-              Clear
+    <div className={`flex flex-col h-full transition-colors duration-300 ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-black'}`}>
+      <div className="flex-grow flex items-center justify-center p-2 sm:p-4">
+        <div className={`w-full max-w-sm mx-auto rounded-2xl p-4 shadow-2xl transition-all duration-300 ${theme === 'dark' ? 'bg-gray-800/50 shadow-cyan-500/5' : 'bg-white/70 shadow-gray-400/20'}`}>
+          
+          {/* --- HEADER --- */}
+          <div className="flex justify-between items-center mb-4">
+            <AnimatePresence mode="wait">
+              <motion.button key={theme} onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')} className="p-2 rounded-full hover:bg-white/10" whileTap={{scale:0.9}} initial={{opacity:0, y:-10}} animate={{opacity:1, y:0}} exit={{opacity:0, y:10}}>
+                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+              </motion.button>
+            </AnimatePresence>
+            <button onClick={() => setShowHistory(s => !s)} className="p-2 rounded-full hover:bg-white/10">
+              <History size={18} />
             </button>
           </div>
-          <div className="max-h-28 overflow-y-auto text-xs">
-            {history.length === 0 ? (
-              <div className="text-center py-2 text-gray-500">No history yet</div>
-            ) : (
-              history.map((item, index) => (
-                <div key={index} className="py-1 border-t first:border-0 border-gray-200 dark:border-gray-700">
-                  <div className={`text-right ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{item.calculation}</div>
-                  <div className="text-right font-medium">{item.result}</div>
+
+          {/* --- HISTORY PANEL --- */}
+          <AnimatePresence>
+            {showHistory && (
+              <motion.div
+                className={`mb-4 border rounded-lg overflow-hidden ${theme === 'dark' ? 'bg-gray-900/50 border-gray-700' : 'bg-gray-50 border-gray-200'}`}
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+              >
+                <div className="p-3">
+                  <div className="flex justify-between items-center mb-2">
+                    <h3 className="text-sm font-semibold">History</h3>
+                    <button onClick={() => setHistory([])} className="p-1 rounded-full hover:bg-white/10"><Trash2 size={14} /></button>
+                  </div>
+                  <div className="max-h-32 overflow-y-auto text-sm space-y-2">
+                    {history.length === 0 
+                      ? <p className="text-center text-xs text-gray-500 py-4">No history yet</p>
+                      : history.map(item => (
+                          <div key={item.id} className="text-right">
+                            <p className="text-xs text-gray-400">{item.calculation}</p>
+                            <p className="font-semibold">{item.result}</p>
+                          </div>
+                        ))
+                    }
+                  </div>
                 </div>
-              ))
+              </motion.div>
             )}
+          </AnimatePresence>
+
+          {/* --- DISPLAY --- */}
+          <div className="mb-4 text-right">
+            <p className="h-6 text-gray-400 text-lg break-all">{firstOperand !== null && operator ? `${formatResult(firstOperand)} ${operator}` : ' '}</p>
+            <p className="text-4xl sm:text-5xl font-bold break-all">{display}</p>
+          </div>
+
+          {/* --- BUTTONS --- */}
+          <div className="grid grid-cols-4 grid-rows-5 gap-2 sm:gap-3">
+            <Button onClick={clearAll}>AC</Button>
+            <Button onClick={() => setDisplay(d => String(parseFloat(d) * -1))}>±</Button>
+            <Button onClick={() => handleOperator('%')}>%</Button>
+            <Button onClick={() => handleOperator('÷')}>÷</Button>
+            
+            <Button>7</Button>
+            <Button>8</Button>
+            <Button>9</Button>
+            <Button onClick={() => handleOperator('×')}>×</Button>
+            
+            <Button>4</Button>
+            <Button>5</Button>
+            <Button>6</Button>
+            <Button onClick={() => handleOperator('-')}>-</Button>
+            
+            <Button>1</Button>
+            <Button>2</Button>
+            <Button>3</Button>
+            <Button onClick={() => handleOperator('+')}>+</Button>
+            
+            <Button className="col-span-2">0</Button>
+            <Button onClick={inputDecimal}>.</Button>
+            <Button onClick={handleEquals}>=</Button>
           </div>
         </div>
-      )}
-
-      {/* Calculator display */}
-      <div className={`border rounded-md p-2 mb-2 text-right ${
-        theme === 'dark' 
-          ? 'bg-gray-900 border-gray-700 text-white' 
-          : 'bg-white border-gray-300 text-gray-800'
-      }`}>
-        <div className={`text-xs h-4 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-          {firstOperand !== null && operator ? `${firstOperand} ${operator}` : ''}
-        </div>
-        <div className="text-2xl md:text-3xl font-medium overflow-hidden text-ellipsis">
-          {display}
-        </div>
-      </div>
-
-      {/* Memory buttons */}
-      <div className="grid grid-cols-5 gap-1 mb-2">
-        <Button onClick={memoryClear} className={`text-xs ${
-          theme === 'dark' 
-            ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' 
-            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-        }`}>MC</Button>
-        <Button onClick={memoryRecall} className={`text-xs ${
-          theme === 'dark' 
-            ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' 
-            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-        }`}>MR</Button>
-        <Button onClick={memoryAdd} className={`text-xs ${
-          theme === 'dark' 
-            ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' 
-            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-        }`}>M+</Button>
-        <Button onClick={memorySubtract} className={`text-xs ${
-          theme === 'dark' 
-            ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' 
-            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-        }`}>M-</Button>
-        <Button onClick={() => setMemory(parseFloat(display))} className={`text-xs ${
-          theme === 'dark' 
-            ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' 
-            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-        }`}>MS</Button>
-      </div>
-
-      {/* Scientific function buttons */}
-      <div className="grid grid-cols-4 gap-1 mb-2">
-        <Button onClick={square} className={
-          theme === 'dark' 
-            ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' 
-            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-        }>
-          x²
-        </Button>
-        <Button onClick={squareRoot} className={
-          theme === 'dark' 
-            ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' 
-            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-        }>
-          √
-        </Button>
-        <Button onClick={reciprocal} className={
-          theme === 'dark' 
-            ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' 
-            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-        }>
-          1/x
-        </Button>
-        <Button onClick={percentage} className={
-          theme === 'dark' 
-            ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' 
-            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-        }>
-          %
-        </Button>
-      </div>
-
-      {/* Main calculator buttons */}
-      <div className="grid grid-cols-4 gap-1 flex-grow">
-        <Button onClick={clearDisplay} className={
-          theme === 'dark' 
-            ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' 
-            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-        }>
-          CE
-        </Button>
-        <Button onClick={clearDisplay} className={
-          theme === 'dark' 
-            ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' 
-            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-        }>
-          C
-        </Button>
-        <Button onClick={backspace} className={
-          theme === 'dark' 
-            ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' 
-            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-        }>
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-          </svg>
-        </Button>
-        <Button onClick={() => handleOperator('÷')} className={
-          theme === 'dark' 
-            ? 'bg-blue-700 text-white hover:bg-blue-600' 
-            : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
-        }>
-          ÷
-        </Button>
-
-        <Button onClick={() => inputDigit('7')} className={
-          theme === 'dark' 
-            ? 'bg-gray-600 text-white hover:bg-gray-500' 
-            : 'bg-white text-gray-700 hover:bg-gray-100'
-        }>
-          7
-        </Button>
-        <Button onClick={() => inputDigit('8')} className={
-          theme === 'dark' 
-            ? 'bg-gray-600 text-white hover:bg-gray-500' 
-            : 'bg-white text-gray-700 hover:bg-gray-100'
-        }>
-          8
-        </Button>
-        <Button onClick={() => inputDigit('9')} className={
-          theme === 'dark' 
-            ? 'bg-gray-600 text-white hover:bg-gray-500' 
-            : 'bg-white text-gray-700 hover:bg-gray-100'
-        }>
-          9
-        </Button>
-        <Button onClick={() => handleOperator('×')} className={
-          theme === 'dark' 
-            ? 'bg-blue-700 text-white hover:bg-blue-600' 
-            : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
-        }>
-          ×
-        </Button>
-        
-        <Button onClick={() => inputDigit('4')} className={
-          theme === 'dark' 
-            ? 'bg-gray-600 text-white hover:bg-gray-500' 
-            : 'bg-white text-gray-700 hover:bg-gray-100'
-        }>
-          4
-        </Button>
-        <Button onClick={() => inputDigit('5')} className={
-          theme === 'dark' 
-            ? 'bg-gray-600 text-white hover:bg-gray-500' 
-            : 'bg-white text-gray-700 hover:bg-gray-100'
-        }>
-          5
-        </Button>
-        <Button onClick={() => inputDigit('6')} className={
-          theme === 'dark' 
-            ? 'bg-gray-600 text-white hover:bg-gray-500' 
-            : 'bg-white text-gray-700 hover:bg-gray-100'
-        }>
-          6
-        </Button>
-        <Button onClick={() => handleOperator('-')} className={
-          theme === 'dark' 
-            ? 'bg-blue-700 text-white hover:bg-blue-600' 
-            : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
-        }>
-          -
-        </Button>
-        
-        <Button onClick={() => inputDigit('1')} className={
-          theme === 'dark' 
-            ? 'bg-gray-600 text-white hover:bg-gray-500' 
-            : 'bg-white text-gray-700 hover:bg-gray-100'
-        }>
-          1
-        </Button>
-        <Button onClick={() => inputDigit('2')} className={
-          theme === 'dark' 
-            ? 'bg-gray-600 text-white hover:bg-gray-500' 
-            : 'bg-white text-gray-700 hover:bg-gray-100'
-        }>
-          2
-        </Button>
-        <Button onClick={() => inputDigit('3')} className={
-          theme === 'dark' 
-            ? 'bg-gray-600 text-white hover:bg-gray-500' 
-            : 'bg-white text-gray-700 hover:bg-gray-100'
-        }>
-          3
-        </Button>
-        <Button onClick={() => handleOperator('+')} className={
-          theme === 'dark' 
-            ? 'bg-blue-700 text-white hover:bg-blue-600' 
-            : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
-        }>
-          +
-        </Button>
-        
-        <Button onClick={toggleSign} className={
-          theme === 'dark' 
-            ? 'bg-gray-600 text-white hover:bg-gray-500' 
-            : 'bg-white text-gray-700 hover:bg-gray-100'
-        }>
-          ±
-        </Button>
-        <Button onClick={() => inputDigit('0')} className={
-          theme === 'dark' 
-            ? 'bg-gray-600 text-white hover:bg-gray-500' 
-            : 'bg-white text-gray-700 hover:bg-gray-100'
-        }>
-          0
-        </Button>
-        <Button onClick={inputDecimal} className={
-          theme === 'dark' 
-            ? 'bg-gray-600 text-white hover:bg-gray-500' 
-            : 'bg-white text-gray-700 hover:bg-gray-100'
-        }>
-          .
-        </Button>
-        <Button onClick={handleEquals} className="bg-blue-500 text-white hover:bg-blue-600">
-          =
-        </Button>
-      </div>
-
-      {/* Keyboard shortcuts hint */}
-      <div className={`mt-2 text-xs text-center ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-        Keyboard shortcuts: 0-9, +, -, *, /, =, Enter, Backspace, Esc
       </div>
     </div>
   );

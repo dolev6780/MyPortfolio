@@ -1,16 +1,14 @@
 import './App.css';
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+import useResponsive from './hooks/useResponsive';
 import Desktop from './pages/Desktop';
+import Mobile from './pages/Mobile';
 
 
 function App() {
+  const isMobile = useResponsive(1024);
   return (
     <div className="App">
-      <Router>
-      <Routes>
-        <Route path='/' element={  <Desktop/>} />
-      </Routes>
-      </Router>
+      {isMobile ? <Mobile /> : <Desktop />}
     </div>
   );
 }
