@@ -1,166 +1,335 @@
-import React, { useState, useEffect } from 'react';
-import { Folder, FileText, Mail, Gamepad2, Calculator, Contact, MoreHorizontal } from 'lucide-react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { Folder, FileText, Mail, Gamepad2, Calculator as CalculatorIcon, Contact, MoreHorizontal, Home, Sun, Wifi, Battery, X, Divide, Minus, Plus, Percent, ArrowLeft, Cloud, CloudSun, CloudRain } from 'lucide-react';
+import AboutMe from '../components/AboutMe';
+import Projects from '../components/Projects';
+import ContactMe from '../components/ContactMe';
+import Games from '../components/Games';
+import Resume from '../components/Resume';
+import Calculator from '../components/Calculator';
+import Weather from '../components/Weather';
 
-/**
- * Placeholder component for rendering the content of an "app".
- * In a real application, this would likely use the 'path' to dynamically import
- * and render the correct component (e.g., AboutMe, Projects).
- */
-const AppContent = ({ app, onGoHome }) => (
-  <div className="p-4 bg-gray-100 text-gray-800 h-full">
-    <h2 className="text-2xl font-bold mb-4">{app.name}</h2>
-    <p>This is the content for the {app.name} application.</p>
-    <p>Path: <code>{app.path}</code></p>
-    <button onClick={onGoHome} className="mt-6 px-4 py-2 bg-blue-500 text-white rounded-lg">Go Back</button>
-  </div>
+const APPS_CONFIG = [
+    { id: 'about', name: 'About Me', icon: Contact, isDocked: true, component: 'AboutMe' },
+    { id: 'projects', name: 'Projects', icon: Folder, isDocked: true, component: 'Projects' },
+    { id: 'contact', name: 'Contact Me', icon: Mail, isDocked: true, component: 'ContactMe' },
+    { id: 'more', name: 'More Apps', icon: MoreHorizontal, isDocked: true, isDrawerToggle: true },
+    { id: 'games', name: 'Games', icon: Gamepad2, isDocked: false, component: 'Games' },
+    { id: 'resume', name: 'My Resume', icon: FileText, isDocked: false, component: 'Resume' },
+    { id: 'calculator', name: 'Calculator', icon: CalculatorIcon, isDocked: false, component: 'Calculator' },
+];
+
+const APP_COMPONENTS = {
+    AboutMe, Projects, ContactMe, Games, Resume, Calculator, Weather
+};
+
+const AppIcon = ({ app, onClick, isDrawerIcon = false }) => (
+    <div
+        className="flex flex-col items-center justify-center text-center group h-full"
+        onClick={onClick ? () => onClick(app) : undefined}
+    >
+        <div className={`
+            w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center 
+            transition-all duration-300 group-hover:bg-purple-500/50 group-hover:scale-110
+            ${isDrawerIcon ? 'w-16 h-16' : 'w-14 h-14'}`}>
+            {React.createElement(app.icon, { size: isDrawerIcon ? 36 : 30, color: "white", strokeWidth: 1.5 })}
+        </div>
+        <span className={`text-white text-xs mt-2 w-full truncate px-1 ${isDrawerIcon ? 'text-sm' : ''}`}>
+            {app.name}
+        </span>
+    </div>
 );
 
-/**
- * Mobile Component
- * Renders an Android-like OS environment for mobile and tablet views.
- */
-export default function Mobile() {
-  // --- STATE MANAGEMENT ---
-  const [apps, setApps] = useState([
-    // Docked Apps
-    { id: 1, name: 'About Me', icon: Contact, path: "aboutme", isDocked: true },
-    { id: 6, name: 'Contact Me', icon: Mail, path: "contactme", isDocked: true },
-    { id: 5, name: 'Calculator', icon: Calculator, path: "calculator", isDocked: true },
-    { id: 2, name: 'Projects', icon: Folder, path: "projects", isDocked: true },
-    // Home Screen Apps
-    { id: 3, name: 'Games', icon: Gamepad2, path: "games", isDocked: false },
-    { id: 4, name: 'My Resume', icon: FileText, path: "cv", isDocked: false },
-  ]);
+const AppContainer = ({ app, onGoHome }) => {
+    const AppComponent = APP_COMPONENTS[app.component];
+    if (!AppComponent) return null;
 
-  const [openApp, setOpenApp] = useState(null);
-  const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [currentTime, setCurrentTime] = useState(new Date());
-
-  // --- DERIVED STATE ---
-  const homeScreenApps = apps.filter(app => !app.isDocked);
-  const dockedApps = apps.filter(app => app.isDocked);
-
-  // --- EFFECTS ---
-
-  // Effect for updating the clock every second
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-    // Cleanup the interval on component unmount
-    return () => clearInterval(timer);
-  }, []);
-
-  // --- EVENT HANDLERS ---
-
-  const handleOpenApp = (app) => {
-    setOpenApp(app);
-    setDrawerOpen(false); // Close drawer when an app is opened
-  };
-
-  const handleGoHome = () => {
-    setOpenApp(null);
-  };
-  
-  const handleToggleDrawer = () => {
-    setDrawerOpen(prev => !prev);
-  };
-
-  // --- RENDER LOGIC ---
-
-  const renderIcon = (app, isDrawerIcon = false) => (
-    <div
-      key={app.id}
-      className="flex flex-col items-center justify-center text-center cursor-pointer group"
-      onClick={() => handleOpenApp(app)}
-    >
-      <div className={`
-        w-14 h-14 rounded-2xl bg-gray-200/20 flex items-center justify-center 
-        transition-all duration-200 group-hover:bg-blue-500 group-hover:scale-110
-        ${isDrawerIcon ? 'w-16 h-16' : ''}
-      `}>
-        {React.createElement(app.icon, { size: 32, color: "white" })}
-      </div>
-      <span className={`text-white text-xs mt-2 w-full truncate px-1 ${isDrawerIcon ? 'text-sm' : ''}`}>
-        {app.name}
-      </span>
-    </div>
-  );
-
-  // Main render return
-  return (
-    <div className="w-full h-screen overflow-hidden relative select-none bg-gray-900">
-      {/* Video Background */}
-      <video autoPlay loop muted playsInline className="absolute w-full h-full left-1/2 top-1/2 object-cover transform -translate-x-1/2 -translate-y-1/2 -z-10 opacity-40">
-        <source src="/backgroundVideo.mp4" type="video/mp4" />
-      </video>
-      
-      <div className="relative z-10 w-full h-full flex flex-col">
-        {/* Status Bar */}
-        <div className="w-full h-8 px-4 flex justify-end items-center text-white text-sm">
-          <span>{currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+    return (
+        <div className="w-full h-full bg-gray-50 rounded-3xl overflow-hidden shadow-2xl animate-app-open">
+            <div className="h-full flex flex-col">
+                <header className="flex-shrink-0 p-2 bg-gray-100 border-b flex items-center justify-between z-10">
+                    <button onClick={onGoHome} className="p-2 rounded-full hover:bg-gray-200">
+                        <ArrowLeft size={20} className="text-gray-600" />
+                    </button>
+                    <span className="font-semibold text-gray-700">{app.name}</span>
+                    <div className="w-8"></div>
+                </header>
+                <main className="flex-grow overflow-y-auto">
+                    <AppComponent />
+                </main>
+            </div>
         </div>
+    );
+};
 
-        {/* --- Main Content: Home Screen or Open App --- */}
-        <main className="flex-grow w-full h-[calc(100%-8rem)] p-4">
-          {openApp ? (
-            // Render the open application view
-            <div className="w-full h-full bg-white rounded-2xl overflow-hidden shadow-2xl animate-fade-in">
-               <AppContent app={openApp} onGoHome={handleGoHome} />
-            </div>
-          ) : (
-            // Render the Home Screen icons
-            <div className="grid grid-cols-4 gap-y-6">
-              {homeScreenApps.map(app => renderIcon(app))}
-            </div>
-          )}
-        </main>
+const DraggableItem = ({ children, index, className, onDragStart, onDragEnter, onDragEnd, onClick }) => {
+    const longPressTimer = useRef();
+    const startPos = useRef({ x: 0, y: 0 });
+    const [isLongPress, setIsLongPress] = useState(false);
+    const [isDragging, setIsDragging] = useState(false);
 
-        {/* --- App Drawer --- */}
-        <div 
-          className={`absolute bottom-0 left-0 right-0 bg-black/70 backdrop-blur-xl rounded-t-3xl transition-transform duration-300 ease-in-out z-20
-            ${isDrawerOpen ? 'transform-none' : 'translate-y-[calc(100%-6rem)]'}
-          `}
-          style={{ height: '70vh' }}
+    const handleInteractionStart = (x, y) => {
+        startPos.current = { x, y };
+        longPressTimer.current = setTimeout(() => {
+            setIsLongPress(true);
+        }, 500);
+    };
+
+    const handleInteractionMove = (x, y) => {
+        const dx = Math.abs(x - startPos.current.x);
+        const dy = Math.abs(y - startPos.current.y);
+        if (dx > 10 || dy > 10) {
+            clearTimeout(longPressTimer.current);
+        }
+    };
+
+    const handleInteractionEnd = () => {
+        clearTimeout(longPressTimer.current);
+        if (!isLongPress) {
+            onClick();
+        }
+        setTimeout(() => setIsLongPress(false), 50);
+    };
+
+    const handleDragStartInternal = (e) => {
+        if (!isLongPress) {
+            e.preventDefault();
+            return;
+        }
+        setIsDragging(true);
+        onDragStart(index);
+        e.dataTransfer.effectAllowed = 'move';
+    };
+
+    const handleDragEndInternal = () => {
+        setIsDragging(false);
+        onDragEnd();
+        setIsLongPress(false);
+    };
+
+    return (
+        <div
+            draggable={isLongPress}
+            onMouseDown={(e) => handleInteractionStart(e.clientX, e.clientY)}
+            onMouseUp={handleInteractionEnd}
+            onMouseMove={(e) => handleInteractionMove(e.clientX, e.clientY)}
+            onTouchStart={(e) => handleInteractionStart(e.touches[0].clientX, e.touches[0].clientY)}
+            onTouchEnd={handleInteractionEnd}
+            onTouchMove={(e) => handleInteractionMove(e.touches[0].clientX, e.touches[0].clientY)}
+            onDragStart={handleDragStartInternal}
+            onDragEnter={() => onDragEnter(index)}
+            onDragEnd={handleDragEndInternal}
+            onDragOver={(e) => e.preventDefault()}
+            className={`${className} transition-transform duration-200 cursor-pointer 
+                ${isDragging ? 'opacity-50 scale-110 z-50' : ''}
+                ${isLongPress && !isDragging ? 'animate-pulse scale-105' : ''}
+            `}
         >
-          <div className="p-5">
-            <div className="w-10 h-1 bg-gray-500 rounded-full mx-auto mb-6 cursor-pointer" onClick={handleToggleDrawer}></div>
-            <div className="grid grid-cols-4 gap-y-8">
-              {apps.map(app => renderIcon(app, true))}
-            </div>
-          </div>
+            {children}
         </div>
-        
-        {/* --- Navigation & Dock --- */}
-        <footer className="w-full h-24 flex flex-col justify-end z-10">
-          {/* Dock */}
-          <div className="mx-auto mb-4 p-2 w-full max-w-sm h-20 bg-black/40 backdrop-blur-lg rounded-3xl flex justify-around items-center">
-            {dockedApps.map(app => renderIcon(app))}
-             {/* Drawer Toggle Button */}
-            <div
-              className="flex flex-col items-center justify-center text-center cursor-pointer group"
-              onClick={handleToggleDrawer}
-            >
-              <div className="w-14 h-14 rounded-2xl bg-gray-200/20 flex items-center justify-center transition-all duration-200 group-hover:bg-white/30 group-hover:scale-110">
-                <MoreHorizontal size={32} color="white" />
-              </div>
-            </div>
-          </div>
+    );
+};
 
-          {/* Android-style navigation buttons (optional, can be controlled by a parent component) */}
-          <div className="w-32 h-1.5 bg-white rounded-full mx-auto mb-2 cursor-pointer" onClick={handleGoHome}></div>
-        </footer>
-      </div>
+const HomeScreen = ({ items, setItems, onOpenApp }) => {
+    const dragItemIndex = useRef(null);
+    const dragOverItemIndex = useRef(null);
 
-      <style jsx>{`
-        @keyframes fade-in {
-          from { opacity: 0; transform: scale(0.95); }
-          to { opacity: 1; transform: scale(1); }
+    const handleDragStart = (index) => {
+        dragItemIndex.current = index;
+    };
+
+    const handleDragEnter = (index) => {
+        dragOverItemIndex.current = index;
+    };
+
+    const handleDragEnd = () => {
+        if (dragItemIndex.current === null || dragOverItemIndex.current === null || dragItemIndex.current === dragOverItemIndex.current) {
+            return;
         }
-        .animate-fade-in {
-          animation: fade-in 0.3s ease-in-out forwards;
-        }
-      `}</style>
+        const newItems = [...items];
+        const draggedItem = newItems.splice(dragItemIndex.current, 1)[0];
+        newItems.splice(dragOverItemIndex.current, 0, draggedItem);
+        dragItemIndex.current = null;
+        dragOverItemIndex.current = null;
+        setItems(newItems);
+    };
+
+    return (
+        <div className="grid grid-cols-4 gap-x-4 gap-y-8 p-4 pt-8 animate-fade-in">
+            {items.map((item, index) => (
+                <DraggableItem
+                    key={item.id}
+                    index={index}
+                    className={item.type === 'widget' ? 'col-span-4 h-32' : 'col-span-1 h-20'}
+                    onDragStart={handleDragStart}
+                    onDragEnter={handleDragEnter}
+                    onDragEnd={handleDragEnd}
+                    onClick={() => {
+                        if (item.type !== 'widget') {
+                            onOpenApp(item);
+                        }
+                    }}
+                >
+                    {item.type === 'widget' ? <Weather /> : <AppIcon app={item} />}
+                </DraggableItem>
+            ))}
+        </div>
+    );
+};
+
+const Dock = ({ apps, onOpenApp, onToggleDrawer }) => (
+    <div className="mx-auto mb-3 p-2 w-full max-w-sm h-20 bg-black/30 backdrop-blur-xl rounded-3xl flex justify-around items-center">
+        {apps.map(app => (
+            <AppIcon
+                key={app.id}
+                app={app}
+                onClick={app.isDrawerToggle ? onToggleDrawer : onOpenApp}
+            />
+        ))}
     </div>
-  );
+);
+
+const AppDrawer = ({ isOpen, onToggleDrawer, apps, onOpenApp }) => {
+    const touchStartY = useRef(0);
+    const drawerRef = useRef(null);
+
+    const handleTouchStart = (e) => {
+        touchStartY.current = e.targetTouches[0].clientY;
+    };
+
+    const handleTouchMove = (e) => {
+        const touchCurrentY = e.targetTouches[0].clientY;
+        const deltaY = touchCurrentY - touchStartY.current;
+        if (deltaY > 50) { // Swipe down to close
+            onToggleDrawer();
+        }
+    };
+
+    return (
+        <div
+            ref={drawerRef}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            className={`
+            absolute top-0 left-0 right-0 h-full bg-black/70 backdrop-blur-2xl
+            transition-transform duration-500 ease-in-out z-40
+            ${isOpen ? 'transform-none' : 'translate-y-full'}
+        `}>
+            <div className="p-5 h-full flex flex-col">
+                <div
+                    className="w-full flex justify-center py-4 flex-shrink-0"
+                    onClick={onToggleDrawer}
+                >
+                    <div className="w-10 h-1.5 bg-gray-500 rounded-full cursor-pointer"></div>
+                </div>
+                <div className="flex-grow overflow-y-auto pr-2">
+                    <div className="grid grid-cols-4 gap-y-8 mt-4">
+                        {apps.map(app => (
+                            <div key={app.id} className="cursor-pointer" onClick={() => { onOpenApp(app); onToggleDrawer(); }}>
+                                <AppIcon app={app} isDrawerIcon={true} />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default function App() {
+    const [openApp, setOpenApp] = useState(null);
+    const [isDrawerOpen, setDrawerOpen] = useState(false);
+
+    const [homeItems, setHomeItems] = useState([
+        { id: 'weather', type: 'widget', component: 'WeatherWidget' },
+        ...APPS_CONFIG.filter(app => !app.isDocked && !app.isDrawerToggle)
+    ]);
+
+    const dockedApps = useMemo(() => APPS_CONFIG.filter(app => app.isDocked), []);
+    const allApps = useMemo(() => APPS_CONFIG.filter(app => !app.isDrawerToggle), []);
+    
+    const touchStartY = useRef(0);
+
+    const handleOpenApp = (app) => {
+        if (app.component) {
+            setOpenApp(app);
+            setDrawerOpen(false);
+        }
+    };
+
+    const handleGoHome = () => setOpenApp(null);
+    const handleToggleDrawer = () => setDrawerOpen(prev => !prev);
+
+    const handleTouchStart = (e) => {
+        touchStartY.current = e.targetTouches[0].clientY;
+    };
+
+    const handleTouchEnd = (e) => {
+        const touchEndY = e.changedTouches[0].clientY;
+        const deltaY = touchStartY.current - touchEndY;
+        // If swipe up is significant and from the bottom of the screen
+        if (deltaY > 75 && touchStartY.current > window.innerHeight - 150) {
+            if (!openApp) {
+               handleToggleDrawer();
+            }
+        }
+    };
+
+    return (
+        <div
+            className="w-full h-screen overflow-hidden relative select-none bg-gray-900 font-sans"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+        >
+            <img
+                className="absolute w-full h-full left-1/2 top-1/2 object-cover transform -translate-x-1/2 -translate-y-1/2 z-0"
+                src="https://images.unsplash.com/photo-1576686271399-2349d0a35883?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzOTAzMDB8MHwxfGFsbHx8fHx8fHx8fDE3MjA4ODQ5NjZ8&ixlib=rb-4.0.3&q=80&w=1080"
+                alt="Mobile wallpaper"
+                onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/1080x1920/1a202c/ffffff?text=Image+Error'; }}
+            />
+            <div className="relative z-10 w-full h-full flex flex-col">
+                <main className="flex-grow w-full h-full">
+                    {openApp ? (
+                        <AppContainer app={openApp} onGoHome={handleGoHome} />
+                    ) : (
+                        <HomeScreen items={homeItems} setItems={setHomeItems} onOpenApp={handleOpenApp} />
+                    )}
+                </main>
+                
+                <AppDrawer
+                    isOpen={isDrawerOpen}
+                    onToggleDrawer={handleToggleDrawer}
+                    apps={allApps}
+                    onOpenApp={handleOpenApp}
+                />
+                
+                {!openApp && (
+                    <footer className="absolute bottom-0 w-full h-24 flex flex-col justify-end z-20">
+                        <Dock apps={dockedApps} onOpenApp={handleOpenApp} onToggleDrawer={handleToggleDrawer} />
+                        <div className="w-32 h-1.5 bg-white/80 rounded-full mx-auto mb-2 cursor-pointer" onClick={handleGoHome}></div>
+                    </footer>
+                )}
+            </div>
+
+            <style jsx global>{`
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+                .font-sans { font-family: 'Inter', sans-serif; }
+                
+                @keyframes app-open {
+                    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+                    to { opacity: 1; transform: scale(1) translateY(0); }
+                }
+                .animate-app-open {
+                    animation: app-open 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+                }
+                
+                @keyframes fade-in {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                .animate-fade-in {
+                    animation: fade-in 0.5s ease-in-out forwards;
+                }
+            `}</style>
+        </div>
+    );
 }
