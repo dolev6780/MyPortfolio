@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Gamepad2, Star, Monitor, X, Puzzle, Swords, Layers3 } from 'lucide-react';
+import { Gamepad2, Star, X, Puzzle, Swords, Layers3 } from 'lucide-react';
 
 // --- Reusable GameCard Component ---
 const GameCard = ({ game, onDoubleClick }) => {

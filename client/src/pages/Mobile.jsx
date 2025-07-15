@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { Folder, FileText, Mail, Gamepad2, Calculator as CalculatorIcon, Contact, MoreHorizontal, Home, Sun, Wifi, Battery, X, Divide, Minus, Plus, Percent, ArrowLeft, Cloud, CloudSun, CloudRain } from 'lucide-react';
+import React, { useState, useMemo, useRef } from 'react';
+import { Folder, FileText, Mail, Gamepad2, Calculator as CalculatorIcon, Contact, MoreHorizontal, ArrowLeft } from 'lucide-react';
 import AboutMe from '../components/AboutMe';
 import Projects from '../components/Projects';
 import ContactMe from '../components/ContactMe';

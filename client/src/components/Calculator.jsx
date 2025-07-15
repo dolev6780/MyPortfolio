@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sun, Moon, History, Trash2, X } from 'lucide-react';
+import { Sun, Moon, History, Trash2} from 'lucide-react';
 
 // Main Calculator Component
 export default function Calculator() {
@@ -9,7 +9,6 @@ export default function Calculator() {
   const [firstOperand, setFirstOperand] = useState(null);
   const [operator, setOperator] = useState(null);
   const [waitingForSecondOperand, setWaitingForSecondOperand] = useState(false);
-  const [memory, setMemory] = useState(0);
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
   const [theme, setTheme] = useState('dark'); // Defaulting to dark theme

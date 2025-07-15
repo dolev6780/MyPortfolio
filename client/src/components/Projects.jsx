@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
-import { Github, ExternalLink, Code, Star, FolderKanban, X } from 'lucide-react';
+import { Github, ExternalLink, Code, Star, FolderKanban } from 'lucide-react';
 import careerinfocus from '../assets/careerinfocus.png'
 import bijumpacademy from '../assets/bijumpacademy.jpg'
 import liatGallery from '../assets/liatGallery.png'
 import ShoppingListApp from '../assets/ShoppingListApp.png'
-// Replaced placeholders with actual project images from public URLs.
 const projects = [
     {
       id: 1,
