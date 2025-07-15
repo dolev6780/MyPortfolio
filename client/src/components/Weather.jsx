@@ -146,10 +146,21 @@ export default function Weather() {
       );
   }
   
+  // FIX: Add a check to ensure weather data is available before rendering
+  if (!weather) {
+    // This can happen in a transient state between loading and success
+    return (
+        <div dir="rtl" className="bg-white/20 backdrop-blur-md p-4 rounded-2xl flex items-center justify-center space-x-4 h-full">
+            <Loader size={48} className="text-white animate-spin" />
+            <p className="text-white">מעבד נתונים...</p>
+        </div>
+    );
+  }
+
   // Success State
   const WeatherIcon = weather.icon;
   return (
-    <div dir="rtl" className="bg-white/20 backdrop-blur-md p-4 rounded-2xl flex items-center space-x-4 h-full">
+    <div dir="rtl" className="bg-white/20 backdrop-blur-md p-4 rounded-2xl flex items-center justify-center space-x-4 h-full">
       {WeatherIcon && <WeatherIcon size={48} className="text-white ml-4" />}
       <div>
         <p className="text-3xl font-bold text-white">{weather.temperature}°C</p>

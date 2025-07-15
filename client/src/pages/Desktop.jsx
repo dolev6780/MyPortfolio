@@ -26,7 +26,6 @@ export default function Desktop() {
   const [minimizedWindows, setMinimizedWindows] = useState([]);
   const [activeWindowId, setActiveWindowId] = useState(null);
   const [zIndexCounter, setZIndexCounter] = useState(100);
-  const [nextDynamicId, setNextDynamicId] = useState(100);
   const [currentTime, setCurrentTime] = useState(new Date());
 
   // --- EFFECTS ---
