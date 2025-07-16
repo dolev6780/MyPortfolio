@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Gamepad2, X } from 'lucide-react';
 
-const GameCard = ({ game, onDoubleClick }) => {
+const GameCard = ({ game, onClick }) => {
   return (
     <motion.div
       layout
@@ -11,7 +11,7 @@ const GameCard = ({ game, onDoubleClick }) => {
       exit={{ opacity: 0, scale: 0.8 }}
       transition={{ type: 'spring', stiffness: 260, damping: 20 }}
       className="relative rounded-xl overflow-hidden group cursor-pointer w-16 h-16"
-      onDoubleClick={() => onDoubleClick(game)}
+      onClick={() => onClick(game)}
     >
       <img
         src={game.image}
@@ -24,7 +24,7 @@ const GameCard = ({ game, onDoubleClick }) => {
 };
 
 // --- Main MobileGames Component ---
-export default function MobileGames({ windowSize, onOpenUrl }) {
+export default function MobileGames({ onOpenUrl }) {
   const [selectedGame, setSelectedGame] = useState(null);
 
   const games = [
@@ -76,7 +76,7 @@ export default function MobileGames({ windowSize, onOpenUrl }) {
     }
   ];
 
-  const handleGameDoubleClick = (game) => {
+  const handleGameClick = (game) => {
     if (game.url && game.url !== "#") {
       if (typeof onOpenUrl === 'function') {
         onOpenUrl(game.url, game.title);
@@ -101,12 +101,11 @@ export default function MobileGames({ windowSize, onOpenUrl }) {
         >
           <AnimatePresence>
             {games.map(game => (
-              <GameCard key={game.id} game={game} onDoubleClick={handleGameDoubleClick} />
+              <GameCard key={game.id} game={game} onClick={handleGameClick} />
             ))}
           </AnimatePresence>
         </motion.div>
       </main>
-      {/* Game Modal for internal components */}
       <AnimatePresence>
         {selectedGame && (
           <motion.div

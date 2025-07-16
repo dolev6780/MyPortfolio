@@ -3,15 +3,9 @@ import { motion } from 'framer-motion';
 import { FileText, Download, ExternalLink, Smartphone } from 'lucide-react';
 import Dolevcv from '../assets/Dolev cv.pdf';
 
-// --- Main Resume Component ---
-// This component displays a PDF resume within an iframe and provides clear actions for users.
 export default function Resume() {
-  // --- Configuration ---
-  // Using the imported local PDF file.
   const pdfUrl = Dolevcv;
 
-  // --- Handlers ---
-  // Opens the PDF in a new browser tab.
   const handleOpenExternal = () => {
     window.open(pdfUrl, '_blank', 'noopener,noreferrer');
   };

@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Globe, Folder, X, Square, ExternalLink, FileText, User, Mail, Calculator as CalculatorIcon, Gamepad2, ShieldAlert, Copy } from 'lucide-react';
-
-// --- Child Components (for routing) ---
-// Using the actual components as requested.
 import Calculator from '../components/Calculator';
 import AboutMe from './AboutMe';
 import Projects from './Projects';
@@ -11,8 +8,6 @@ import Games from './Games';
 import Resume from './Resume';
 import ContactMe from './ContactMe';
 
-
-// --- Sub-Components for the Window ---
 
 const ContentRouter = ({ path, windowSize, onOpenUrl }) => {
   switch (path) {

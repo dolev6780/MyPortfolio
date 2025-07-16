@@ -8,7 +8,8 @@ import MobileResume from '../components/MobileResume';
 import MobileCalculator from '../components/MobileCalculator';
 import Weather from '../components/Weather';
 import MobileModal from '../components/MobileModal';
-import wallpaper from '../assets/portfolioAssets/PortfolioLogo.png';
+import wallpaper from '../assets/portfolioAssets/wallpaper.png';
+import MobileBrowser from '../components/MobileBrowser'; // Import the browser component
 
 const APPS_CONFIG = [
     { id: 'about', name: 'About Me', icon: Contact, isDocked: true, component: 'MobileAboutMe' },
@@ -25,8 +26,6 @@ const APP_COMPONENTS = {
     MobileAboutMe, MobileProjects, MobileContactMe, MobileGames, MobileResume, MobileCalculator,
     MobileWeather: Weather
 };
-
-// --- Sub-components ---
 
 const MobileAppIcon = ({ app, onClick, isDrawerIcon = false }) => (
     <div
@@ -45,22 +44,22 @@ const MobileAppIcon = ({ app, onClick, isDrawerIcon = false }) => (
     </div>
 );
 
-const MobileAppContainer = ({ app, onGoHome }) => {
+const MobileAppContainer = ({ app, onGoHome, onOpenUrl }) => {
     const AppComponent = APP_COMPONENTS[app.component];
     if (!AppComponent) return null;
 
     return (
-        <div className="w-full h-full bg-gray-50 rounded-3xl overflow-hidden shadow-2xl animate-app-open">
+        <div className="w-full h-full overflow-hidden animate-app-open">
             <div className="h-full flex flex-col">
-                <header className="flex-shrink-0 p-2 bg-gray-100 border-b flex items-center justify-between z-10">
-                    <button onClick={onGoHome} className="p-2 rounded-full hover:bg-gray-200">
-                        <ArrowLeft size={20} className="text-gray-600" />
+                <header className="flex-shrink-0 p-2 flex items-center justify-between z-10">
+                    <button onClick={onGoHome} className="p-2">
+                        <ArrowLeft size={20} className="text-white" />
                     </button>
-                    <span className="font-semibold text-gray-700">{app.name}</span>
+                    <span className="font-semibold text-white">{app.name}</span>
                     <div className="w-8"></div>
                 </header>
                 <main className="flex-grow overflow-y-auto">
-                    <AppComponent />
+                    <AppComponent onOpenUrl={onOpenUrl}/>
                 </main>
             </div>
         </div>
@@ -183,7 +182,7 @@ const MobileHomeScreen = ({ items, setItems, onOpenApp }) => {
 };
 
 const MobileDock = ({ apps, onOpenApp, onToggleDrawer }) => (
-    <div className="mx-auto mb-3 p-2 w-full max-w-sm h-20 bg-black/30 backdrop-blur-xl rounded-3xl flex justify-around items-center">
+    <div className="mx-auto mb-3 p-2 w-full max-w-sm h-24 bg-black/30 backdrop-blur-xl rounded-3xl flex justify-around items-center">
         {apps.map(app => (
             <MobileAppIcon
                 key={app.id}
@@ -211,7 +210,7 @@ const MobileAppDrawer = ({ isOpen, onToggleDrawer, apps, onOpenApp }) => {
     const handleTouchMove = (e) => {
         const touchCurrentY = e.targetTouches[0].clientY;
         const deltaY = touchCurrentY - touchStartY.current;
-        if (deltaY > 50) { // Swipe down to close
+        if (deltaY > 50) { 
             onToggleDrawer();
         }
     };
@@ -222,7 +221,7 @@ const MobileAppDrawer = ({ isOpen, onToggleDrawer, apps, onOpenApp }) => {
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             className={`
-            absolute top-0 left-0 right-0 h-full bg-black/70 backdrop-blur-2xl
+            absolute top-0 left-0 right-0 h-full bg-black/70 backdrop-blur
             transition-transform duration-500 ease-in-out z-40
             ${isOpen ? 'transform-none' : 'translate-y-full'}
         `}>
@@ -236,7 +235,7 @@ const MobileAppDrawer = ({ isOpen, onToggleDrawer, apps, onOpenApp }) => {
                 <div className="flex-grow overflow-y-auto pr-2">
                     <div className="grid grid-cols-4 gap-y-8 mt-4">
                         {apps.map(app => (
-                            <div key={app.id} className="cursor-pointer" onClick={() => { onOpenApp(app); onToggleDrawer(); }}>
+                            <div key={app.id} className="cursor-pointer" onClick={() => { onOpenApp(app); }}>
                                 <MobileAppIcon app={app} isDrawerIcon={true} />
                             </div>
                         ))}
@@ -248,13 +247,12 @@ const MobileAppDrawer = ({ isOpen, onToggleDrawer, apps, onOpenApp }) => {
 };
 
 // --- Main App Component ---
-
 export default function MobileApp() {
     const [openApp, setOpenApp] = useState(null);
     const [isDrawerOpen, setDrawerOpen] = useState(false);
     const [modalApp, setModalApp] = useState(null);
-    // MODIFICATION: New state to prevent immediate closing of the modal.
     const [isOpeningModal, setIsOpeningModal] = useState(false);
+    const [browserContent, setBrowserContent] = useState(null); // State for the browser view
 
     const [homeItems, setHomeItems] = useState([
         { id: 'weather_widget', type: 'widget', component: 'MobileWeather' },
@@ -263,14 +261,11 @@ export default function MobileApp() {
 
     const dockedApps = useMemo(() => APPS_CONFIG.filter(app => app.isDocked), []);
     const allApps = useMemo(() => APPS_CONFIG.filter(app => !app.isDrawerToggle), []);
-    
+
     const touchStartY = useRef(0);
 
-    // MODIFICATION: `useEffect` to manage the opening state.
     useEffect(() => {
-        // If a modal was just opened...
         if (modalApp) {
-            // ...then on the very next browser tick, allow it to be closed again.
             const timer = setTimeout(() => {
                 setIsOpeningModal(false);
             }, 0);
@@ -280,9 +275,9 @@ export default function MobileApp() {
 
 
     const handleOpenApp = (app) => {
+        console.log(`Opening app: ${app.name}`);
         if (app.component) {
             if (app.type === 'game') {
-                // MODIFICATION: Set the opening flag to true before showing the modal.
                 setIsOpeningModal(true);
                 setModalApp(app);
             } else {
@@ -290,6 +285,17 @@ export default function MobileApp() {
             }
             setDrawerOpen(false);
         }
+    };
+
+    const handleOpenUrl = (url, title, app) => {
+        setBrowserContent({ url, title });
+        setOpenApp(null);
+        setModalApp(null);
+        setDrawerOpen(false);
+    };
+
+    const handleCloseBrowser = () => {
+        setBrowserContent(null);
     };
 
     const handleCloseModal = (e) => {
@@ -301,7 +307,7 @@ export default function MobileApp() {
             setModalApp(null);
         }
     };
-    
+
     const handleGoHome = () => setOpenApp(null);
     const handleToggleDrawer = () => setDrawerOpen(prev => !prev);
 
@@ -313,7 +319,7 @@ export default function MobileApp() {
         const touchEndY = e.changedTouches[0].clientY;
         const deltaY = touchStartY.current - touchEndY;
         if (deltaY > 75 && touchStartY.current > window.innerHeight - 150) {
-            if (!openApp && !modalApp) { 
+            if (!openApp && !modalApp) {
                 handleToggleDrawer();
             }
         }
@@ -333,21 +339,23 @@ export default function MobileApp() {
             />
             <div className="relative z-10 w-full h-full flex flex-col">
                 <main className="flex-grow w-full h-full">
-                    {openApp ? (
-                        <MobileAppContainer app={openApp} onGoHome={handleGoHome} />
+                    {browserContent ? (
+                        <MobileBrowser url={browserContent.url} title={browserContent.title} onGoHome={handleCloseBrowser} />
+                    ) : openApp ? (
+                        <MobileAppContainer app={openApp} onGoHome={handleGoHome} onOpenUrl={handleOpenUrl}/>
                     ) : (
                         <MobileHomeScreen items={homeItems} setItems={setHomeItems} onOpenApp={handleOpenApp} />
                     )}
                 </main>
-                
+
                 <MobileAppDrawer
                     isOpen={isDrawerOpen}
                     onToggleDrawer={handleToggleDrawer}
                     apps={allApps}
                     onOpenApp={handleOpenApp}
                 />
-                
-                {!openApp && !modalApp && (
+
+                {!openApp && !modalApp && !browserContent && (
                     <footer className="absolute bottom-0 w-full h-24 flex flex-col justify-end z-20">
                         <MobileDock apps={dockedApps} onOpenApp={handleOpenApp} onToggleDrawer={handleToggleDrawer} />
                         <div className="w-32 h-1.5 bg-white/80 rounded-full mx-auto mb-2 cursor-pointer" onClick={handleGoHome}></div>
@@ -356,16 +364,27 @@ export default function MobileApp() {
             </div>
 
             {modalApp && (
-                <div 
-                    className="absolute inset-0 z-50 p-4 bg-black/50 backdrop-blur-sm flex items-center justify-center cursor-pointer"
-                    onClick={handleCloseModal}
-                >
-                    <MobileModal 
-                        app={modalApp} 
-                        onGoHome={() => setModalApp(null)}
-                        APP_COMPONENTS={APP_COMPONENTS} 
-                    />
-                </div>
+                <>
+                    {/* 1. This is just the background. It catches the clicks to close the modal. */}
+                    <div
+                        className="absolute inset-0 z-40 bg-black/50 backdrop-blur-sm"
+                        onClick={handleCloseModal}
+                    ></div>
+
+                    {/* 2. This container centers the modal but is invisible to clicks. */}
+                    <div className="absolute inset-0 z-50 p-4 flex items-center justify-center pointer-events-none">
+                        
+                        {/* 3. This wrapper re-enables clicks for the modal content only. */}
+                        <div className="pointer-events-auto">
+                            <MobileModal
+                                app={modalApp}
+                                onGoHome={() => setModalApp(null)}
+                                APP_COMPONENTS={APP_COMPONENTS}
+                                onOpenUrl={handleOpenUrl}
+                            />
+                        </div>
+                    </div>
+                </>
             )}
 
             <style>{`

@@ -1,17 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FileText, Download, ExternalLink, Smartphone } from 'lucide-react';
+import Dolevcv from '../assets/Dolev cv.pdf';
 
-// --- Main MobileResume Component ---
-// This component displays a PDF resume within an iframe and provides clear actions for users.
 export default function MobileResume() {
-  // --- Configuration ---
-  // Using a placeholder PDF URL as the local file is not accessible.
-  // Replace this with your actual PDF file path if needed.
-  const pdfUrl = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
+  const pdfUrl = Dolevcv;
 
-  // --- Handlers ---
-  // Opens the PDF in a new browser tab.
   const handleOpenExternal = () => {
     window.open(pdfUrl, '_blank', 'noopener,noreferrer');
   };

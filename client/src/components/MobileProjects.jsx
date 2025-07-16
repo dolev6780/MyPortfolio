@@ -68,15 +68,7 @@ const projects = [
 
 const filters = ['all', 'frontend', 'fullstack', 'mobile'];
 
-// --- Main MobileProjects Component ---
-export default function MobileProjects() {
-  // A mock onOpenUrl function for demonstration purposes.
-  // In a real app, this would be passed in as a prop to handle opening URLs in a modal or new window.
-  const onOpenUrl = (url, title) => {
-    console.log(`Opening URL: ${url} for project: ${title}`);
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
-
+export default function MobileProjects({ onOpenUrl }) {
   const [activeFilter, setActiveFilter] = useState('all');
   const [isCompact, setIsCompact] = useState(false);
 
@@ -89,6 +81,16 @@ export default function MobileProjects() {
     checkSize(); // Initial check
     return () => window.removeEventListener('resize', checkSize);
   }, []);
+
+  // Fallback function if onOpenUrl is not provided
+  const handleOpenUrl = (url, title) => {
+    if (typeof onOpenUrl === 'function') {
+      onOpenUrl(url, title);
+    } else {
+      console.log(`Opening URL: ${url} for project: ${title}`);
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  };
 
   const getProjectUrl = (project) => project.demo || project.url || null;
 
@@ -191,7 +193,7 @@ export default function MobileProjects() {
                     )}
                     {projectUrl && (
                       <div
-                        onClick={() => onOpenUrl(projectUrl, project.title)}
+                        onClick={() => handleOpenUrl(projectUrl, project.title)}
                         className="absolute inset-0 flex items-center justify-center bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer"
                       >
                         <div className="flex items-center gap-2 text-white font-semibold py-2 px-4 border-2 border-white rounded-full transform group-hover:scale-100 scale-90 transition-transform duration-300">
@@ -225,10 +227,13 @@ export default function MobileProjects() {
                         </a>
                       )}
                       {projectUrl && (
-                        <a href={projectUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                        <button 
+                          onClick={() => handleOpenUrl(projectUrl, project.title)}
+                          className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                        >
                           <ExternalLink size={18} />
                           {!isCompact && <span className="text-sm font-medium">Demo</span>}
-                        </a>
+                        </button>
                       )}
                     </div>
                     <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-mono capitalize">
@@ -282,7 +287,7 @@ export default function MobileProjects() {
           </p>
           <button
             className="px-8 py-3 bg-white text-indigo-600 font-bold rounded-lg hover:bg-indigo-50 transition-colors transform hover:scale-105 shadow-lg"
-            onClick={() => onOpenUrl('https://example.com/contact', 'Contact Me')}
+            onClick={() => handleOpenUrl('mailto:contact@example.com', 'Contact Me')}
           >
             Get in Touch
           </button>
