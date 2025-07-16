@@ -146,7 +146,6 @@ export default function Weather() {
       );
   }
   
-  // FIX: Add a check to ensure weather data is available before rendering
   if (!weather) {
     // This can happen in a transient state between loading and success
     return (
@@ -160,10 +159,10 @@ export default function Weather() {
   // Success State
   const WeatherIcon = weather.icon;
   return (
-    <div dir="rtl" className="bg-white/20 backdrop-blur-md p-4 rounded-2xl flex items-center justify-center space-x-4 h-full">
+    <div dir="rtl" className="p-4 flex items-center justify-center space-x-4 h-full">
       {WeatherIcon && <WeatherIcon size={48} className="text-white ml-4" />}
       <div>
-        <p className="text-3xl font-bold text-white">{weather.temperature}°C</p>
+        <p className="text-3xl font-bold text-white">{weather.temperature}°</p>
         <p className="text-white">{weather.condition}</p>
         <p className="text-white/80 text-sm">{location}</p>
         <p className="text-white/80 text-xs mt-2">
@@ -174,8 +173,7 @@ export default function Weather() {
                 day: 'numeric',
                 hour: 'numeric',
                 minute: 'numeric',
-                second: 'numeric',
-            })}
+            }).replace('בשעה ', '')}
         </p>
       </div>
     </div>

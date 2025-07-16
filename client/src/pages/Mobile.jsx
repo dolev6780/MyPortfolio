@@ -1,30 +1,36 @@
-import React, { useState, useMemo, useRef } from 'react';
-import { Folder, FileText, Mail, Gamepad2, Calculator as CalculatorIcon, Contact, MoreHorizontal, ArrowLeft } from 'lucide-react';
-import AboutMe from '../components/AboutMe';
-import Projects from '../components/Projects';
-import ContactMe from '../components/ContactMe';
-import Games from '../components/Games';
-import Resume from '../components/Resume';
-import Calculator from '../components/Calculator';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
+import { Folder, FileText, Mail, Gamepad2, Calculator as CalculatorIcon, Contact, MoreHorizontal, ArrowLeft, Sun } from 'lucide-react';
+import MobileAboutMe from '../components/MobileAboutMe';
+import MobileProjects from '../components/MobileProjects';
+import MobileContactMe from '../components/MobileContactMe';
+import MobileGames from '../components/MobileGames';
+import MobileResume from '../components/MobileResume';
+import MobileCalculator from '../components/MobileCalculator';
 import Weather from '../components/Weather';
+import MobileModal from '../components/MobileModal';
+import wallpaper from '../assets/portfolioAssets/PortfolioLogo.png';
 
 const APPS_CONFIG = [
-    { id: 'about', name: 'About Me', icon: Contact, isDocked: true, component: 'AboutMe' },
-    { id: 'projects', name: 'Projects', icon: Folder, isDocked: true, component: 'Projects' },
-    { id: 'contact', name: 'Contact Me', icon: Mail, isDocked: true, component: 'ContactMe' },
+    { id: 'about', name: 'About Me', icon: Contact, isDocked: true, component: 'MobileAboutMe' },
+    { id: 'projects', name: 'Projects', icon: Folder, isDocked: true, component: 'MobileProjects' },
+    { id: 'contact', name: 'Contact Me', icon: Mail, isDocked: true, component: 'MobileContactMe' },
     { id: 'more', name: 'More Apps', icon: MoreHorizontal, isDocked: true, isDrawerToggle: true },
-    { id: 'games', name: 'Games', icon: Gamepad2, isDocked: false, component: 'Games' },
-    { id: 'resume', name: 'My Resume', icon: FileText, isDocked: false, component: 'Resume' },
-    { id: 'calculator', name: 'Calculator', icon: CalculatorIcon, isDocked: false, component: 'Calculator' },
+    { id: 'games', name: 'Games', icon: Gamepad2, isDocked: false, component: 'MobileGames', type: 'game' },
+    { id: 'resume', name: 'My Resume', icon: FileText, isDocked: false, component: 'MobileResume' },
+    { id: 'calculator', name: 'Calculator', icon: CalculatorIcon, isDocked: false, component: 'MobileCalculator' },
+    { id: 'weather_app', name: 'Weather', icon: Sun, isDocked: false, component: 'MobileWeather' }
 ];
 
 const APP_COMPONENTS = {
-    AboutMe, Projects, ContactMe, Games, Resume, Calculator, Weather
+    MobileAboutMe, MobileProjects, MobileContactMe, MobileGames, MobileResume, MobileCalculator,
+    MobileWeather: Weather
 };
 
-const AppIcon = ({ app, onClick, isDrawerIcon = false }) => (
+// --- Sub-components ---
+
+const MobileAppIcon = ({ app, onClick, isDrawerIcon = false }) => (
     <div
-        className="flex flex-col items-center justify-center text-center group h-full"
+        className="flex flex-col items-center justify-center text-center group h-full cursor-pointer"
         onClick={onClick ? () => onClick(app) : undefined}
     >
         <div className={`
@@ -39,7 +45,7 @@ const AppIcon = ({ app, onClick, isDrawerIcon = false }) => (
     </div>
 );
 
-const AppContainer = ({ app, onGoHome }) => {
+const MobileAppContainer = ({ app, onGoHome }) => {
     const AppComponent = APP_COMPONENTS[app.component];
     if (!AppComponent) return null;
 
@@ -61,7 +67,7 @@ const AppContainer = ({ app, onGoHome }) => {
     );
 };
 
-const DraggableItem = ({ children, index, className, onDragStart, onDragEnter, onDragEnd, onClick }) => {
+const MobileDraggableItem = ({ children, index, className, onDragStart, onDragEnter, onDragEnd, onClick }) => {
     const longPressTimer = useRef();
     const startPos = useRef({ x: 0, y: 0 });
     const [isLongPress, setIsLongPress] = useState(false);
@@ -119,8 +125,8 @@ const DraggableItem = ({ children, index, className, onDragStart, onDragEnter, o
             onDragEnter={() => onDragEnter(index)}
             onDragEnd={handleDragEndInternal}
             onDragOver={(e) => e.preventDefault()}
-            className={`${className} transition-transform duration-200 cursor-pointer 
-                ${isDragging ? 'opacity-50 scale-110 z-50' : ''}
+            className={`${className} transition-transform duration-200 
+                ${isDragging ? 'opacity-50 scale-110 z-50' : 'cursor-pointer'}
                 ${isLongPress && !isDragging ? 'animate-pulse scale-105' : ''}
             `}
         >
@@ -129,7 +135,7 @@ const DraggableItem = ({ children, index, className, onDragStart, onDragEnter, o
     );
 };
 
-const HomeScreen = ({ items, setItems, onOpenApp }) => {
+const MobileHomeScreen = ({ items, setItems, onOpenApp }) => {
     const dragItemIndex = useRef(null);
     const dragOverItemIndex = useRef(null);
 
@@ -156,7 +162,7 @@ const HomeScreen = ({ items, setItems, onOpenApp }) => {
     return (
         <div className="grid grid-cols-4 gap-x-4 gap-y-8 p-4 pt-8 animate-fade-in">
             {items.map((item, index) => (
-                <DraggableItem
+                <MobileDraggableItem
                     key={item.id}
                     index={index}
                     className={item.type === 'widget' ? 'col-span-4 h-32' : 'col-span-1 h-20'}
@@ -169,26 +175,32 @@ const HomeScreen = ({ items, setItems, onOpenApp }) => {
                         }
                     }}
                 >
-                    {item.type === 'widget' ? <Weather /> : <AppIcon app={item} />}
-                </DraggableItem>
+                    {item.type === 'widget' ? <Weather isWidget={true} /> : <MobileAppIcon app={item} />}
+                </MobileDraggableItem>
             ))}
         </div>
     );
 };
 
-const Dock = ({ apps, onOpenApp, onToggleDrawer }) => (
+const MobileDock = ({ apps, onOpenApp, onToggleDrawer }) => (
     <div className="mx-auto mb-3 p-2 w-full max-w-sm h-20 bg-black/30 backdrop-blur-xl rounded-3xl flex justify-around items-center">
         {apps.map(app => (
-            <AppIcon
+            <MobileAppIcon
                 key={app.id}
                 app={app}
-                onClick={app.isDrawerToggle ? onToggleDrawer : onOpenApp}
+                onClick={(clickedApp) => {
+                    if (app.isDrawerToggle) {
+                        onToggleDrawer();
+                    } else {
+                        onOpenApp(clickedApp);
+                    }
+                }}
             />
         ))}
     </div>
 );
 
-const AppDrawer = ({ isOpen, onToggleDrawer, apps, onOpenApp }) => {
+const MobileAppDrawer = ({ isOpen, onToggleDrawer, apps, onOpenApp }) => {
     const touchStartY = useRef(0);
     const drawerRef = useRef(null);
 
@@ -225,7 +237,7 @@ const AppDrawer = ({ isOpen, onToggleDrawer, apps, onOpenApp }) => {
                     <div className="grid grid-cols-4 gap-y-8 mt-4">
                         {apps.map(app => (
                             <div key={app.id} className="cursor-pointer" onClick={() => { onOpenApp(app); onToggleDrawer(); }}>
-                                <AppIcon app={app} isDrawerIcon={true} />
+                                <MobileAppIcon app={app} isDrawerIcon={true} />
                             </div>
                         ))}
                     </div>
@@ -235,13 +247,18 @@ const AppDrawer = ({ isOpen, onToggleDrawer, apps, onOpenApp }) => {
     );
 };
 
-export default function App() {
+// --- Main App Component ---
+
+export default function MobileApp() {
     const [openApp, setOpenApp] = useState(null);
     const [isDrawerOpen, setDrawerOpen] = useState(false);
+    const [modalApp, setModalApp] = useState(null);
+    // MODIFICATION: New state to prevent immediate closing of the modal.
+    const [isOpeningModal, setIsOpeningModal] = useState(false);
 
     const [homeItems, setHomeItems] = useState([
-        { id: 'weather', type: 'widget', component: 'WeatherWidget' },
-        ...APPS_CONFIG.filter(app => !app.isDocked && !app.isDrawerToggle)
+        { id: 'weather_widget', type: 'widget', component: 'MobileWeather' },
+        ...APPS_CONFIG.filter(app => !app.isDocked && !app.isDrawerToggle && app.id !== 'weather_app')
     ]);
 
     const dockedApps = useMemo(() => APPS_CONFIG.filter(app => app.isDocked), []);
@@ -249,13 +266,42 @@ export default function App() {
     
     const touchStartY = useRef(0);
 
+    // MODIFICATION: `useEffect` to manage the opening state.
+    useEffect(() => {
+        // If a modal was just opened...
+        if (modalApp) {
+            // ...then on the very next browser tick, allow it to be closed again.
+            const timer = setTimeout(() => {
+                setIsOpeningModal(false);
+            }, 0);
+            return () => clearTimeout(timer);
+        }
+    }, [modalApp]);
+
+
     const handleOpenApp = (app) => {
         if (app.component) {
-            setOpenApp(app);
+            if (app.type === 'game') {
+                // MODIFICATION: Set the opening flag to true before showing the modal.
+                setIsOpeningModal(true);
+                setModalApp(app);
+            } else {
+                setOpenApp(app);
+            }
             setDrawerOpen(false);
         }
     };
 
+    const handleCloseModal = (e) => {
+        e.stopPropagation();
+        if (isOpeningModal) {
+            return;
+        }
+        if (e.target === e.currentTarget) {
+            setModalApp(null);
+        }
+    };
+    
     const handleGoHome = () => setOpenApp(null);
     const handleToggleDrawer = () => setDrawerOpen(prev => !prev);
 
@@ -266,10 +312,9 @@ export default function App() {
     const handleTouchEnd = (e) => {
         const touchEndY = e.changedTouches[0].clientY;
         const deltaY = touchStartY.current - touchEndY;
-        // If swipe up is significant and from the bottom of the screen
         if (deltaY > 75 && touchStartY.current > window.innerHeight - 150) {
-            if (!openApp) {
-               handleToggleDrawer();
+            if (!openApp && !modalApp) { 
+                handleToggleDrawer();
             }
         }
     };
@@ -282,35 +327,48 @@ export default function App() {
         >
             <img
                 className="absolute w-full h-full left-1/2 top-1/2 object-cover transform -translate-x-1/2 -translate-y-1/2 z-0"
-                src="https://images.unsplash.com/photo-1576686271399-2349d0a35883?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzOTAzMDB8MHwxfGFsbHx8fHx8fHx8fDE3MjA4ODQ5NjZ8&ixlib=rb-4.0.3&q=80&w=1080"
+                src={wallpaper}
                 alt="Mobile wallpaper"
                 onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/1080x1920/1a202c/ffffff?text=Image+Error'; }}
             />
             <div className="relative z-10 w-full h-full flex flex-col">
                 <main className="flex-grow w-full h-full">
                     {openApp ? (
-                        <AppContainer app={openApp} onGoHome={handleGoHome} />
+                        <MobileAppContainer app={openApp} onGoHome={handleGoHome} />
                     ) : (
-                        <HomeScreen items={homeItems} setItems={setHomeItems} onOpenApp={handleOpenApp} />
+                        <MobileHomeScreen items={homeItems} setItems={setHomeItems} onOpenApp={handleOpenApp} />
                     )}
                 </main>
                 
-                <AppDrawer
+                <MobileAppDrawer
                     isOpen={isDrawerOpen}
                     onToggleDrawer={handleToggleDrawer}
                     apps={allApps}
                     onOpenApp={handleOpenApp}
                 />
                 
-                {!openApp && (
+                {!openApp && !modalApp && (
                     <footer className="absolute bottom-0 w-full h-24 flex flex-col justify-end z-20">
-                        <Dock apps={dockedApps} onOpenApp={handleOpenApp} onToggleDrawer={handleToggleDrawer} />
+                        <MobileDock apps={dockedApps} onOpenApp={handleOpenApp} onToggleDrawer={handleToggleDrawer} />
                         <div className="w-32 h-1.5 bg-white/80 rounded-full mx-auto mb-2 cursor-pointer" onClick={handleGoHome}></div>
                     </footer>
                 )}
             </div>
 
-            <style jsx global>{`
+            {modalApp && (
+                <div 
+                    className="absolute inset-0 z-50 p-4 bg-black/50 backdrop-blur-sm flex items-center justify-center cursor-pointer"
+                    onClick={handleCloseModal}
+                >
+                    <MobileModal 
+                        app={modalApp} 
+                        onGoHome={() => setModalApp(null)}
+                        APP_COMPONENTS={APP_COMPONENTS} 
+                    />
+                </div>
+            )}
+
+            <style>{`
                 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
                 .font-sans { font-family: 'Inter', sans-serif; }
                 

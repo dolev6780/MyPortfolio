@@ -1,20 +1,19 @@
 {
   "files": {
-    "main.css": "/static/css/main.56fdd398.css",
-    "main.js": "/static/js/main.431c5343.js",
+    "main.css": "/static/css/main.6de97bec.css",
+    "main.js": "/static/js/main.7afbdc43.js",
     "static/media/liatGallery.png": "/static/media/liatGallery.e3c0537e7d28e8e907f1.png",
+    "static/media/PortfolioLogo.png": "/static/media/PortfolioLogo.e1d53c8c4cda25d8e3e7.png",
     "static/media/bijumpacademy.jpg": "/static/media/bijumpacademy.2d42ea6318b467c5be7d.jpg",
     "static/media/ShoppingListApp.png": "/static/media/ShoppingListApp.a528868070aa23045d76.png",
-    "static/media/memorygame.jpg": "/static/media/memorygame.5b0707dc668c5e80c90e.jpg",
     "static/media/careerinfocus.png": "/static/media/careerinfocus.0fce5a041bba4dbe6d44.png",
-    "static/media/cv.png": "/static/media/cv.7579941b413ffae8ed23.png",
     "static/media/Dolev cv.pdf": "/static/media/Dolev cv.a0bf6287e11f8f93a714.pdf",
     "index.html": "/index.html",
-    "main.56fdd398.css.map": "/static/css/main.56fdd398.css.map",
-    "main.431c5343.js.map": "/static/js/main.431c5343.js.map"
+    "main.6de97bec.css.map": "/static/css/main.6de97bec.css.map",
+    "main.7afbdc43.js.map": "/static/js/main.7afbdc43.js.map"
   },
   "entrypoints": [
-    "static/css/main.56fdd398.css",
-    "static/js/main.431c5343.js"
+    "static/css/main.6de97bec.css",
+    "static/js/main.7afbdc43.js"
   ]
 }
