@@ -1,11 +1,9 @@
 import React from "react";
 import { motion, useAnimation, useInView } from "framer-motion";
 import { User, Wrench, MessageSquareQuote, Mail } from 'lucide-react';
-// import profilepic from "../assets/profilepic.jpeg"; // User should replace this with their actual image path
+import profilepic from "../assets/profilepic.jpeg";
+import Sidebar from './Sidebar';
 
-// --- Sub-components for better structure ---
-
-// Animated Skill Bar Component
 const Skill = ({ name, level }) => {
   const ref = React.useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.5 });
@@ -45,10 +43,10 @@ export default function AboutMe({ windowSize }) {
 
   // Skills list remains the same
   const skills = [
-    { name: "React & Next.js", level: 90 },
-    { name: "UI/UX Design (Figma)", level: 85 },
-    { name: "JavaScript & TypeScript", level: 85 },
-    { name: "Node.js & Express", level: 80 },
+    { name: "React", level: 95 },
+    { name: "UI/UX Design (Figma)", level: 70 },
+    { name: "JavaScript", level: 90 },
+    { name: "Node.js & Express", level: 90 },
     { name: "Flutter & Dart", level: 80 },
     { name: "React Native", level: 75 },
   ];
@@ -77,8 +75,7 @@ export default function AboutMe({ windowSize }) {
 
   return (
     <div className="flex w-full h-full bg-gray-100/50">
-      {/* The Sidebar can be added here if needed, this structure supports it */}
-      {/* <Sidebar /> */}
+      <Sidebar />
 
       <div className="flex-grow p-4 md:p-8 overflow-y-auto">
         <motion.div
@@ -98,7 +95,7 @@ export default function AboutMe({ windowSize }) {
               transition={{ type: "spring", stiffness: 300 }}
             >
               <img
-                src="https://placehold.co/160x160/E0E7FF/4F46E5?text=DC" // Placeholder for profilepic
+                src={profilepic}
                 alt="Dolev Cohen"
                 className="w-full h-full object-cover rounded-full"
               />
@@ -131,7 +128,6 @@ export default function AboutMe({ windowSize }) {
                 </p>
               </motion.div>
 
-              {/* Testimonial Section */}
               <motion.div className="p-8 bg-white rounded-2xl shadow-subtle" variants={itemVariants}>
                 <h2 className="flex items-center text-2xl font-bold text-blue-500 mb-4">
                   <MessageSquareQuote className="mr-3" /> Testimonial
@@ -140,7 +136,7 @@ export default function AboutMe({ windowSize }) {
                   "Dolev delivered an exceptional website that perfectly captured our brand's essence. His technical expertise and eye for design resulted in a platform that not only looks fantastic but also performs flawlessly."
                 </blockquote>
                 <p className="text-right mt-4 text-gray-800 font-medium">
-                  — Jane Smith, CEO at TechCorp
+                  — Koral Shalev, CEO at CarrerInFocus
                 </p>
               </motion.div>
             </div>

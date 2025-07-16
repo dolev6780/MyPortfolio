@@ -9,7 +9,7 @@ import MobileCalculator from '../components/MobileCalculator';
 import Weather from '../components/Weather';
 import MobileModal from '../components/MobileModal';
 import wallpaper from '../assets/portfolioAssets/wallpaper.png';
-import MobileBrowser from '../components/MobileBrowser'; // Import the browser component
+import MobileBrowser from '../components/MobileBrowser';
 
 const APPS_CONFIG = [
     { id: 'about', name: 'About Me', icon: Contact, isDocked: true, component: 'MobileAboutMe' },
@@ -53,9 +53,9 @@ const MobileAppContainer = ({ app, onGoHome, onOpenUrl }) => {
             <div className="h-full flex flex-col">
                 <header className="flex-shrink-0 p-2 flex items-center justify-between z-10">
                     <button onClick={onGoHome} className="p-2">
-                        <ArrowLeft size={20} className="text-white" />
+                        <ArrowLeft size={20} />
                     </button>
-                    <span className="font-semibold text-white">{app.name}</span>
+                    <span className="font-semibold">{app.name}</span>
                     <div className="w-8"></div>
                 </header>
                 <main className="flex-grow overflow-y-auto">
@@ -246,13 +246,12 @@ const MobileAppDrawer = ({ isOpen, onToggleDrawer, apps, onOpenApp }) => {
     );
 };
 
-// --- Main App Component ---
 export default function MobileApp() {
     const [openApp, setOpenApp] = useState(null);
     const [isDrawerOpen, setDrawerOpen] = useState(false);
     const [modalApp, setModalApp] = useState(null);
     const [isOpeningModal, setIsOpeningModal] = useState(false);
-    const [browserContent, setBrowserContent] = useState(null); // State for the browser view
+    const [browserContent, setBrowserContent] = useState(null);
 
     const [homeItems, setHomeItems] = useState([
         { id: 'weather_widget', type: 'widget', component: 'MobileWeather' },
@@ -275,7 +274,6 @@ export default function MobileApp() {
 
 
     const handleOpenApp = (app) => {
-        console.log(`Opening app: ${app.name}`);
         if (app.component) {
             if (app.type === 'game') {
                 setIsOpeningModal(true);
@@ -365,16 +363,11 @@ export default function MobileApp() {
 
             {modalApp && (
                 <>
-                    {/* 1. This is just the background. It catches the clicks to close the modal. */}
                     <div
                         className="absolute inset-0 z-40 bg-black/50 backdrop-blur-sm"
                         onClick={handleCloseModal}
                     ></div>
-
-                    {/* 2. This container centers the modal but is invisible to clicks. */}
                     <div className="absolute inset-0 z-50 p-4 flex items-center justify-center pointer-events-none">
-                        
-                        {/* 3. This wrapper re-enables clicks for the modal content only. */}
                         <div className="pointer-events-auto">
                             <MobileModal
                                 app={modalApp}

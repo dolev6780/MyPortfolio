@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Linkedin, Github, MessageCircle, Menu, ArrowLeft } from 'lucide-react';
-import ResumeViewer from './ResumeViewer'; // Assuming ResumeViewer is in the same directory
 
 // --- Sidebar Navigation Data ---
 const navItems = [
@@ -138,14 +137,7 @@ export default function Sidebar() {
       {/* --- Footer / Resume Button --- */}
       <div className="p-4 border-t border-slate-200 dark:border-slate-800">
         <div className={isExpanded ? 'w-full' : 'flex justify-center'}>
-          {isExpanded ? (
-             <ResumeViewer />
-          ) : (
-            // Render just the icon part of the ResumeViewer button when collapsed
-             <div className="p-3 bg-indigo-600 text-white rounded-lg shadow-lg">
-                <ResumeViewer />
-             </div>
-          )}
+          
         </div>
       </div>
     </motion.aside>

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { User, Mail, MessageSquare, Loader, CheckCircle, AlertTriangle } from 'lucide-react';
 
-// Reusable Input Field Component
 const FormInput = ({ icon, type = "text", name, placeholder, value, onChange, error }) => {
   const Icon = icon;
   return (
