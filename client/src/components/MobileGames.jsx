@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Gamepad2, Star, X, Puzzle, Swords, Layers3 } from 'lucide-react';
+import { Gamepad2, X } from 'lucide-react';
 
 const GameCard = ({ game, onDoubleClick }) => {
   return (
