@@ -31,7 +31,7 @@ const navItems = [
 ];
 
 // --- Main Sidebar Component ---
-export default function Sidebar() {
+export default function Sidebar({ onOpenApp }) {
   const [isExpanded, setIsExpanded] = useState(window.innerWidth > 768);
 
   // Effect to handle window resizing
@@ -68,7 +68,7 @@ export default function Sidebar() {
 
   return (
     <motion.aside
-      className="fixed top-0 left-0 h-full bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 shadow-lg flex flex-col z-50"
+      className="h-full bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 shadow-lg flex flex-col z-50 flex-shrink-0"
       variants={sidebarVariants}
       initial={isExpanded ? 'expanded' : 'collapsed'}
       animate={isExpanded ? 'expanded' : 'collapsed'}
@@ -112,7 +112,13 @@ export default function Sidebar() {
                 href={item.href}
                 target={item.isExternal ? '_blank' : '_self'}
                 rel={item.isExternal ? 'noopener noreferrer' : ''}
-                className="flex items-center w-full p-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-slate-800 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                onClick={(e) => {
+                  if (item.label === 'Contact Me' && onOpenApp) {
+                    e.preventDefault();
+                    onOpenApp('Contact Me');
+                  }
+                }}
+                className="flex items-center w-full p-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-slate-800 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
               >
                 <item.icon className="w-10 h-10 flex-shrink-0" size={24} />
                 <AnimatePresence>
@@ -137,7 +143,7 @@ export default function Sidebar() {
       {/* --- Footer / Resume Button --- */}
       <div className="p-4 border-t border-slate-200 dark:border-slate-800">
         <div className={isExpanded ? 'w-full' : 'flex justify-center'}>
-          
+
         </div>
       </div>
     </motion.aside>

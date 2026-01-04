@@ -6,63 +6,63 @@ import bijumpacademy from '../assets/bijumpacademy.jpg'
 import liatGallery from '../assets/liatGallery.png'
 import ShoppingListApp from '../assets/ShoppingListApp.png'
 const projects = [
-    {
-      id: 1,
-      title: "Career In Focus",
-      description: "A unique portfolio styled as a Windows desktop environment with interactive windows and icons.",
-      image: careerinfocus,
-      category: "frontend",
-      technologies: ["React", "Tailwind CSS", "Framer Motion", "Firebase"],
-      url: "https://careerinfocus.co.il/",
-      featured: true
-    },
-    {
-      id: 2,
-      title: "B.I Jump Academy",
-      description: "A fully-featured online store with a product catalog, shopping cart, and secure checkout process.",
-      image: bijumpacademy,
-      category: "fullstack",
-      technologies: ["Wix", "JavaScript", "Velo API"],
-      demo: "https://www.bijumpacademy.co.il/"
-    },
-    {
-      id: 3,
-      title: "Liat Photography",
-      description: "An elegant and minimalist portfolio gallery for a photographer, focusing on visual storytelling.",
-      image: liatGallery,
-      category: "frontend",
-      technologies: ["React", "Tailwind CSS", "Framer Motion", "Firebase"],
-      demo: "https://liatphotography.netlify.app"
-    },
-    {
-      id: 4,
-      title: "Shopping List App",
-      description: "A collaborative, real-time shopping list application built for mobile platforms.",
-      image: ShoppingListApp,
-      category: "mobile",
-      technologies: ["Flutter", "Firebase"],
-      github: "https://github.com/dolev6780/shoppingListFlutter",
-    },
-    {
-      id: 5,
-      title: "Personal Blog Platform",
-      description: "Statically generated blog with markdown support, code highlighting, and a focus on performance.",
-      image: "https://placehold.co/600x400/fde047/78350f?text=Gatsby+Blog",
-      category: "frontend",
-      technologies: ["Gatsby", "GraphQL", "Styled Components"],
-      github: "https://github.com/username/blog",
-      demo: "https://example.com/blog"
-    },
-    {
-      id: 6,
-      title: "Fitness Tracker API",
-      description: "A robust backend service for a fitness application, handling user data, workouts, and progress.",
-      image: "https://placehold.co/600x400/fca5a5/7f1d1d?text=Fitness+API",
-      category: "fullstack",
-      technologies: ["Node.js", "Express", "MongoDB", "JWT"],
-      github: "https://github.com/username/fitness-api",
-      demo: null
-    }
+  {
+    id: 1,
+    title: "Career In Focus",
+    description: "A unique portfolio styled as a Windows desktop environment with interactive windows and icons.",
+    image: careerinfocus,
+    category: "frontend",
+    technologies: ["React", "Tailwind CSS", "Framer Motion", "Firebase"],
+    url: "https://careerinfocus.co.il/",
+    featured: true
+  },
+  {
+    id: 2,
+    title: "B.I Jump Academy",
+    description: "A fully-featured online store with a product catalog, shopping cart, and secure checkout process.",
+    image: bijumpacademy,
+    category: "fullstack",
+    technologies: ["Wix", "JavaScript", "Velo API"],
+    demo: "https://www.bijumpacademy.co.il/"
+  },
+  {
+    id: 3,
+    title: "Liat Photography",
+    description: "An elegant and minimalist portfolio gallery for a photographer, focusing on visual storytelling.",
+    image: liatGallery,
+    category: "frontend",
+    technologies: ["React", "Tailwind CSS", "Framer Motion", "Firebase"],
+    demo: "https://liatphotography.netlify.app"
+  },
+  {
+    id: 4,
+    title: "Shopping List App",
+    description: "A collaborative, real-time shopping list application built for mobile platforms.",
+    image: ShoppingListApp,
+    category: "mobile",
+    technologies: ["Flutter", "Firebase"],
+    github: "https://github.com/dolev6780/shoppingListFlutter",
+  },
+  {
+    id: 5,
+    title: "Personal Blog Platform",
+    description: "Statically generated blog with markdown support, code highlighting, and a focus on performance.",
+    image: "https://placehold.co/600x400/fde047/78350f?text=Gatsby+Blog",
+    category: "frontend",
+    technologies: ["Gatsby", "GraphQL", "Styled Components"],
+    github: "https://github.com/username/blog",
+    demo: "https://example.com/blog"
+  },
+  {
+    id: 6,
+    title: "Fitness Tracker API",
+    description: "A robust backend service for a fitness application, handling user data, workouts, and progress.",
+    image: "https://placehold.co/600x400/fca5a5/7f1d1d?text=Fitness+API",
+    category: "fullstack",
+    technologies: ["Node.js", "Express", "MongoDB", "JWT"],
+    github: "https://github.com/username/fitness-api",
+    demo: null
+  }
 ];
 
 const filters = ['all', 'frontend', 'fullstack', 'mobile'];
@@ -172,7 +172,7 @@ export default function Projects() {
                   animate="visible"
                   exit={{ opacity: 0, scale: 0.8 }}
                   transition={{ duration: 0.3 }}
-                  className="group bg-white dark:bg-slate-800/50 rounded-xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-200 dark:border-slate-700 flex flex-col"
+                  className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 dark:border-slate-700/50 flex flex-col"
                 >
                   {/* Image Section */}
                   <div className="relative overflow-hidden">
@@ -200,7 +200,7 @@ export default function Projects() {
                       </div>
                     )}
                   </div>
-                  
+
                   {/* Content Section */}
                   <div className="p-6 flex-grow flex flex-col">
                     <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{project.title}</h3>

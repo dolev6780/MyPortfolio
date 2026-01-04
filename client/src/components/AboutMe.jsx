@@ -21,10 +21,10 @@ const Skill = ({ name, level }) => {
   return (
     <div ref={ref}>
       <div className="flex justify-between mb-1">
-        <span className="font-medium text-gray-700">{name}</span>
-        <span className="text-sm text-gray-500">{level}%</span>
+        <span className="font-medium text-slate-700 dark:text-slate-300">{name}</span>
+        <span className="text-sm text-slate-500 dark:text-slate-400">{level}%</span>
       </div>
-      <div className="h-2.5 w-full bg-gray-200 rounded-full overflow-hidden">
+      <div className="h-2.5 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
         <motion.div
           className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full"
           initial={{ width: 0 }}
@@ -36,13 +36,14 @@ const Skill = ({ name, level }) => {
 };
 
 // Main AboutMe Component
-export default function AboutMe({ windowSize }) {
+export default function AboutMe({ windowSize, onOpenApp }) {
   // Bio content remains the same
   const aboutMeText =
     "Hey, I'm Dolev. As a Freelance Mobile and Web Developer, I am passionate about turning ideas into functional, scalable, and user-friendly applications. With expertise in full-stack development, I specialize in creating responsive websites and mobile apps that provide seamless experiences across devices.";
 
   // Skills list remains the same
   const skills = [
+    { name: "Code with AI", level: 100 },
     { name: "React", level: 95 },
     { name: "UI/UX Design (Figma)", level: 70 },
     { name: "JavaScript", level: 90 },
@@ -74,8 +75,8 @@ export default function AboutMe({ windowSize }) {
   };
 
   return (
-    <div className="flex w-full h-full bg-gray-100/50">
-      <Sidebar />
+    <div className="flex w-full h-full bg-slate-50 dark:bg-slate-900 overflow-hidden">
+      <Sidebar onOpenApp={onOpenApp} />
 
       <div className="flex-grow p-4 md:p-8 overflow-y-auto">
         <motion.div
@@ -86,7 +87,7 @@ export default function AboutMe({ windowSize }) {
         >
           {/* --- Header Section --- */}
           <motion.div
-            className="flex flex-col md:flex-row items-center gap-6 md:gap-8 p-8 bg-white rounded-2xl shadow-subtle mb-8"
+            className="flex flex-col md:flex-row items-center gap-6 md:gap-8 p-8 bg-white dark:bg-slate-800 rounded-2xl shadow-sm mb-8 border border-slate-200 dark:border-slate-700"
             variants={itemVariants}
           >
             <motion.div
@@ -103,10 +104,10 @@ export default function AboutMe({ windowSize }) {
             </motion.div>
 
             <div className="text-center md:text-left">
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-800">
+              <h1 className="text-4xl md:text-5xl font-bold text-slate-800 dark:text-white">
                 Dolev <span className="text-blue-500">Cohen</span>
               </h1>
-              <p className="text-xl text-gray-500 mt-1">
+              <p className="text-xl text-slate-500 dark:text-slate-400 mt-1">
                 Freelance Mobile & Web Developer
               </p>
             </div>
@@ -116,26 +117,26 @@ export default function AboutMe({ windowSize }) {
             {/* --- Left Column (About & Testimonial) --- */}
             <div className="lg:col-span-2 space-y-8">
               {/* About Me Section */}
-              <motion.div className="p-8 bg-white rounded-2xl shadow-subtle" variants={itemVariants}>
+              <motion.div className="p-8 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700" variants={itemVariants}>
                 <h2 className="flex items-center text-2xl font-bold text-blue-500 mb-4">
                   <User className="mr-3" /> About Me
                 </h2>
-                <p className="text-gray-700 leading-relaxed">
+                <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
                   {aboutMeText}
                 </p>
-                <p className="text-gray-700 leading-relaxed mt-4">
+                <p className="text-slate-700 dark:text-slate-300 leading-relaxed mt-4">
                   I pride myself on writing clean, maintainable code and staying up-to-date with the latest technologies. My goal is to deliver solutions that not only meet client requirements but exceed expectations.
                 </p>
               </motion.div>
 
-              <motion.div className="p-8 bg-white rounded-2xl shadow-subtle" variants={itemVariants}>
+              <motion.div className="p-8 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700" variants={itemVariants}>
                 <h2 className="flex items-center text-2xl font-bold text-blue-500 mb-4">
                   <MessageSquareQuote className="mr-3" /> Testimonial
                 </h2>
-                <blockquote className="border-l-4 border-blue-200 pl-6 text-gray-600 italic">
+                <blockquote className="border-l-4 border-blue-200 dark:border-blue-900 pl-6 text-slate-600 dark:text-slate-400 italic">
                   "Dolev delivered an exceptional website that perfectly captured our brand's essence. His technical expertise and eye for design resulted in a platform that not only looks fantastic but also performs flawlessly."
                 </blockquote>
-                <p className="text-right mt-4 text-gray-800 font-medium">
+                <p className="text-right mt-4 text-slate-800 dark:text-slate-200 font-medium">
                   — Koral Shalev, CEO at CarrerInFocus
                 </p>
               </motion.div>
@@ -144,7 +145,7 @@ export default function AboutMe({ windowSize }) {
             {/* --- Right Column (Skills & CTA) --- */}
             <div className="lg:col-span-1 space-y-8">
               {/* Skills Section */}
-              <motion.div className="p-8 bg-white rounded-2xl shadow-subtle" variants={itemVariants}>
+              <motion.div className="p-8 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700" variants={itemVariants}>
                 <h2 className="flex items-center text-2xl font-bold text-blue-500 mb-6">
                   <Wrench className="mr-3" /> My Skills
                 </h2>
@@ -167,8 +168,9 @@ export default function AboutMe({ windowSize }) {
                   className="bg-white text-blue-500 px-6 py-2.5 rounded-lg font-bold shadow-md hover:bg-gray-100 transition-colors flex items-center justify-center w-full"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  onClick={() => onOpenApp && onOpenApp('Contact Me')}
                 >
-                  <Mail className="mr-2" size={20}/> Get In Touch
+                  <Mail className="mr-2" size={20} /> Get In Touch
                 </motion.button>
               </motion.div>
             </div>

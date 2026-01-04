@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Folder, FileText, Mail, Gamepad2, Calculator, Contact } from 'lucide-react';
 import WindowsModal from '../components/WindowsModal';
+import StartMenu from '../components/StartMenu';
+import LogoutModal from '../components/LogoutModal';
 
 /**
  * Desktop Component
  * Main component that renders a desktop-like environment with icons and windows
  */
-export default function Desktop() {
+export default function Desktop({ onLogout }) {
   // --- STATE MANAGEMENT ---
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [icons, setIcons] = useState([
     { id: 1, name: 'About Me', icon: Contact, gridX: 0, gridY: 0, path: "aboutme" },
     { id: 2, name: 'Projects', icon: Folder, gridX: 0, gridY: 1, path: "projects" },
@@ -45,7 +48,7 @@ export default function Desktop() {
       const width = window.innerWidth;
       const height = window.innerHeight;
       let newGridSize = width < 640 ? 60 : (width < 1024 ? 70 : 80);
-      
+
       setGridSize(newGridSize);
       setGridColumns(Math.floor(width / newGridSize));
       setGridRows(Math.floor((height - 48) / newGridSize)); // 48px for taskbar
@@ -141,6 +144,26 @@ export default function Desktop() {
     }
   };
 
+  const handleOpenApp = (appName) => {
+    const appIcon = icons.find(icon => icon.name.toLowerCase() === appName.toLowerCase() || icon.path === appName);
+    if (appIcon) {
+      handleIconDoubleClick(appIcon);
+    }
+  };
+
+  // --- START MENU LOGIC ---
+  const [isStartMenuOpen, setIsStartMenuOpen] = useState(false);
+
+  const toggleStartMenu = (e) => {
+    e.stopPropagation(); // Prevent immediate close
+    setIsStartMenuOpen(!isStartMenuOpen);
+  };
+
+  const handleStartMenuAppClick = (app) => {
+    handleIconDoubleClick(app);
+    setIsStartMenuOpen(false);
+  };
+
   // --- RENDER LOGIC ---
 
   const renderGrid = () => {
@@ -190,10 +213,29 @@ export default function Desktop() {
       className="w-full h-screen overflow-hidden p-0 m-0 relative select-none"
       onClick={handleDesktopClick}
     >
-      {/* Video Background */}
-      <video autoPlay loop muted playsInline className="absolute w-full h-full left-1/2 top-1/2 object-cover transform -translate-x-1/2 -translate-y-1/2 -z-10">
-        <source src="/backgroundVideo.mp4" type="video/mp4" />
-      </video>
+      {/* Desktop Wallpaper */}
+      <img
+        src="/desktop_wallpaper.jpg"
+        alt="Desktop Wallpaper"
+        className="absolute w-full h-full left-0 top-0 object-cover -z-10"
+      />
+
+      {/* Wallpaper Overlay Content */}
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center pointer-events-none -z-5">
+        <div className="bg-black/30 backdrop-blur-md border border-white/10 p-12 rounded-3xl shadow-2xl flex flex-col items-center animate-pulse-slow">
+          <h1 className="flex text-6xl font-black text-white tracking-wider uppercase text-center" style={{ fontFamily: "'Orbitron', sans-serif", textShadow: '0 0 30px rgba(0,200,255,0.8), 0 0 60px rgba(0,100,255,0.4)' }}>
+            {"Dolev Cohen".split("").map((char, index) => (
+              <span
+                key={index}
+                className="animate-reappear inline-block"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                {char === " " ? "\u00A0" : char}
+              </span>
+            ))}
+          </h1>
+        </div>
+      </div>
 
       {/* Desktop Icon Grid */}
       <div
@@ -224,12 +266,31 @@ export default function Desktop() {
           isMinimized={minimizedWindows.includes(window.id)}
           zIndex={window.zIndex}
           isActive={activeWindowId === window.id}
+          onOpenApp={handleOpenApp}
         />
       ))}
 
+      {/* Start Menu */}
+      <StartMenu
+        isOpen={isStartMenuOpen}
+        onClose={() => setIsStartMenuOpen(false)}
+        apps={icons}
+        onAppClick={handleStartMenuAppClick}
+        onLogoutRequest={() => setShowLogoutModal(true)}
+      />
+
+      <LogoutModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={onLogout}
+      />
+
       {/* Taskbar */}
-      <div className="fixed bottom-0 left-0 right-0 h-12 bg-gray-900/80 flex items-center px-2 border-t border-gray-700/50 backdrop-blur-md">
-        <div className="w-10 h-10 flex items-center justify-center text-white mr-2 hover:bg-blue-500 rounded transition-colors duration-200 cursor-pointer">
+      <div className="fixed bottom-0 left-0 right-0 h-12 bg-gray-900/80 flex items-center px-2 border-t border-gray-700/50 backdrop-blur-md z-[1000]">
+        <div
+          className={`w-10 h-10 flex items-center justify-center text-white mr-2 hover:bg-white/10 rounded transition-colors duration-200 cursor-pointer ${isStartMenuOpen ? 'bg-white/20' : ''}`}
+          onClick={toggleStartMenu}
+        >
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white">
             <path d="M0 0h11.5v11.5H0V0zm12.5 0H24v11.5H12.5V0zM0 12.5h11.5V24H0V12.5zm12.5 0H24V24H12.5V12.5z" />
           </svg>
@@ -239,8 +300,8 @@ export default function Desktop() {
             <div
               key={window.id}
               className={`h-9 px-3 flex items-center rounded-md transition-all duration-200 cursor-pointer border-b-2
-                ${activeWindowId === window.id && !minimizedWindows.includes(window.id) 
-                  ? 'bg-white/20 border-blue-400' 
+                ${activeWindowId === window.id && !minimizedWindows.includes(window.id)
+                  ? 'bg-white/20 border-blue-400'
                   : 'bg-white/5 border-transparent hover:bg-white/10'}
                 ${minimizedWindows.includes(window.id) ? 'opacity-60' : ''}
               `}

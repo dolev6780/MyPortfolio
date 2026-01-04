@@ -9,9 +9,9 @@ import Resume from './Resume';
 import ContactMe from './ContactMe';
 
 
-const ContentRouter = ({ path, windowSize, onOpenUrl }) => {
+const ContentRouter = ({ path, windowSize, onOpenUrl, onOpenApp }) => {
   switch (path) {
-    case 'aboutme': return <AboutMe windowSize={windowSize} />;
+    case 'aboutme': return <AboutMe windowSize={windowSize} onOpenApp={onOpenApp} />;
     case 'projects': return <Projects windowSize={windowSize} onOpenUrl={onOpenUrl} />;
     case 'games': return <Games windowSize={windowSize} onOpenUrl={onOpenUrl} />;
     case 'cv': return <Resume windowSize={windowSize} />;
@@ -51,7 +51,7 @@ const WindowTitleBar = React.memo(({ title, path, url, onMouseDown, onMinimize, 
       <button onClick={onMinimize} className="p-2 rounded-full hover:bg-white/20 transition-colors">
         {/* Custom SVG for Windows-style minimize icon */}
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
         </svg>
       </button>
       <button onClick={onMaximize} className="p-2 rounded-full hover:bg-white/20 transition-colors">
@@ -87,9 +87,9 @@ const IframeErrorDisplay = ({ url }) => (
   </div>
 );
 
-const WindowContent = ({ url, path, onOpenUrl, windowSizePixels }) => {
+const WindowContent = ({ url, path, onOpenUrl, windowSizePixels, onOpenApp }) => {
   const [iframeError, setIframeError] = useState(false);
-  
+
   useEffect(() => {
     setIframeError(false); // Reset error on url change
   }, [url]);
@@ -113,34 +113,34 @@ const WindowContent = ({ url, path, onOpenUrl, windowSizePixels }) => {
   }
   return (
     <Suspense fallback={<div className="p-4">Loading...</div>}>
-      <ContentRouter path={path} windowSize={windowSizePixels} onOpenUrl={onOpenUrl} />
+      <ContentRouter path={path} windowSize={windowSizePixels} onOpenUrl={onOpenUrl} onOpenApp={onOpenApp} />
     </Suspense>
   );
 };
 
 const ResizeHandles = ({ onResizeStart }) => {
-    const handleDirections = [
-        { direction: 'top', className: 'cursor-n-resize top-0 left-0 right-0 h-2' },
-        { direction: 'bottom', className: 'cursor-s-resize bottom-0 left-0 right-0 h-2' },
-        { direction: 'left', className: 'cursor-w-resize top-0 bottom-0 left-0 w-2' },
-        { direction: 'right', className: 'cursor-e-resize top-0 bottom-0 right-0 w-2' },
-        { direction: 'top-left', className: 'cursor-nw-resize top-0 left-0 w-4 h-4' },
-        { direction: 'top-right', className: 'cursor-ne-resize top-0 right-0 w-4 h-4' },
-        { direction: 'bottom-left', className: 'cursor-sw-resize bottom-0 left-0 w-4 h-4' },
-        { direction: 'bottom-right', className: 'cursor-se-resize bottom-0 right-0 w-4 h-4' },
-    ];
+  const handleDirections = [
+    { direction: 'top', className: 'cursor-n-resize top-0 left-0 right-0 h-2' },
+    { direction: 'bottom', className: 'cursor-s-resize bottom-0 left-0 right-0 h-2' },
+    { direction: 'left', className: 'cursor-w-resize top-0 bottom-0 left-0 w-2' },
+    { direction: 'right', className: 'cursor-e-resize top-0 bottom-0 right-0 w-2' },
+    { direction: 'top-left', className: 'cursor-nw-resize top-0 left-0 w-4 h-4' },
+    { direction: 'top-right', className: 'cursor-ne-resize top-0 right-0 w-4 h-4' },
+    { direction: 'bottom-left', className: 'cursor-sw-resize bottom-0 left-0 w-4 h-4' },
+    { direction: 'bottom-right', className: 'cursor-se-resize bottom-0 right-0 w-4 h-4' },
+  ];
 
-    return (
-        <>
-            {handleDirections.map(({ direction, className }) => (
-                <div
-                    key={direction}
-                    className={`absolute ${className} z-10`}
-                    onMouseDown={(e) => onResizeStart(e, direction)}
-                />
-            ))}
-        </>
-    );
+  return (
+    <>
+      {handleDirections.map(({ direction, className }) => (
+        <div
+          key={direction}
+          className={`absolute ${className} z-10`}
+          onMouseDown={(e) => onResizeStart(e, direction)}
+        />
+      ))}
+    </>
+  );
 };
 
 
@@ -156,7 +156,8 @@ export default function WindowsModal({
   initialPosition = { x: '10%', y: '10%' },
   initialSize = { width: '80%', height: '70%' },
   isMinimized = false,
-  onOpenUrl
+  onOpenUrl,
+  onOpenApp
 }) {
   const [position, setPosition] = useState(initialPosition);
   const [size, setSize] = useState(initialSize);
@@ -178,9 +179,9 @@ export default function WindowsModal({
 
   useEffect(() => {
     if (isOpen) {
-        const observer = new ResizeObserver(updateSizeInPixels);
-        if (modalRef.current) observer.observe(modalRef.current);
-        return () => observer.disconnect();
+      const observer = new ResizeObserver(updateSizeInPixels);
+      if (modalRef.current) observer.observe(modalRef.current);
+      return () => observer.disconnect();
     }
   }, [isOpen, updateSizeInPixels]);
 
@@ -202,7 +203,7 @@ export default function WindowsModal({
   const handleDragStart = useCallback((e) => {
     if (isMaximized) return;
     if (e.target.closest('button')) return; // Don't drag on buttons
-    
+
     setIsDragging(true);
     const modalRect = modalRef.current.getBoundingClientRect();
     const dragOffset = { x: e.clientX - modalRect.left, y: e.clientY - modalRect.top };
@@ -226,37 +227,37 @@ export default function WindowsModal({
   const handleResizeStart = useCallback((e, direction) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     const startX = e.clientX;
     const startY = e.clientY;
     const modalRect = modalRef.current.getBoundingClientRect();
 
     const handleMouseMove = (moveEvent) => {
-        let newWidth = modalRect.width;
-        let newHeight = modalRect.height;
-        let newX = modalRect.left;
-        let newY = modalRect.top;
+      let newWidth = modalRect.width;
+      let newHeight = modalRect.height;
+      let newX = modalRect.left;
+      let newY = modalRect.top;
 
-        const deltaX = moveEvent.clientX - startX;
-        const deltaY = moveEvent.clientY - startY;
+      const deltaX = moveEvent.clientX - startX;
+      const deltaY = moveEvent.clientY - startY;
 
-        if (direction.includes('right')) {
-            newWidth = Math.max(400, modalRect.width + deltaX);
-        }
-        if (direction.includes('left')) {
-            newWidth = Math.max(400, modalRect.width - deltaX);
-            newX = modalRect.left + deltaX;
-        }
-        if (direction.includes('bottom')) {
-            newHeight = Math.max(300, modalRect.height + deltaY);
-        }
-        if (direction.includes('top')) {
-            newHeight = Math.max(300, modalRect.height - deltaY);
-            newY = modalRect.top + deltaY;
-        }
+      if (direction.includes('right')) {
+        newWidth = Math.max(400, modalRect.width + deltaX);
+      }
+      if (direction.includes('left')) {
+        newWidth = Math.max(400, modalRect.width - deltaX);
+        newX = modalRect.left + deltaX;
+      }
+      if (direction.includes('bottom')) {
+        newHeight = Math.max(300, modalRect.height + deltaY);
+      }
+      if (direction.includes('top')) {
+        newHeight = Math.max(300, modalRect.height - deltaY);
+        newY = modalRect.top + deltaY;
+      }
 
-        setSize({ width: `${newWidth}px`, height: `${newHeight}px` });
-        setPosition({ x: `${newX}px`, y: `${newY}px` });
+      setSize({ width: `${newWidth}px`, height: `${newHeight}px` });
+      setPosition({ x: `${newX}px`, y: `${newY}px` });
     };
 
     const handleMouseUp = () => {
@@ -287,10 +288,10 @@ export default function WindowsModal({
         animate={{ opacity: 1, scale: 1, transition: { duration: 0.3, ease: 'easeOut' } }}
         exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2, ease: 'easeIn' } }}
         transition={{
-            width: { duration: 0.2, ease: 'easeOut' },
-            height: { duration: 0.2, ease: 'easeOut' },
-            left: isDragging ? { duration: 0 } : { duration: 0.2, ease: 'easeOut' },
-            top: isDragging ? { duration: 0 } : { duration: 0.2, ease: 'easeOut' },
+          width: { duration: 0.2, ease: 'easeOut' },
+          height: { duration: 0.2, ease: 'easeOut' },
+          left: isDragging ? { duration: 0 } : { duration: 0.2, ease: 'easeOut' },
+          top: isDragging ? { duration: 0 } : { duration: 0.2, ease: 'easeOut' },
         }}
       >
         <WindowTitleBar
@@ -309,6 +310,7 @@ export default function WindowsModal({
             path={path}
             onOpenUrl={onOpenUrl}
             windowSizePixels={windowSizePixels}
+            onOpenApp={onOpenApp}
           />
         </div>
         {!isMaximized && <ResizeHandles onResizeStart={handleResizeStart} />}

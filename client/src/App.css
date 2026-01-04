@@ -2,17 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap');
+
 html {
   scroll-behavior: smooth;
 }
+
 .App {
   text-align: center;
 }
-body{
+
+body {
   font-family: 'Figtree', cursive;
   margin: 0;
   padding: 0;
-  background: linear-gradient(#1a1c1d,#4d4d4d);
+  background: linear-gradient(#1a1c1d, #4d4d4d);
   color: white;
 }
 
@@ -34,40 +38,71 @@ article img {
 
 .stickyPos {
   position: absolute;
-  top: 50%; /* Adjust this value to control the vertical position of the half circle */
+  top: 50%;
+  /* Adjust this value to control the vertical position of the half circle */
   left: 50%;
   transform: translate(-50%, -50%);
   overflow: hidden;
-  height: 200px; /* Adjust this value to control the height of the half circle */
-  width: 100%; /* Adjust this value if needed based on your layout */
+  height: 200px;
+  /* Adjust this value to control the height of the half circle */
+  width: 100%;
+  /* Adjust this value if needed based on your layout */
 }
 
 .text1 {
-  text-shadow: 0px 4px 3px rgba(0,0,0,0.4),
-             0px 8px 13px rgba(0,0,0,0.1),
-             0px 18px 23px rgba(0,0,0,0.1);
+  text-shadow: 0px 4px 3px rgba(0, 0, 0, 0.4),
+    0px 8px 13px rgba(0, 0, 0, 0.1),
+    0px 18px 23px rgba(0, 0, 0, 0.1);
 }
 
 
 /* Define keyframes for walking animations */
 @keyframes walk-right {
-  0% { background-position: 0px; }
-  100% { background-position: -100px; } /* Adjust as needed */
+  0% {
+    background-position: 0px;
+  }
+
+  100% {
+    background-position: -100px;
+  }
+
+  /* Adjust as needed */
 }
 
 @keyframes walk-left {
-  0% { background-position: 0px; }
-  100% { background-position: 100px; } /* Adjust as needed */
+  0% {
+    background-position: 0px;
+  }
+
+  100% {
+    background-position: 100px;
+  }
+
+  /* Adjust as needed */
 }
 
 @keyframes walk-up {
-  0% { background-position: 0px; }
-  100% { background-position: 0px; } /* Adjust as needed */
+  0% {
+    background-position: 0px;
+  }
+
+  100% {
+    background-position: 0px;
+  }
+
+  /* Adjust as needed */
 }
 
 @keyframes walk-down {
-  0% { background-position: 0px; }
-  100% { background-position: 0px; } /* Adjust as needed */
+  0% {
+    background-position: 0px;
+  }
+
+  100% {
+    background-position: 0px;
+  }
+
+  /* Adjust as needed */
 }
 
 /* Apply animations based on direction */
@@ -85,4 +120,90 @@ article img {
 
 .walk-down {
   animation: walk-down 1s infinite;
+}
+
+/* Floating Animation */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Slow Pulse Animation */
+@keyframes pulse-slow {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+/* Reappear Animation (30s cycle) */
+@keyframes letter-reappear {
+
+  0%,
+  85% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+
+  88% {
+    opacity: 0;
+    transform: translateY(-10px);
+    filter: blur(5px);
+  }
+
+  90% {
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(5px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.animate-reappear {
+  animation: letter-reappear 30s infinite;
+}
+
+/* Slide Up Animation */
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.2s ease-out forwards;
 }
